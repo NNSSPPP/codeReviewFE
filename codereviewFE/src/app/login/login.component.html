@@ -19,12 +19,29 @@
       <form (ngSubmit)="onSubmit()">
         <div class="input-group">
           <label for="email">Email</label>
-          <input type="email" [(ngModel)]="email" name="email" required />
+          <input type="email" name="email" [(ngModel)]="email" required email
+          pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$" #emailRef="ngModel" />
+          <div *ngIf="emailRef.touched || emailRef.dirty">
+            <small *ngIf="emailRef.errors?.['required']" class="error-message">
+                Email is required
+            </small>
+            <small *ngIf="emailRef.errors?.['email']" class="error-message">
+                Enter a valid email
+            </small>
+            <small *ngIf="emailRef.errors?.['pattern']" class="error-message">
+                Email must have at least 2 characters after "."
+            </small>  
+          </div>
         </div>
 
         <div class="input-group">
           <label for="password">Password</label>
-          <input type="password" [(ngModel)]="password" name="password" required />
+          <input type="password"  name="password" [(ngModel)]="password" required #pwdRef="ngModel" />
+          <div *ngIf="pwdRef.touched || pwdRef.dirty">
+            <small *ngIf="pwdRef.errors?.['required']" class="error-message">
+              Password is required
+            </small>
+          </div>
         </div>
 
         <button type="submit">Login</button>
