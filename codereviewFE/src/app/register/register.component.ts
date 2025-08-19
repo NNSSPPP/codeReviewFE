@@ -18,9 +18,14 @@ export class RegisterComponent {
   confirmPassword = '';
 
   existingUsernames = ['user12345', 'admin2025', 'testuser1'];
+  existingEmails = ['hello@gmail.com', 'admin@test.com', 'user@example.com'];
 
   checkUsername() {
     return this.existingUsernames.includes(this.username);
+  }
+
+  checkEmail() {
+    return this.existingEmails.includes(this.email);
   }
 
   get passwordError() {
@@ -34,20 +39,18 @@ export class RegisterComponent {
     return this.password && this.confirmPassword && this.password !== this.confirmPassword;
   }
 
-  onSubmit() {
-    const hasError = this.username || this.email || this.telephone || this.password || this.confirmPassword ;
-  
-    if (!hasError) {
-      console.log({
-        username: this.username,
-        email: this.email,
-        telephone: this.telephone,
-        password: this.password
-      });
-      alert('Register Success!');
-    } else {
+  onSubmit() { 
+    if (this.checkUsername() || this.checkEmail() || this.passwordError || this.passwordsMismatch) {
       alert('Register Failed!');
-    }
+      return;
+    } 
+    console.log({ 
+      username: this.username,
+      email: this.email, 
+      telephone: this.telephone, 
+      password: this.password 
+    }); 
+    alert('Register Success!'); 
   }
   
 }

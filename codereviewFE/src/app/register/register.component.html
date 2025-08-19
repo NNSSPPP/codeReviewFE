@@ -1,78 +1,98 @@
 <div class="register-container">
     <div class="register-box">
-  
-      <div class="register-header">
-         <a routerLink="/" class="back-btn">
-            <i class="bi bi-arrow-left"></i>
-        </a>
-        <h2>Register</h2>
 
-      </div>
-  
-      <form (ngSubmit)="onSubmit()" #form="ngForm" novalidate>
-  
-        <!-- Username -->
-        <div class="input-group">
-          <label for="username">Username</label>
-          <input type="text" name="username" [(ngModel)]="username" required minlength="8" #usernameRef="ngModel" />
-          <div *ngIf="usernameRef.touched || usernameRef.dirty">
-            <small *ngIf="usernameRef.errors?.['required']" class="error-message">Username is required</small>
-            <small *ngIf="usernameRef.errors?.['minlength']" class="error-message">Username must be at least 8
-              characters</small>
-            <small *ngIf="checkUsername()" class="error-message">Username already exists</small>
-          </div>
+        <div class="register-header">
+            <a routerLink="/" class="back-btn">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h2>Register</h2>
+
         </div>
-  
-        <!-- Email -->
-        <div class="input-group">
-          <label for="email">Email</label>
-          <input type="email" name="email" [(ngModel)]="email" required email #emailRef="ngModel" />
-          <div *ngIf="emailRef.touched || emailRef.dirty">
-            <small *ngIf="emailRef.errors?.['required']" class="error-message">Email is required</small>
-            <small *ngIf="emailRef.errors?.['email']" class="error-message">Enter a valid email</small>
-          </div>
+
+        <form (ngSubmit)="onSubmit()" #form="ngForm" novalidate>
+
+            <!-- Username -->
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" [(ngModel)]="username" required minlength="8"
+                    #usernameRef="ngModel" />
+                <div *ngIf="usernameRef.touched || usernameRef.dirty">
+                    <small *ngIf="usernameRef.errors?.['required']" class="error-message">Username is required</small>
+                    <small *ngIf="usernameRef.errors?.['minlength']" class="error-message">Username must be at least 8
+                        characters</small>
+                    <small *ngIf="checkUsername()" class="error-message">Username already exists</small>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" [(ngModel)]="email" required email
+                    pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$" #emailRef="ngModel" />
+
+                <div *ngIf="emailRef.touched || emailRef.dirty">
+                    <small *ngIf="emailRef.errors?.['required']" class="error-message">
+                        Email is required
+                    </small>
+                    <small *ngIf="emailRef.errors?.['email']" class="error-message">
+                        Enter a valid email
+                    </small>
+                    <small *ngIf="emailRef.errors?.['pattern']" class="error-message">
+                        Email must have at least 2 characters after "."
+                    </small>
+                    <small *ngIf="checkEmail()" class="error-message">
+                        This email is already taken
+                    </small>
+                </div>
+            </div>
+
+            <!-- Telephone -->
+            <div class="input-group">
+                <label for="telephone">Phone Number</label>
+                <input type="tel" name="telephone" [(ngModel)]="telephone" required pattern="^0\d{9}$" maxlength="10"
+                    #telRef="ngModel" />
+                <div *ngIf="telRef.touched || telRef.dirty">
+                    <small *ngIf="telRef.errors?.['required']" class="error-message">
+                        Phone Number is required
+                    </small>
+                    <small *ngIf="telRef.errors?.['pattern']" class="error-message">
+                        Phone Number must start with 0 and be 10 digits
+                    </small>
+                </div>
+            </div>
+
+
+            <!-- Password -->
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" [(ngModel)]="password" required #pwdRef="ngModel" />
+                <div *ngIf="pwdRef.touched || pwdRef.dirty">
+                    <small *ngIf="pwdRef.errors?.['required']" class="error-message">Password is required</small>
+                    <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
+                </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required
+                    #confirmRef="ngModel" />
+                <div *ngIf="confirmRef.touched || confirmRef.dirty">
+                    <small *ngIf="confirmRef.errors?.['required']" class="error-message">Confirm password is
+                        required</small>
+                    <small *ngIf="passwordsMismatch" class="error-message">Passwords do not match</small>
+                </div>
+            </div>
+
+            <button type="submit"
+                [disabled]="form.invalid || checkUsername() || checkEmail() || passwordError || passwordsMismatch">Register</button>
+        </form>
+        <div class="extra-links">
+            <p>
+                Already have an account?
+                <a [routerLink]="['/login']">Login</a>
+            </p>
         </div>
-  
-        <!-- Telephone -->
-        <div class="input-group">
-          <label for="telephone">Telephone</label>
-          <input type="tel" name="telephone" [(ngModel)]="telephone" required pattern="^\d{10}$" maxlength="10"
-            #telRef="ngModel" />
-          <div *ngIf="telRef.touched || telRef.dirty">
-            <small *ngIf="telRef.errors?.['required']" class="error-message">Telephone is required</small>
-            <small *ngIf="telRef.errors?.['pattern']" class="error-message">Telephone must be 10 digits</small>
-          </div>
-        </div>
-  
-        <!-- Password -->
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" name="password" [(ngModel)]="password" required #pwdRef="ngModel" />
-          <div *ngIf="pwdRef.touched || pwdRef.dirty">
-            <small *ngIf="pwdRef.errors?.['required']" class="error-message">Password is required</small>
-            <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
-          </div>
-        </div>
-  
-        <!-- Confirm Password -->
-        <div class="input-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required #confirmRef="ngModel" />
-          <div *ngIf="confirmRef.touched || confirmRef.dirty">
-            <small *ngIf="confirmRef.errors?.['required']" class="error-message">Confirm password is required</small>
-            <small *ngIf="passwordsMismatch" class="error-message">Passwords do not match</small>
-          </div>
-        </div>
-  
-        <button type="submit"
-          [disabled]="form.invalid || checkUsername() || passwordError || passwordsMismatch">Register</button>
-      </form>
-      <div class="extra-links">
-        <p>
-          Already have an account?
-          <a [routerLink]="['/login']">Login</a>
-        </p>
-      </div>
-  
+
     </div>
-  </div>
+</div>

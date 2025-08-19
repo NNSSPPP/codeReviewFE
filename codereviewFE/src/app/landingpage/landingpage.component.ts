@@ -10,8 +10,12 @@ import { Router } from '@angular/router';
 export class LandingpageComponent {
   constructor(private router: Router) {}
 
-  goToLogin()    { this.router.navigate(['/login']); }
-  goToRegister() { this.router.navigate(['/register']); }
+  goToLogin(){ 
+    this.router.navigate(['/login']);
+  }
+  goToRegister(){ 
+    this.router.navigate(['/register']);
+  }
 
   scrollTo(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
