@@ -1,0 +1,117 @@
+/* ตัว container ทั้งหน้า */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #cce7ff, #99d1ff); 
+    font-family: Arial, sans-serif;
+  }
+  
+  /* กล่อง login */
+  .login-box {
+    position: relative;
+    padding: 3rem 3.5rem;     
+    max-width: 650px;         
+    min-height: 480px;        
+    width: 100%;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 24px;         
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2); 
+  }
+  
+  /* header */
+  .login-header {
+    text-align: center;
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  
+  .login-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1a73e8;
+  }
+  
+  .back-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.8rem;  
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .back-btn:hover {
+    color: #0056b3;
+  }
+  
+  /* input group */
+  .input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  /* ปุ่ม login */
+  button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-top: 1.2rem;
+    font-weight: bold;
+  }
+  
+  button:hover {
+    background-color: #1665c1;
+  }
+  
+  .extra-links {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .extra-links a {
+    color: #1a73e8;
+    text-decoration: none;
+  }
+  
+  .extra-links a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .login-box {
+      padding: 2rem 2.5rem;
+      max-width: 90%;
+      min-height: auto;  
+    }
+  
+    .login-header h2 {
+      font-size: 1.8rem;
+    }
+  }
+  
