@@ -1,110 +1,35 @@
-/* หน้าเต็มจอ ฟ้าอ่อน gradient */
-.landing-container {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #cce7ff, #99d1ff);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* กล่องเนื้อหา */
-  .landing-content {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 2rem 3rem;
-    border-radius: 20px;
-    max-width: 1100px;  
-    width: 100%;       
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease; 
-  }
-  
-  /* แถวบน Welcome + ปุ่ม */
-  .top-row {
-    display: flex;
-    align-items: center;       
-    justify-content: space-between; 
-    flex-wrap: wrap;          
-    gap: 1rem;                 
-  }
-  
-  .welcome-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #003366;
-    margin: 0;
-    flex-grow: 1; 
-  }
-  
-  /* ปุ่ม Sign In / Register group */
-  .button-group {
-    display: flex;       
-    gap: 1rem;           
-    align-items: center; 
-  }
-  
-  /* ปุ่ม Sign In */
-  .btn-signin {
-    background: linear-gradient(45deg, #007BFF, #339CFF);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-    transition: 0.3s;
-  }
-  
-  .btn-signin:hover {
-    background: linear-gradient(45deg, #0059b3, #1a8cff);
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
-  }
-  
-  /* ปุ่ม Register */
-  .btn-register {
-    background: white;
-    color: #007BFF;
-    border: 2px solid #007BFF;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-    transition: 0.3s;
-  }
-  
-  .btn-register:hover {
-    background: #e6f0ff;
-    color: #0059b3;
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
-  }
-  
-  /* ปุ่มขนาดใหญ่ */
-  .btn-lg {
-    padding: 0.75rem 1.8rem;
-    font-size: 1.1rem;
-  }
-  
-  /* เนื้อหาอธิบาย */
-  .lead {
-    font-size: 1.1rem;
-    color: #003366;
-    margin-top: 1rem;
-    text-align: left;
-  }
-  
-  /* Responsive: มือถือเรียงแนวตั้ง */
-  @media (max-width: 767px) {
-    .landing-content {
-        padding: 1.5rem 1.8rem;
-        max-width: 90%;  
-        border-radius: 15px;
-      }
-    .top-row {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-  
-    .button-group {
-      flex-direction: column;
-      gap: 0.75rem; 
-      margin-top: 0.5rem;
-    }
-  }
-  
+/* Layout base */
+:host { display:block; }
+
+/* Hero */
+.hero {
+  min-height: 70vh;
+  display: flex;
+  background:
+    radial-gradient(1200px 400px at 50% -50%, rgba(13,110,253,.12), transparent 60%),
+    linear-gradient(135deg, #cce7ff, #99d1ff);
+  color: #0b2a4a;
+}
+
+/* Feature cards */
+.feature-card { border: 0; box-shadow: 0 8px 20px rgba(0,0,0,.08); transition: transform .2s, box-shadow .2s; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.12); }
+
+/* CTA */
+.cta { background: linear-gradient(135deg, #2670ff, #003a9f); }
+
+/* Top-right nav buttons */
+nav .btn { min-width: 88px; }
+
+/* Responsive tweaks */
+@media (max-width: 767px) {
+  .hero { padding-top: 4rem; padding-bottom: 3rem; }
+}
+.text-gradient-red {
+  background: linear-gradient(45deg, #EF4444, #FB923C); /* ไล่แดง → ส้ม */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
