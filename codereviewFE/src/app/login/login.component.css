@@ -113,5 +113,51 @@
     .login-header h2 {
       font-size: 1.8rem;
     }
+  
   }
+  /* NEW: แบ่งสองฝั่ง */
+.login-wrapper{
+  display:flex;
+  background:#fff;
+  border-radius:24px;
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+  overflow:hidden;
+  max-width:1000px; /* กำหนดความกว้างรวม */
+  width:100%;
+}
+
+/* NEW: ฝั่งซ้าย Welcome */
+.welcome-section{
+  flex:1;
+  background:#1a73e8;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  padding:3rem;
+}
+.welcome-section .logo{font-weight:700;margin-bottom:2rem;}
+.welcome-section h1{font-size:2.5rem;line-height:1.2;margin:0 0 1rem;}
+.welcome-section p{opacity:.95;margin:0;}
+
+/* OVERRIDE: ทำให้ .login-box ยอมวางคู่กับฝั่งซ้าย */
+.login-wrapper .login-box{
+  flex:1;
+  padding:3rem 3.5rem;
+  max-width:none;   /* ยกเลิก 650px เดิมเมื่ออยู่ใน wrapper */
+  width:auto;       /* แชร์พื้นที่กับซ้าย */
+  margin:0;         /* เอา margin:auto ออก */
+  min-height:auto;
+  border-radius:0;  /* มุมโค้งใช้จาก wrapper แล้ว */
+  box-shadow:none;  /* เงาใช้จาก wrapper แล้ว */
+}
+
+/* Responsive */
+@media (max-width:768px){
+  .login-wrapper{flex-direction:column;}
+  .welcome-section{align-items:center;text-align:center;padding:2rem;}
+  .login-wrapper .login-box{padding:2rem;}
+}
+
   
