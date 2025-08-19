@@ -88,6 +88,10 @@
     background-color: #1665c1;
   }
   
+  .error-message { 
+    color: red; font-size: 0.8rem; 
+  }
+  
   .extra-links {
     margin-top: 1.5rem;
     text-align: center;
