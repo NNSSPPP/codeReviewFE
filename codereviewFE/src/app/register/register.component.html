@@ -19,13 +19,13 @@
 
       </div>
 
-      <form (ngSubmit)="onSubmit()" #form="ngForm" novalidate>
+      <form (ngSubmit)="onSubmit(form)" #form="ngForm" novalidate>
 
         <!-- Username -->
         <div class="input-group">
           <label for="username">Username</label>
           <input type="text" name="username" [(ngModel)]="username" required minlength="8" #usernameRef="ngModel" />
-          <div *ngIf="usernameRef.touched || usernameRef.dirty">
+          <div *ngIf="usernameRef.touched || usernameRef.dirty || submitted">
             <small *ngIf="usernameRef.errors?.['required']" class="error-message">Username is required</small>
             <small *ngIf="usernameRef.errors?.['minlength']" class="error-message">Username must be at least 8
               characters</small>
@@ -39,7 +39,7 @@
           <input type="email" name="email" [(ngModel)]="email" required email pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$"
             #emailRef="ngModel" />
 
-          <div *ngIf="emailRef.touched || emailRef.dirty">
+          <div *ngIf="emailRef.touched || emailRef.dirty || submitted">
             <small *ngIf="emailRef.errors?.['required']" class="error-message">
               Email is required
             </small>
@@ -60,7 +60,7 @@
           <label for="telephone">Phone Number</label>
           <input type="tel" name="telephone" [(ngModel)]="telephone" required pattern="^0\d{9}$" maxlength="10"
             #telRef="ngModel" />
-          <div *ngIf="telRef.touched || telRef.dirty">
+          <div *ngIf="telRef.touched || telRef.dirty || submitted">
             <small *ngIf="telRef.errors?.['required']" class="error-message">
               Phone Number is required
             </small>
@@ -74,9 +74,11 @@
         <!-- Password -->
         <div class="input-group">
           <label for="password">Password</label>
-          <input type="password" name="password" [(ngModel)]="password" required #pwdRef="ngModel" />
-          <div *ngIf="pwdRef.touched || pwdRef.dirty">
+          <input type="password" name="password" [(ngModel)]="password" required minlength="8" #pwdRef="ngModel" />
+          <div *ngIf="pwdRef.touched || pwdRef.dirty || submitted">
             <small *ngIf="pwdRef.errors?.['required']" class="error-message">Password is required</small>
+            <small *ngIf="pwdRef.errors?.['minlength']" class="error-message">Password must be at least 8
+              characters</small>
             <small *ngIf="passwordError" class="error-message">{{ passwordError }}</small>
           </div>
         </div>
@@ -84,17 +86,19 @@
         <!-- Confirm Password -->
         <div class="input-group">
           <label for="confirmPassword">Confirm Password</label>
-          <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required #confirmRef="ngModel" />
-          <div *ngIf="confirmRef.touched || confirmRef.dirty">
+          <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required minlength="8" #confirmRef="ngModel" />
+          <div *ngIf="confirmRef.touched || confirmRef.dirty || submitted">
             <small *ngIf="confirmRef.errors?.['required']" class="error-message">Confirm password is
               required</small>
             <small *ngIf="passwordsMismatch" class="error-message">Passwords do not match</small>
           </div>
         </div>
 
-        <button type="submit"
-          [disabled]="form.invalid || checkUsername() || checkEmail() || passwordError || passwordsMismatch">Register</button>
+        <button type="submit">Register</button>
+
       </form>
+
+      
       <div class="extra-links">
         <p>
           Already have an account?
