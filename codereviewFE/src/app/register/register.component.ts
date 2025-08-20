@@ -57,8 +57,7 @@ onSubmit(form: any) {
   if (form.invalid || this.checkUsername() || this.checkEmail() || this.passwordError || this.passwordsMismatch) {
     return; 
   }
-
-  //console.log("Form Submitted:", form.value);
+  
   console.log('Submit Success!');
   alert('Register Success!');
   this.clearForm(form);
