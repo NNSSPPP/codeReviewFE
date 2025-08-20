@@ -1,1 +1,93 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <div class="dashboard-header shadow-sm">
+    <!-- Title -->
+    <div class="dashboard-title">
+      <strong>Dashboard Overview</strong>
+    </div>
+  
+    <!-- Actions -->
+    <div class="dashboard-actions">
+      <button class="btn btn-link refresh-btn" (click)="onRefresh()">Refresh</button>
+      <button class="btn btn-link export-btn" (click)="onExport()">Export</button>
+  
+      <!-- Notification -->
+      <div class="notification-wrapper" (click)="onNotificationClick()" (keydown.enter)="onNotificationClick()" (keydown.space)="onNotificationClick()">
+        <i class="bi bi-bell-fill notification-icon"></i>
+        <span *ngIf="notifications > 0" class="notification-badge">
+          {{ notifications }}
+        </span>
+      </div>
+  
+      <!-- User -->
+      <span class="admin-name">Admin</span>
+  
+      <!-- Logout -->
+      <button class="btn btn-sm btn-outline-danger logout-btn" (click)="onLogout()">
+        Logout
+      </button>
+    </div>
+  </div>
+  
+  <!-- Quality Gate Status -->
+  <div class="status-cards">
+    <div class="card">Passed: {{qualityStatus.passed}}</div>
+    <div class="card">Warning: {{qualityStatus.warning}}</div>
+    <div class="card">Failed: {{qualityStatus.failed}}</div>
+  </div>
+
+  <!-- Recent Scans Table -->
+  <div class="recent-scans">
+    <h3>Recent Scans</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Grade</th>
+          <th>Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let scan of recentScans">
+          <td>{{scan.project}}</td>
+          <td>{{scan.status}}</td>
+          <td>{{scan.grade}}</td>
+          <td>{{scan.time}}</td>
+          <td><button>View</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bugs, Security, Code Smells, Coverage -->
+  <div class="metrics">
+    <div class="metric-card">Bugs</div>
+    <div class="metric-card">Security</div>
+    <div class="metric-card">Code Smells</div>
+    <div class="metric-card">Coverage</div>
+  </div>
+
+  <!-- Quality Trend -->
+  <div class="quality-trend">
+    <h3>Quality Trend (Last 30 Days)</h3>
+    <div class="chart-placeholder">[Chart]</div>
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="bottom-section">
+    <div class="issues">
+      <h3>Top Issues</h3>
+      <ul>
+        <li *ngFor="let issue of topIssues">{{issue}}</li>
+      </ul>
+    </div>
+
+    <div class="distribution">
+      <h3>Project Distribution</h3>
+      <ul>
+        <li *ngFor="let project of projectDistribution">{{project}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
