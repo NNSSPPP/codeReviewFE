@@ -16,7 +16,7 @@
         <h2>Login</h2>
       </div>
 
-      <form (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit()" #form="ngForm" novalidate>
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" [(ngModel)]="email" required email
@@ -44,7 +44,8 @@
           </div>
         </div>
 
-        <button type="submit">Login</button>
+        <button type="submit"
+        [disabled]="form.invalid">Login</button>
       </form>
 
       <div class="extra-links">
