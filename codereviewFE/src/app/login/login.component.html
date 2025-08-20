@@ -16,12 +16,12 @@
         <h2>Login</h2>
       </div>
 
-      <form (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit(form)" #form="ngForm" novalidate >
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" [(ngModel)]="email" required email
           pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$" #emailRef="ngModel" />
-          <div *ngIf="emailRef.touched || emailRef.dirty">
+          <div *ngIf="emailRef.touched || emailRef.dirty || submitted">
             <small *ngIf="emailRef.errors?.['required']" class="error-message">
                 Email is required
             </small>
@@ -37,7 +37,7 @@
         <div class="input-group">
           <label for="password">Password</label>
           <input type="password"  name="password" [(ngModel)]="password" required #pwdRef="ngModel" />
-          <div *ngIf="pwdRef.touched || pwdRef.dirty">
+          <div *ngIf="pwdRef.touched || pwdRef.dirty || submitted">
             <small *ngIf="pwdRef.errors?.['required']" class="error-message">
               Password is required
             </small>
