@@ -11,3 +11,4 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: '**', redirectTo: '' } // path ผิดทั้งหมดให้กลับหน้า landing page
 ];
+
