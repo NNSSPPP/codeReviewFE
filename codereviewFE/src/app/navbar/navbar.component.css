@@ -1,0 +1,66 @@
+.vertical-navbar {
+  width: 220px;
+  min-height: 100vh;
+  background-color: #007BFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* สำคัญ! กระจาย space */
+  padding: 20px 0;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: all 0.3s;
+  z-index: 1000;
+}
+
+/* Heading */
+.vertical-navbar h4 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Menu list */
+.vertical-navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between; /* กระจายเมนูให้ balance */
+}
+
+.vertical-navbar li {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* เว้นช่องว่างระหว่างเมนู */
+}
+
+.vertical-navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  border-left: 4px solid transparent;
+  transition: all 0.3s;
+}
+
+.vertical-navbar a i {
+  margin-right: 10px; /* เว้นช่องว่างไอคอนกับข้อความ */
+}
+
+.vertical-navbar a:hover {
+  background-color: #3399FF;
+}
+
+.vertical-navbar a.active {
+  background-color: #0056b3;
+  border-left: 4px solid #FFA500;
+}

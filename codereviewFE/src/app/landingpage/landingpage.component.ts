@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./landingpage.component.css']
 })
 export class LandingpageComponent {
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router)  {}
 
   goToLogin(){ 
     this.router.navigate(['/login']);
