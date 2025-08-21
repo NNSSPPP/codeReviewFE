@@ -1,31 +1,36 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  constructor(private readonly router: Router) { }
+  constructor(private readonly router: Router) {}
 
-  notifications = 3;
+  notifications = [
+    { type: 'error',   title: 'Scan failed', message: 'API-Service build failed', icon: 'bi bi-x-circle-fill' },
+    { type: 'warning', title: 'Quality gate warning', message: 'Coverage dropped below 80%', icon: 'bi bi-exclamation-triangle-fill' },
+    { type: 'success', title: 'Issue resolved', message: 'SQL Injection fixed', icon: 'bi bi-check-circle-fill' },
+    { type: 'info',    title: 'New comment', message: 'Please review code again', icon: 'bi bi-info-circle-fill' }
+  ];
+
+  showNotifications = false;
 
   onRefresh() {
     console.log('Refreshing dashboard...');
-    // เขียนโค้ดรีเฟรชข้อมูล
   }
 
   onExport() {
     console.log('Exporting data...');
-    // เขียนโค้ด export ข้อมูล
   }
 
-  onNotificationClick() {
-    console.log('Opening notifications...');
-    // เปิด modal หรือหน้าแจ้งเตือน
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
   }
 
   onLogout() {
@@ -48,5 +53,4 @@ export class DashboardComponent {
   ];
 
   projectDistribution = ['Angular', 'Spring', 'React'];
-
 }
