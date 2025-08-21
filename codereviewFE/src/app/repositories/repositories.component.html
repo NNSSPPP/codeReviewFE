@@ -1,1 +1,118 @@
-<p>repositories works!</p>
+<div class="container-fluid p-3 repo-dashboard">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">
+            <i class="fas fa-folder-open text-primary me-2"></i> Repository Management
+        </h3>
+        <button class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> Add Repository
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <ng-container *ngFor="let stat of summaryStats">
+            <div class="col-md-3">
+                <div class="summary-card">
+                    <div class="summary-icon" [ngClass]="stat.bg"><i [class]="stat.icon"></i></div>
+                    <div>
+                        <h4>{{ stat.count }}</h4>
+                        <p>{{ stat.label }}</p>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Search + Filter Tabs -->
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <ul class="nav nav-pills repo-tabs mb-2">
+            <!-- All -->
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="activeFilter === 'all'" (click)="filterBy('all')">
+                    All Repositories
+                    <span class="badge bg-secondary ms-1">{{ repositories.length }}</span>
+                </a>
+            </li>
+
+            <!-- Angular -->
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="activeFilter === 'Angular'" (click)="filterBy('Angular')">
+                    Angular
+                    <span class="badge bg-warning text-dark ms-1">{{ countByFramework('Angular') }}</span>
+                </a>
+            </li>
+
+            <!-- Spring Boot -->
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="activeFilter === 'Spring Boot'" (click)="filterBy('Spring Boot')">
+                    Spring Boot
+                    <span class="badge bg-success ms-1">{{ countByFramework('Spring Boot') }}</span>
+                </a>
+            </li>
+
+            <!-- React -->
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="activeFilter === 'React'" (click)="filterBy('React')">
+                    React
+                    <span class="badge bg-info text-dark ms-1">{{ countByFramework('React') }}</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="search-box">
+            <input type="text" class="form-control" placeholder="Search repositories..."
+                (input)="searchRepositories($event)" />
+        </div>
+    </div>
+
+    <!-- Repository Cards -->
+    <div class="row g-3">
+        <div class="col-md-6" *ngFor="let repo of filteredRepositories">
+            <div class="repo-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="fw-bold mb-1">{{ repo.name }}</h5>
+                        <p class="text-muted mb-2">{{ repo.framework }} + {{ repo.language }}</p>
+                        <a [href]="repo.repoUrl" target="_blank" class="repo-link">
+                            <i class="fas fa-link me-1"></i>{{ repo.repoUrl }}
+                        </a>
+                        <p class="mb-1"><i class="fas fa-code-branch me-1"></i> Branch: {{ repo.branch }}</p>
+
+                        <p class="mb-1" *ngIf="repo.status === 'Active'">
+                            <i class="fas fa-clock me-1"></i> Last Scan: <strong>{{ repo.lastScan }}</strong>
+                        </p>
+
+                        <div *ngIf="repo.status === 'Scanning'" class="mb-2">
+                            <i class="fas fa-sync me-1"></i> Scanning: <strong>{{ repo.scanningProgress }}%</strong>
+                            <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
+                                {{ repo.scanningProgress }}%
+                            </progress>
+                        </div>
+
+
+                        <p *ngIf="repo.qualityGate" class="mb-1">Quality Gate: <span class="badge bg-success">{{
+                                repo.qualityGate }}</span></p>
+                        <p *ngIf="repo.previousGrade" class="mb-1">Previous: <span class="badge bg-warning text-dark">{{
+                                repo.previousGrade }}</span></p>
+                    </div>
+
+                    <span class="status-badge" [ngClass]="{
+                    'bg-success': repo.status === 'Active',
+                    'bg-info': repo.status === 'Scanning',
+                    'bg-warning': repo.status === 'Paused'
+                  }">
+                        {{ repo.status }}
+                    </span>
+                </div>
+
+                <!-- Stats -->
+                <div class="repo-stats">
+                    <span><i class="fas fa-bug me-1"></i>{{ repo.bugs }} Bugs</span>
+                    <span><i class="fas fa-shield-alt me-1"></i>{{ repo.vulnerabilities }} Vulnerabilities</span>
+                    <span><i class="fas fa-percentage me-1"></i>{{ repo.coverage }}% Coverage</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
