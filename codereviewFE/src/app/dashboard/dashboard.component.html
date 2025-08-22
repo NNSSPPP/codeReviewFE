@@ -33,23 +33,56 @@
       <button class="btn btn-sm btn-outline-danger logout-btn" (click)="onLogout()">Logout</button>
     </div>
   </div>
+  <div class="row top-section">
+  <div class="quality-gate-card">
+    <h4 class="title">
+      <i class="bi bi-trophy-fill"></i> Quality Gate Status
+    </h4>
 
-  <!-- Quality Gate Status -->
-  <div class="status-cards">
-    <div *ngFor="let condition of dashboardData.qualityGate.conditions" 
-         class="card"
-         [ngClass]="{
-          'passed': condition.status === 'OK',
-          'warning': condition.status === 'WARN',
-          'failed': condition.status === 'ERROR'
-         }">
-      {{ condition.metric }}: {{ condition.status }} (Actual: {{condition.actual}}, Threshold: {{condition.threshold}})
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading data...</p>
+    </div>
+
+    <!-- Chart & Status -->
+    <div *ngIf="!loading">
+      <div class="chart-container">
+        <apx-chart [series]="pieChartOptions.series!" [chart]="pieChartOptions.chart!"
+          [labels]="pieChartOptions.labels!" [colors]="pieChartOptions.colors!"
+          [plotOptions]="pieChartOptions.plotOptions!" [dataLabels]="pieChartOptions.dataLabels!"
+          [legend]="pieChartOptions.legend!" [tooltip]="pieChartOptions.tooltip!"></apx-chart>
+
+      </div>
+
+
+
+      <div class="status-summary">
+        <div class="status-item passed">
+          <i class="bi bi-check-circle-fill"></i> Passed
+          <span>{{ mockData.passedCount }}</span>
+        </div>
+        <div class="status-item warning">
+          <i class="bi bi-exclamation-triangle-fill"></i> Warning
+          <span>{{ mockData.warningCount }}</span>
+        </div>
+        <div class="status-item failed">
+          <i class="bi bi-x-circle-fill"></i> Failed
+          <span>{{ mockData.failedCount }}</span>
+        </div>
+      </div>
     </div>
   </div>
 
+
+
+
+
   <!-- Recent Scans Table -->
   <div class="recent-scans">
-    <h3>Recent Scans</h3>
+    <h4 class="title">
+      <i class="bi bi-clock-history"></i> Recent Scans
+    </h4>
     <table>
       <thead>
         <tr>
@@ -71,13 +104,16 @@
           <td [ngClass]="{
               'grade-cell grade--a': scan.grade === 'A',
               'grade-cell grade--b': scan.grade === 'B',
-              'grade-cell grade--c': scan.grade === 'C'
+              'grade-cell grade--c': scan.grade === 'C',
+              'grade-cell grade--d': scan.grade === 'D',
+              'grade-cell grade--e': scan.grade === 'E'
             }">{{ scan.grade }}</td>
           <td>{{ scan.time }}</td>
           <td><button>View</button></td>
         </tr>
       </tbody>
     </table>
+  </div>
   </div>
 
   <!-- Metrics -->
@@ -86,8 +122,6 @@
     <div class="metric-card">Vulnerabilities: {{ dashboardData.metrics.vulnerabilities }}</div>
     <div class="metric-card">Code Smells: {{ dashboardData.metrics.codeSmells }}</div>
     <div class="metric-card">Coverage: {{ dashboardData.metrics.coverage }}%</div>
-    <div class="metric-card">Duplications: {{ dashboardData.metrics.duplications }}%</div>
-    <div class="metric-card">Technical Debt: {{ dashboardData.metrics.technicalDebt }}</div>
   </div>
 
   <!-- Top Issues -->

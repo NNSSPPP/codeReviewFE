@@ -64,3 +64,41 @@
   background-color: #0056b3;
   border-left: 4px solid #FFA500;
 }
+
+/* @media (max-width: 1023px) and (min-width: 768px) {
+  .vertical-navbar {
+    width: 80px;
+    padding: 20px 5px;
+  }
+
+  .vertical-navbar a {
+    justify-content: center; /* icon อยู่ตรงกลาง 
+  }
+
+  .vertical-navbar a span { /* text ซ่อน
+    display: none;
+  }
+}*/
+
+/* Mobile: ซ่อน navbar, slide ได้ 
+@media (max-width: 767px) {
+  .vertical-navbar {
+    width: 200px;
+    left: -220px; /* ซ่อน navbar ออกนอกหน้าจอ 
+  }
+
+  .vertical-navbar.active { /* toggle class "active" เพื่อแสดง 
+    left: 0;
+  }
+}
+
+/* Hamburger button 
+.hamburger {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 24px;
+  color: #007BFF;
+  z-index: 1100;
+  cursor: pointer;
+} */

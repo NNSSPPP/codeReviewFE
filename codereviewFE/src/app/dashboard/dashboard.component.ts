@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 interface Condition {
   metric: string;
@@ -52,10 +53,12 @@ interface DashboardData {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,NgApexchartsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
+
 export class DashboardComponent {
   constructor(private readonly router: Router) {}
 
@@ -92,6 +95,7 @@ export class DashboardComponent {
     ]
   };
 
+  showNotifications = false
   notifications = [
     { type: 'error',   title: 'Scan failed', message: 'API-Service build failed', icon: 'bi bi-x-circle-fill' },
     { type: 'warning', title: 'Quality gate warning', message: 'Coverage dropped below 80%', icon: 'bi bi-exclamation-triangle-fill' },
@@ -99,7 +103,86 @@ export class DashboardComponent {
     { type: 'info',    title: 'New comment', message: 'Please review code again', icon: 'bi bi-info-circle-fill' }
   ];
 
-  showNotifications = false;
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+  }
+
+   // Mock data
+   mockData = {
+    passedCount: 15,
+    warningCount: 3,
+    failedCount: 0
+  };
+
+  /// Pie chart options
+pieChartOptions!: ApexOptions;
+totalProjects = 0;
+grade = '';
+gradePercent = 0;
+loading = true;
+
+ngOnInit() {
+  this.loadDashboardData();
+}
+
+// ฟังก์ชันคำนวณสีตามเกรด
+getGradeColor(grade: string): string {
+  switch (grade) {
+    case 'A': return '#10B981'; // Green
+    case 'B': return '#84CC16'; // Light Green
+    case 'C': return '#F59E0B'; // Orange
+    case 'D': return '#FB923C'; // Light Orange
+    case 'E':
+    case 'F': return '#EF4444'; // Red
+    default: return '#6B7280';   // Gray fallback
+  }
+}
+
+loadDashboardData() {
+  // คำนวณรวมโปรเจกต์
+  this.totalProjects = this.mockData.passedCount + this.mockData.warningCount + this.mockData.failedCount;
+  const passPercent = this.mockData.passedCount / this.totalProjects;
+
+  // คำนวณเกรดรวม
+  if (passPercent >= 0.8) this.grade = 'A';
+  else if (passPercent >= 0.7) this.grade = 'B';
+  else if (passPercent >= 0.6) this.grade = 'C';
+  else if (passPercent >= 0.5) this.grade = 'D';
+  else if (passPercent >= 0.4) this.grade = 'E';
+  else this.grade = 'F';
+
+  this.gradePercent = Math.round(passPercent * 100);
+
+  const gradePercentSeries = this.gradePercent; // % ของเกรด
+  const remainingPercent = 100 - this.gradePercent; // ส่วนที่เหลือ
+  
+  this.pieChartOptions = {
+    chart: { type: 'donut', height: 300 },
+    series: [gradePercentSeries, remainingPercent],
+    labels: ['', ''], // ปิด label segment
+    colors: [this.getGradeColor(this.grade), '#E5E7EB'], // สีเกรด + สีเทา
+    plotOptions: {
+      pie: {
+        donut: {
+          labels: {
+            show: true,
+            total: {
+              show: true,
+              showAlways: true,
+              label: this.grade, // ตัวอักษรเกรด
+              fontSize: '24px',
+              formatter: () => this.gradePercent + '%' // ตัวเลข %
+            }
+          }
+        }
+      }
+    },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    tooltip: { enabled: false }
+  };
+  this.loading = false;
+}
 
   onRefresh() {
     console.log('Refreshing dashboard...');
@@ -109,12 +192,10 @@ export class DashboardComponent {
     console.log('Exporting data...');
   }
 
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-  }
-
   onLogout() {
     console.log('Logging out...');
     this.router.navigate(['/']);
   }
+
+
 }

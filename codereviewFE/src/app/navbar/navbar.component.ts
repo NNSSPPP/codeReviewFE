@@ -10,4 +10,10 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent {
 
+  navbarOpen = false;
+
+  toggleNavbar() {
+    this.navbarOpen = !this.navbarOpen;
+  }
+
 }

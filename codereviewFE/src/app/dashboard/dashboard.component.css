@@ -412,4 +412,39 @@
     transition: color 0.25s ease, transform 0.2s ease;
   }
   .view-all a:hover { text-decoration: underline; transform: translateY(-1px); }
+
+  /* Row: Quality Gate + Recent Scans */
+.row.top-section {
+  display: flex;
+  gap: 20px;              /* เว้นระยะห่างระหว่างสองกล่อง */
+  margin-bottom: 20px;    /* เว้นระยะกับ section ด้านล่าง */
+  align-items: flex-start; /* ให้แนวบนตรงกัน */
+}
+
+/* กล่อง Quality Gate */
+.quality-gate-card {
+  flex: 1;                 /* กินพื้นที่ครึ่งนึง */
+  background: #fff;        /* สีพื้นหลัง */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* กล่อง Recent Scans */
+.recent-scans {
+  flex: 2;                 /* กว้างกว่า (2 เท่าของ Quality Gate) */
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow-x: auto;        /* กัน table ล้น */
+}
+
+/* Responsive: มือถือแสดงเรียงแนวตั้ง */
+@media (max-width: 768px) {
+  .row.top-section {
+    flex-direction: column;
+  }
+}
+
   
