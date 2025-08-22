@@ -44,36 +44,32 @@
      3) HEADER
      ========================================= */
   .dashboard-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
     padding: 10px 18px;
-  }
-  .dashboard-header:hover {
-    transform: none;
-    background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
-    box-shadow: var(--shadow);
+    margin-bottom: 16px;
   }
   
   .dashboard-title {
-    color: #0b1220;
     font-size: 18px;
     font-weight: 800;
+    color: #0b1220;
   }
-
+  
   .dashboard-actions {
     display: flex;
     align-items: center;
     gap: 10px;
   }
+  
   .admin-name {
-    color: #1f2937;
     font-size: 12px;
+    color: #1f2937;
   }
   
   /* =========================================
@@ -88,11 +84,13 @@
     padding: 0 4px;
     transition: color .2s, background .2s, transform .06s;
   }
+  
   .dashboard-actions .btn-link:hover {
     background: #eef4ff;
     color: var(--primary);
     transform: translateY(-1px);
   }
+  
   .logout-btn {
     background: #fff;
     border: 1px solid #fecaca;
@@ -102,6 +100,7 @@
     padding: 6px 12px;
     transition: background .2s, transform .06s, box-shadow .2s;
   }
+  
   .logout-btn:hover {
     background: #fff1f2;
     box-shadow: var(--shadow-soft);
@@ -109,10 +108,10 @@
   }
   
   /* =========================================
-     5) NOTIFICATION
+     5) NOTIFICATIONS
      ========================================= */
   .notification-wrapper {
-    position: relative;
+    position: relative; /* dropdown อยู่กับ icon */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -123,13 +122,16 @@
     cursor: pointer;
     transition: background .2s, transform .06s;
   }
+  
   .notification-wrapper:hover {
     background: #d3301a;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   }
+  
   .notification-icon {
     font-size: 16px;
   }
+  
   .notification-badge {
     background: #fff;
     border: 2px solid var(--danger);
@@ -143,13 +145,50 @@
     position: absolute;
     top: -5px; right: -6px;
     text-align: center;
-    /*animation: badge-pulse 1.8s ease-out infinite;*/
   }
-  @keyframes badge-pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, .55); }
-    70%  { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  
+  /* Dropdown Panel */
+  .notifications-panel {
+    position: absolute; 
+    top: 36px;
+    right: 0;
+    width: 320px;
+    max-height: 350px;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 12px;
+    z-index: 1200;
   }
+  
+  .notifications-panel h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1f2937;
+  }
+  
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+  
+  .notification-item:hover {
+    transform: translateX(3px);
+  }
+  
+  .notification-item.error   { background: #fee2e2; color: #991b1b; }
+  .notification-item.warning { background: #fef3c7; color: #92400e; }
+  .notification-item.success { background: #d1fae5; color: #065f46; }
+  .notification-item.info    { background: #e0e7ff; color: #1e3a8a; }
   
   /* =========================================
      6) STATUS CARDS
@@ -159,6 +198,7 @@
     gap: 12px;
     margin: 16px 0 20px;
   }
+  
   .card {
     flex: 1;
     padding: 16px;
@@ -171,6 +211,7 @@
     position: relative;
     transition: box-shadow var(--t-med) var(--ease), transform var(--t-med) var(--ease);
   }
+  
   .card::before {
     content: "";
     position: absolute;
@@ -178,40 +219,47 @@
     width: 6px;
     border-radius: 12px 0 0 12px;
   }
-  .status-cards > .card:nth-of-type(1)::before { background: linear-gradient(180deg, #16a34a, #22c55e); }
-  .status-cards > .card:nth-of-type(2)::before { background: linear-gradient(180deg, #d97706, #f59e0b); }
-  .status-cards > .card:nth-of-type(3)::before { background: linear-gradient(180deg, #dc2626, #ef4444); }
+  
+  .card.passed::before  { background: linear-gradient(180deg, #16a34a, #22c55e); }
+  .card.warning::before { background: linear-gradient(180deg, #d97706, #f59e0b); }
+  .card.failed::before  { background: linear-gradient(180deg, #dc2626, #ef4444); }
   
   /* =========================================
      7) RECENT SCANS TABLE
      ========================================= */
-  .recent-scans h3 {
-    font-size: 16px;
-    font-weight: 800;
-    margin: 0 0 10px;
+  .recent-scans {
+    animation: fadeIn 0.8s ease-in-out;
+    margin-bottom: 20px;
   }
+  
   .recent-scans table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     border-radius: 12px;
+    overflow: hidden;
     border: 1px solid var(--border);
     background: var(--surface);
     box-shadow: var(--shadow-soft);
   }
+  
   .recent-scans thead th {
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     padding: 12px 14px;
     background: linear-gradient(180deg, #f2f6ff, #e8efff);
+    color: #334155;
   }
+  
   .recent-scans td {
     font-size: 13px;
     padding: 12px 14px;
     border-top: 1px solid #eef2f7;
   }
+  
   .recent-scans td:last-child { text-align: right; }
+  
   .recent-scans td button {
     padding: 6px 12px;
     font-size: 12px;
@@ -220,45 +268,34 @@
     border: 1px solid #1e40af;
     background: linear-gradient(180deg, var(--primary-500), var(--primary));
     box-shadow: 0 6px 12px rgba(37, 99, 235, .18);
-    transition: transform .06s, box-shadow .2s, filter .2s;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+    transition: transform .15s, box-shadow .25s, filter .25s;
   }
+  
   .recent-scans td button:hover {
     transform: translateY(-1px);
     box-shadow: 0 10px 16px rgba(37, 99, 235, .22);
   }
-  .recent-scans td button:active::after {
-    animation: ripple var(--t-slow) ease-out;
-  }
-  .recent-scans td button::after {
-    content: "";
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 12px; height: 12px;
-    border-radius: 999px;
-    background: rgba(59, 130, 246, .25);
-    transform: translate(-50%, -50%) scale(0);
-  }
-  @keyframes ripple {
-    0%   { transform: translate(-50%, -50%) scale(0);   opacity: .55; }
-    100% { transform: translate(-50%, -50%) scale(28);  opacity: 0;   }
+  
+  /* STATUS & GRADE CELLS */
+  .status-cell, .grade-cell {
+    text-align: center;
+    font-weight: 700;
+    vertical-align: middle;
+    padding: 12px 0;
+    border-radius: 0 !important;
+    cursor: default;
+    transition: transform 0.25s ease;
   }
   
-  /* STATUS CELLS */
-  .status-cell, .grade-cell {
-    text-align: left;
-    font-weight: 800;
-  }
-  .status--passed  { background:#D1FAE5 !important; color:#065F46 !important; }
-  .status--warning { background:#FEF3C7 !important; color:#92400E !important; }
-  .status--failed  { background:#FEE2E2 !important; color:#991B1B !important; }
-  .grade--a { background:#10B981 !important; color:#fff !important; }
-  .grade--b { background:#84CC16 !important; color:#fff !important; }
-  .grade--c { background:#F59E0B !important; color:#fff !important; }
-  .grade--d { background:#FB923C !important; color:#fff !important; }
-  .grade--e { background:#EF4444 !important; color:#fff !important; }
+  .status--passed  { background:#D1FAE5; color:#065F46; }
+  .status--warning { background:#FEF3C7; color:#92400E; }
+  .status--failed  { background:#FEE2E2; color:#991B1B; }
+  
+  .grade--a { background:#10B981; color:#fff; }
+  .grade--b { background:#84CC16; color:#fff; }
+  .grade--c { background:#F59E0B; color:#fff; }
+  .grade--d { background:#FB923C; color:#fff; }
+  .grade--e { background:#EF4444; color:#fff; }
   
   /* =========================================
      8) METRICS
@@ -268,6 +305,7 @@
     gap: 12px;
     margin-bottom: 20px;
   }
+  
   .metric-card {
     flex: 1;
     padding: 18px;
@@ -290,6 +328,7 @@
     background: var(--surface);
     box-shadow: var(--shadow);
   }
+  
   .chart-placeholder {
     height: 170px;
     display: grid;
@@ -307,6 +346,7 @@
     display: flex;
     gap: 16px;
   }
+  
   .issues, .distribution {
     flex: 1;
     padding: 16px;
@@ -315,6 +355,7 @@
     background: var(--surface);
     box-shadow: var(--shadow-soft);
   }
+  
   .bottom-section h3 {
     font-size: 16px;
     font-weight: 800;
@@ -328,254 +369,29 @@
     .status-cards { flex-direction: column; }
     .metrics { flex-wrap: wrap; }
   }
+  
   @media (max-width: 720px) {
     .dashboard-header { flex-wrap: wrap; gap: 8px; }
     .bottom-section { flex-direction: column; }
     .recent-scans table { display: block; overflow-x: auto; }
   }
-  /* ===== Recent Scans Table ===== */
-.recent-scans {
-    animation: fadeIn 0.8s ease-in-out;
-  }
   
-  .recent-scans h3 {
-    color: #111827;
-    font-size: 16px;
-    font-weight: 800;
-    margin: 0 0 10px;
-  }
-  
-  .recent-scans table {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    border-collapse: separate;
-    border-spacing: 0;
-    box-shadow: var(--shadow-soft);
-    margin-bottom: 20px;
-    width: 100%;
-    overflow: hidden;
-    animation: slideUp 0.8s ease-in-out;
-  }
-  
-  .recent-scans thead th {
-    background: linear-gradient(180deg, #f2f6ff, #e8efff);
-    border-bottom: 1px solid #d9e2ff;
-    color: #334155;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .6px;
-    padding: 12px 14px;
-    text-align: left;
-    text-transform: uppercase;
-  }
-  
-  .recent-scans tbody tr {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-  }
-  
-  .recent-scans tbody tr:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    background: #f9fafb;
-  }
-  
-  .recent-scans td {
-    border-top: 1px solid #eef2f7;
-    color: #0f172a;
-    font-size: 13px;
-    padding: 12px 14px;
-    transition: background 0.25s ease;
-  }
-  
-  /* ปุ่ม Action */
-  .recent-scans td:last-child { text-align: right; }
-  .recent-scans td button {
-    background: linear-gradient(180deg, var(--primary-500), var(--primary));
-    border: 1px solid #1e40af;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(37, 99, 235, .18);
-    color: #fff;
-    font-size: 12px;
-    padding: 6px 12px;
-    transition: transform .15s, box-shadow .25s, filter .25s;
-  }
-  .recent-scans td button:hover {
-    box-shadow: 0 10px 16px rgba(37, 99, 235, .22);
-    filter: saturate(1.05);
-    transform: translateY(-1px);
-  }
-  
-  /* ===== Status & Grade Cells ===== */
-  .status-cell, .grade-cell {
-    text-align: center;
-    font-weight: 700;
-    vertical-align: middle;
-    padding: 12px 0;
-    border-radius: 0px;
-    cursor: default;
-    transition: transform 0.25s ease
-  }
-  
-  /* Hover effect */
-  .status-cell:hover, .grade-cell:hover {
-    transform: translateY(-2px) scale(1.04);
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* Status colors */
-  .status--passed  { background:#D1FAE5 !important; color:#065F46 !important; }
-  .status--warning { background:#FEF3C7 !important; color:#92400E !important; }
-  .status--failed  { background:#FEE2E2 !important; color:#991B1B !important; }
-  
-  /* Grade colors */
-  .grade--a { background:#10B981 !important; color:#fff !important; }
-  .grade--b { background:#84CC16 !important; color:#fff !important; }
-  .grade--c { background:#F59E0B !important; color:#fff !important; }
-  .grade--d { background:#FB923C !important; color:#fff !important; }
-  .grade--e { background:#EF4444 !important; color:#fff !important; }
-  
-  /* ===== Animations ===== */
-  @keyframes pulse {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.02); }
-    100% { transform: scale(1); }
-  }
-  
-  @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  
-  @keyframes slideUp {
-    0% { transform: translateY(10px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-  }
-/* ลิงก์ View All Scans */
-.view-all {
-    text-align: right;
-    margin-top: 8px;
-  }
-  
-  .view-all a {
-    color: #2563eb; /* Primary Blue */
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.25s ease, transform 0.25s ease;
-  }
-  
-  .view-all a:hover {
-    color: #1e40af; /* Darker Blue */
-    transform: translateX(3px);
-  }
-  /* ==== NOTIFICATIONS DROPDOWN ==== */
-  .notifications-panel {
-    position: fixed;   /* ลอยอิสระ */
-  top: 60px;         /* ระยะจากขอบบน */
-  right: 20px;  
-    width: 320px;
-    max-height: 350px;
-    overflow-y: auto;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    padding: 12px;
-    animation: fadeIn .3s ease;
-    z-index: 1200;
-  }
-  
-  
-  .notifications-panel h3 {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #1f2937;
-  }
-  
-  .notification-item {
-    display: flex;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    transform: translateX(0); /* ค่าตั้งต้น */
-    transition: transform 0.2s ease, background-color 0.3s ease;
-   
-  }
-  .notification-item:hover {
-    transform: translateX(3px); 
-  }
-  
-  .notification-item.error   { background: #fee2e2; color: #991b1b; }
-  .notification-item.warning { background: #fef3c7; color: #92400e; }
-  .notification-item.success { background: #d1fae5; color: #065f46; }
-  .notification-item.info    { background: #e0e7ff; color: #1e3a8a; }
-  
-  /* ==== FIX: Status Cells ไม่ให้โค้งมนทั้ง cell ==== */
-  .status-cell, .grade-cell {
-    text-align: left;
-    font-weight: 700;
-    vertical-align: middle;
-    padding: 12px 0;
-    border-radius: 0 !important;  /* ปิดโค้งมน */
-    cursor: default;
-    transition: transform 0.25s ease;
-  }
-  .status--failed {
-    border: 2px solid transparent;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-  
-  .status--failed:hover {
-    border-color: #ef4444;
-    transform: translateY(-2px);
-  }
- 
-  
-  .notification-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 6px;
-    transition: transform 0.2s ease, background-color 0.3s ease;
-  }
-  
-  .notification-item.error {
-    background-color: #f8d7da; /* สีทึบ ไม่โปร่ง */
-    color: #842029;
-  }
-  .notifications-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;  /* โปร่งใสได้ */
-    z-index: 999;             /* แค่ต่ำกว่า panel */
-  }
-
-  /* จอเล็กกว่า 768px → ขยายกว้างเต็มเกือบจอ */
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     .notifications-panel {
       right: 10px;
-      left: 10px;         /* กำหนด left/right ให้ชิดขอบ */
-      width: auto;        /* ใช้ auto แทนค่าตายตัว */
-      max-width: none;    /* เอาข้อจำกัดออก */
+      left: 10px;
+      width: auto;
+      max-width: none;
       border-radius: 10px;
     }
   }
   
-  /* จอเล็กมาก (มือถือ <480px) → เต็มจอ */
   @media (max-width: 480px) {
     .notifications-panel {
       top: 0;
       right: 0;
       left: 0;
-      bottom: 0;          /* ครอบทั้งจอ */
+      bottom: 0;
       width: 100%;
       height: 100%;
       max-height: none;
@@ -583,9 +399,17 @@
     }
   }
   
+  /* Animations */
+  @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes slideUp { 0% { transform: translateY(10px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
   
-  
-  
-  
-    
+  /* View All Scans */
+  .view-all { text-align: right; margin-top: 8px; }
+  .view-all a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.25s ease, transform 0.2s ease;
+  }
+  .view-all a:hover { text-decoration: underline; transform: translateY(-1px); }
   

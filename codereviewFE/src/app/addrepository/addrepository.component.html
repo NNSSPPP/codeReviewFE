@@ -1,1 +1,100 @@
-<p>addrepository works!</p>
+<div class="container">
+    <h2>Add Repository</h2>
+  
+    <form #repoForm="ngForm" (ngSubmit)="onSubmit(repoForm)">
+  
+      <!-- Repository Information -->
+      <fieldset>
+        <legend>Repository Information</legend>
+  
+        <label for="name">Repository Name *</label>
+        <input type="text" name="name" [(ngModel)]="gitRepository.name" required minlength="3" #name="ngModel">
+        <div class="error" *ngIf="name.invalid && name.touched">Name is required (min 3 chars).</div>
+  
+        <label for="url">Git URL *</label>
+        <input type="url" name="url" [(ngModel)]="gitRepository.url" required #url="ngModel">
+        <div class="error" *ngIf="url.invalid && url.touched">Valid URL required.</div>
+  
+        <label for="type">Project Type *</label>
+        <select name="type" [(ngModel)]="gitRepository.type" required #type="ngModel">
+          <option value="angular">Angular</option>
+          <option value="springboot">Spring Boot</option>
+        </select>
+        <div class="error" *ngIf="type.invalid && type.touched">Project type required.</div>
+  
+        <label for="branch">Default Branch *</label>
+        <input type="text" name="branch" [(ngModel)]="gitRepository.branch" required #branch="ngModel">
+        <div class="error" *ngIf="branch.invalid && branch.touched">Branch required.</div>
+      </fieldset>
+  
+      <!-- Authentication -->
+      <fieldset>
+        <legend>Authentication</legend>
+  
+        <label for="authMethod">
+          <input type="radio" name="authMethod" [(ngModel)]="authMethod" value="usernamePassword" required>
+          Username / Password
+        </label>
+        <label for="authMethod">
+          <input type="radio" name="authMethod" [(ngModel)]="authMethod" value="accessToken" required>
+          Access Token
+        </label>
+  
+        <div *ngIf="authMethod === 'usernamePassword'">
+          <label for="username">Username *</label>
+          <input type="text" name="username" [(ngModel)]="gitRepository.credentials.username" required #username="ngModel">
+          <div class="error" *ngIf="username.invalid && username.touched">Username required.</div>
+  
+          <label for="password">Password *</label>
+          <input type="password" name="password" [(ngModel)]="gitRepository.credentials.password" required minlength="6" #password="ngModel">
+          <div class="error" *ngIf="password.invalid && password.touched">Password min 6 chars.</div>
+        </div>
+  
+        <div *ngIf="authMethod === 'accessToken'">
+          <label for="token">Access Token *</label>
+          <input type="text" name="token" [(ngModel)]="gitRepository.credentials.token" required minlength="10" #token="ngModel">
+          <div class="error" *ngIf="token.invalid && token.touched">Token min 10 chars required.</div>
+        </div>
+      </fieldset>
+  
+      <!-- SonarQube Config -->
+      <fieldset>
+        <legend>SonarQube Configuration</legend>
+  
+        <label for="serverUrl">SonarQube Server *</label>
+        <input type="url" name="serverUrl" [(ngModel)]="sonarConfig.serverUrl" required #serverUrl="ngModel">
+        <div class="error" *ngIf="serverUrl.invalid && serverUrl.touched">Valid server URL required.</div>
+  
+        <label for="projectKey">Project Key *</label>
+        <input type="text" name="projectKey" [(ngModel)]="sonarConfig.projectKey" required #projectKey="ngModel">
+        <div class="error" *ngIf="projectKey.invalid && projectKey.touched">Project key required.</div>
+  
+        <!-- <label for="projectName">Project Name</label>
+        <input type="text" name="projectName" [(ngModel)]="sonarConfig.projectName">
+  
+        <label for="projectVersion">Project Version</label>
+        <input type="text" name="projectVersion" [(ngModel)]="sonarConfig.projectVersion">
+  
+        <label for="sources">Sources</label>
+        <input type="text" name="sources" [(ngModel)]="sonarConfig.sources"> -->
+  
+        <label for="enableAutoScan">
+          <input type="checkbox" name="enableAutoScan" [(ngModel)]="sonarConfig.enableAutoScan" checked>
+          Enable Automatic Scanning
+        </label>
+  
+        <label for="enableQualityGate">
+          <input type="checkbox" name="enableQualityGate" [(ngModel)]="sonarConfig.enableQualityGate" checked>
+          Enable Quality Gate Check
+        </label>
+      </fieldset>
+  
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" class="btn cancel">Cancel</button>
+        <button type="button" class="btn btn-secondary" (click)="onTest()">Test Connection</button>
+        <button type="submit" class="btn save" [disabled]="!repoForm.valid">Save</button>
+      </div>
+    </form>
+  </div>
+  
