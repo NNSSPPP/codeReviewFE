@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router'; 
 
 interface Repository {
   id: number;
@@ -21,7 +22,7 @@ interface Repository {
 @Component({
   selector: 'app-repositories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './repositories.component.html',
   styleUrl: './repositories.component.css'
 })
@@ -31,6 +32,12 @@ export class RepositoriesComponent {
   summaryStats: { label: string; count: number; icon: string; bg: string }[] = [];
   activeFilter: string = 'all'; // ใช้ track tab ที่ active
 
+  constructor(private readonly router: Router) {}
+
+  goToAddRepository() {
+    this.router.navigate(['/addrepository']);
+  }
+  
   ngOnInit(): void {
     this.repositories = [
       {

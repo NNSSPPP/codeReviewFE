@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
+import {AddrepositoryComponent} from './addrepository/addrepository.component';
 import { CodereviewComponent } from './codereview/codereview.component';
 import { IssueComponent } from './issue/issue.component';
 import { AnalysisComponent } from './analysis/analysis.component';
@@ -24,6 +25,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'repositories', component: RepositoriesComponent },
+      { path: 'addrepository', component: AddrepositoryComponent },
       { path: 'codereview', component: CodereviewComponent },
       { path: 'issue', component: IssueComponent },
       { path: 'analysis', component: AnalysisComponent },
