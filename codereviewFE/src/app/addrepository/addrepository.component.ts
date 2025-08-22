@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-addrepository',
@@ -12,7 +12,9 @@ import { RouterModule } from '@angular/router';
 })
 export class AddrepositoryComponent {
 
-  authMethod: 'usernamePassword' | 'accessToken' = 'usernamePassword';
+  constructor(private router: Router) {}
+
+  authMethod: 'usernamePassword' | 'accessToken' | null = null;
 
   gitRepository = {
     id: '',
@@ -50,10 +52,13 @@ export class AddrepositoryComponent {
     }
   }
 
-  
   onTest() {
     console.log('Testing connection:', this.gitRepository, this.sonarConfig);
     alert('Connection OK!');
   }
-  
+
+  onCancel() {
+    // กลับไปที่หน้า repositories
+    this.router.navigate(['/repositories']);
+  }
 }
