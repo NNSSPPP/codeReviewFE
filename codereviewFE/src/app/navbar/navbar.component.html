@@ -1,37 +1,36 @@
-<!-- <button class="hamburger" (click)="toggleNavbar()">
+<button class="hamburger" [class.active]="navbarOpen" (click)="toggleNavbar()">
   <i class="bi bi-list"></i>
-</button> -->
+</button> 
 
-<nav class="vertical-navbar">
-  <!-- <nav class="vertical-navbar" [class.active]="navbarOpen"> -->
+<nav class="vertical-navbar" [class.active]="navbarOpen">
   <h4><i class="bi bi-code-slash"></i> PCCTH Automate Code Review</h4>
   <ul>
     <li class="nav-item">
-      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-speedometer2"></i> Dashboard
       </a>
       <a class="nav-link" routerLink="/repositories" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">
+        [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-folder-fill"></i> Repositories
       </a>
       <a class="nav-link" routerLink="/codereview" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">
+        [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi-chat-left-text "></i> Code Review
       </a>
-      <a class="nav-link" routerLink="/issue" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a class="nav-link" routerLink="/issue" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-exclamation-circle-fill"></i> Issue
       </a>
-      <a class="nav-link" routerLink="/analysis" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a class="nav-link" routerLink="/analysis" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-graph-up"></i> Analysis
       </a>
-      <a class="nav-link" routerLink="/report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a class="nav-link" routerLink="/report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-file-earmark-text-fill"></i> Report
       </a>
     </li>
 
     <!-- กลุ่ม Setting -->
     <li class="nav-item mt-auto">
-      <a class="nav-link" routerLink="/setting" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <a class="nav-link" routerLink="/setting" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-gear-fill"></i> Setting
       </a>
     </li>

@@ -1,39 +1,37 @@
-/* เนื้อหาหลัก */
-.main-content {
-  flex: 1;
-  margin-left: 220px; /* เว้นทางซ้ายให้ navbar fixed */
-  box-sizing: border-box; /* ป้องกัน padding ทำให้ content เกิน */
-  max-width: calc(100% - 220px); /* ไม่ให้เนื้อหาเกิน viewport */
+
+.app-container {
+  display: flex; /* แบ่ง layout ออกเป็น 2 ส่วน */
+  min-height: 100vh; /* สูงเต็มหน้าจอ */
 }
 
-/* ตัวอย่าง layout ภายใน */
-.main-content .content-row {
-  display: flex;
-  flex-wrap: wrap; /* ให้ element ใน row ห่อเมื่อหน้าจอเล็ก */
-  gap: 20px;
-}
-
-.main-content .content-item {
-  flex: 1 1 300px; /* ขยายเต็มแต่ไม่เล็กกว่า 300px */
-  background-color: #f2f2f2;
+/* Navbar ด้านซ้าย */
+app-navbar {
+  width: 220px;          /* ความกว้างของ sidebar */
+  background: #fff;      /* สีพื้นหลัง */
+  color: #fff;
+  flex-shrink: 0;        /* ไม่ให้หด */
   padding: 15px;
-  border-radius: 8px;
   box-sizing: border-box;
 }
 
-/* Responsive: หน้าจอเล็กกว่า 768px */
+/* เนื้อหาหลัก */
+.main-content {
+  flex: 1;               /* กินพื้นที่ที่เหลือ */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Responsive: จอเล็กให้ navbar ขึ้นไปอยู่บน */
 @media (max-width: 768px) {
+  .app-container {
+    flex-direction: column; /* จาก row → column */
+  }
+
+  app-navbar {
+    width: 100%; /* Navbar เต็มจอด้านบน */
+  }
+
   .main-content {
-    margin-left: 0;
-    padding: 15px;
-    max-width: 100%;
-  }
-
-  .main-content .content-row {
-    flex-direction: column; /* จัดเป็นคอลัมน์แทน row */
-  }
-
-  .main-content .content-item {
-    flex: 1 1 100%; /* เต็มความกว้าง */
+    width: 100%;
   }
 }

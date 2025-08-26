@@ -34,111 +34,185 @@
     </div>
   </div>
   <div class="row top-section">
-  <div class="quality-gate-card">
-    <h4 class="title">
-      <i class="bi bi-trophy-fill"></i> Quality Gate Status
-    </h4>
+    <div class="quality-gate-card">
+      <h4 class="title">
+        <i class="bi bi-trophy-fill"></i> Quality Gate Status
+      </h4>
 
-    <!-- Loading Spinner -->
-    <div *ngIf="loading" class="loading-container">
-      <div class="spinner"></div>
-      <p>Loading data...</p>
-    </div>
-
-    <!-- Chart & Status -->
-    <div *ngIf="!loading">
-      <div class="chart-container">
-        <apx-chart [series]="pieChartOptions.series!" [chart]="pieChartOptions.chart!"
-          [labels]="pieChartOptions.labels!" [colors]="pieChartOptions.colors!"
-          [plotOptions]="pieChartOptions.plotOptions!" [dataLabels]="pieChartOptions.dataLabels!"
-          [legend]="pieChartOptions.legend!" [tooltip]="pieChartOptions.tooltip!"></apx-chart>
-
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading data...</p>
       </div>
 
+      <!-- Chart & Status -->
+      <div *ngIf="!loading">
+        <div class="chart-container">
+          <apx-chart [series]="pieChartOptions.series!" [chart]="pieChartOptions.chart!"
+            [labels]="pieChartOptions.labels!" [colors]="pieChartOptions.colors!"
+            [plotOptions]="pieChartOptions.plotOptions!" [dataLabels]="pieChartOptions.dataLabels!"
+            [legend]="pieChartOptions.legend!" [tooltip]="pieChartOptions.tooltip!"></apx-chart>
+
+        </div>
 
 
-      <div class="status-summary">
-        <div class="status-item passed">
-          <i class="bi bi-check-circle-fill"></i> Passed
-          <span>{{ mockData.passedCount }}</span>
-        </div>
-        <div class="status-item warning">
-          <i class="bi bi-exclamation-triangle-fill"></i> Warning
-          <span>{{ mockData.warningCount }}</span>
-        </div>
-        <div class="status-item failed">
-          <i class="bi bi-x-circle-fill"></i> Failed
-          <span>{{ mockData.failedCount }}</span>
+
+        <div class="status-summary">
+          <div class="status-item passed">
+            <i class="bi bi-check-circle-fill"></i> Passed
+            <span>{{ mockData.passedCount }}</span>
+          </div>
+          <div class="status-item warning">
+            <i class="bi bi-exclamation-triangle-fill"></i> Warning
+            <span>{{ mockData.warningCount }}</span>
+          </div>
+          <div class="status-item failed">
+            <i class="bi bi-x-circle-fill"></i> Failed
+            <span>{{ mockData.failedCount }}</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-
-
-
-
-  <!-- Recent Scans Table -->
-  <div class="recent-scans">
-    <h4 class="title">
-      <i class="bi bi-clock-history"></i> Recent Scans
-    </h4>
-    <table>
-      <thead>
-        <tr>
-          <th>Project</th>
-          <th>Status</th>
-          <th>Grade</th>
-          <th>Time</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let scan of dashboardData.history">
-          <td>{{ scan.project }}</td>
-          <td [ngClass]="{
+    <!-- Recent Scans Table -->
+    <div class="recent-scans">
+      <h4 class="title">
+        <i class="bi bi-clock-history"></i> Recent Scans
+      </h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Grade</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let scan of latestScans">
+            <td>{{ scan.project }}</td>
+            <td [ngClass]="{
               'status-cell status--passed':  scan.status === 'Passed',
               'status-cell status--warning': scan.status === 'Warning',
               'status-cell status--failed':  scan.status === 'Failed'
             }">{{ scan.status }}</td>
-          <td [ngClass]="{
+            <td [ngClass]="{
               'grade-cell grade--a': scan.grade === 'A',
               'grade-cell grade--b': scan.grade === 'B',
               'grade-cell grade--c': scan.grade === 'C',
               'grade-cell grade--d': scan.grade === 'D',
               'grade-cell grade--e': scan.grade === 'E'
             }">{{ scan.grade }}</td>
-          <td>{{ scan.time }}</td>
-          <td><button>View</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            <td>{{ scan.time }}</td>
+            <td>
+              <button *ngIf="scan.status === 'Passed' || scan.status === 'Warning'" class="btn btn-primary btn-sm">
+                <i class="bi bi-eye"></i>
+              </button>
+
+              <button *ngIf="scan.status === 'Failed'" class="btn btn-warning btn-sm">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </td>
+
+
+          </tr>
+        </tbody>
+      </table>
+      <!-- View All -->
+      <div class="button-container">
+        <!-- link ไปหน้า scan history -->
+        <a [routerLink]="['/']" class="view-all-link">
+          View All <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+    </div>
   </div>
 
   <!-- Metrics -->
   <div class="metrics">
-    <div class="metric-card">Bugs: {{ dashboardData.metrics.bugs }}</div>
-    <div class="metric-card">Vulnerabilities: {{ dashboardData.metrics.vulnerabilities }}</div>
-    <div class="metric-card">Code Smells: {{ dashboardData.metrics.codeSmells }}</div>
-    <div class="metric-card">Coverage: {{ dashboardData.metrics.coverage }}%</div>
+    <div class="metric-card bugs">
+      <div class="metric-icon"><i class="bi bi-bug-fill"></i></div>
+      <div class="metric-title">Bugs</div>
+      <div class="metric-value">{{ dashboardData.metrics.bugs }}</div>
+      <div class="metric-change decrease">↓ 5 today</div>
+    </div>
+
+    <div class="metric-card security">
+      <div class="metric-icon"><i class="bi bi-shield-lock"></i></div>
+      <div class="metric-title">Security</div>
+      <div class="metric-value">{{ dashboardData.metrics.vulnerabilities }}</div>
+      <div class="metric-change increase">↑ 1 today</div>
+    </div>
+
+    <div class="metric-card code-smells">
+      <div class="metric-icon"><i class="bi bi-wind"></i></div>
+      <div class="metric-title">Code Smells</div>
+      <div class="metric-value">{{ dashboardData.metrics.codeSmells }}</div>
+      <div class="metric-change decrease">↓ 12 today</div>
+    </div>
+
+    <div class="metric-card coverage">
+      <div class="metric-icon"><i class="bi bi-check2-circle"></i></div>
+      <div class="metric-title">Coverage</div>
+      <div class="metric-value">{{ dashboardData.metrics.coverage }}%</div>
+      <div class="metric-change increase">↑ 2.3%</div>
+    </div>
   </div>
 
-  <!-- Top Issues -->
-  <div class="issues">
-    <h3>Top Issues</h3>
-    <ul>
-      <li *ngFor="let issue of dashboardData.issues">
-        {{ issue.type }} - {{ issue.message }} (Severity: {{ issue.severity }})
-      </li>
-    </ul>
-  </div>
 
-  <!-- Project Distribution -->
-  <div class="distribution">
-    <h3>Project Distribution</h3>
-    <ul>
-      <li *ngFor="let scan of dashboardData.history">{{ scan.project }}</li>
-    </ul>
+  <div class="quality-trend">
+    <h4><i class="bi bi-graph-up"></i> Quality Trend (Last 30 Days)</h4>
+    <apx-chart 
+      [series]="coverageChartSeries!" 
+      [chart]="coverageChartOptions.chart!" 
+      [xaxis]="coverageChartOptions.xaxis!"
+      [stroke]="coverageChartOptions.stroke!"
+      [markers]="coverageChartOptions.markers!"
+      [colors]="coverageChartOptions.colors!"
+      [yaxis]="coverageChartOptions.yaxis!">
+    </apx-chart>
   </div>
-</div>
+  
+
+    <!-- Top Issues & Project Distribution -->
+    <div class="row mt-4">
+      <div class="col">
+        <h4><i class="bi bi-exclamation-circle"></i> Top Issues</h4>
+        <ul>
+          <li *ngFor="let i of dashboardData.issues">
+            {{ i.type }} - {{ i.message }}
+          </li>
+        </ul>
+        <button class="btn btn-sm btn-primary">Manage Issues →</button>
+      </div>
+
+      <div class="col">
+        <h4><i class="bi bi-bar-chart"></i> Project Distribution</h4>
+        
+        <div *ngFor="let p of projectDistribution" class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>{{ p.type }}</span>
+            <span>{{ p.percent }}%</span>
+          </div>
+          <div class="progress" style="height: 20px;">
+            <progress 
+  class="progress-bar"
+  [value]="p.percent" 
+  max="100"
+  [ngClass]="{
+    'bg-primary': p.type === 'Angular',
+    'bg-success': p.type === 'SpringBoot'
+  }">
+  {{ p.percent }}%
+</progress>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+
+  </div>
