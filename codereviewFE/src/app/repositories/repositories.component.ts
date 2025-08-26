@@ -71,7 +71,7 @@ export class RepositoriesComponent {
       {
         id: 3,
         name: 'User Management Service',
-        framework: 'React 18',
+        framework: 'Angular 18',
         language: 'TypeScript',
         repoUrl: 'https://github.com/pccth/user-service.git',
         branch: 'main',

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 interface Condition {
@@ -27,6 +28,7 @@ interface SecurityHotspot {
 
 interface ScanHistory {
   project: string;
+  typeproject: 'Angular' | 'SpringBoot';
   status: 'Passed' | 'Warning' | 'Failed';
   grade: string;
   time: string;
@@ -48,12 +50,14 @@ interface DashboardData {
   issues: Issue[];
   securityHotspots: SecurityHotspot[];
   history: ScanHistory[];
+  coverageHistory: number[];
+  days: number[];
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule,NgApexchartsModule],
+  imports: [CommonModule,NgApexchartsModule,RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -61,6 +65,12 @@ interface DashboardData {
 
 export class DashboardComponent {
   constructor(private readonly router: Router) {}
+
+  ngOnInit() {
+    this.loadDashboardData();
+    this.calculateProjectDistribution();
+    this.loadCoverageChart();
+  }
 
    // Mock Dashboard Data
    dashboardData: DashboardData = {
@@ -89,10 +99,16 @@ export class DashboardComponent {
       { id: 2, status: 'REVIEWED', description: 'Hardcoded password', project: 'Project A' }
     ],
     history: [
-      { project: 'Project A', status: 'Passed', grade: 'A', time: '2025-08-20 12:00' },
-      { project: 'Project B', status: 'Warning', grade: 'B', time: '2025-08-19 15:00' },
-      { project: 'Project C', status: 'Failed', grade: 'C', time: '2025-08-18 09:00' }
-    ]
+      { project: 'Project A', typeproject: 'Angular', status: 'Passed', grade: 'A', time: '2025-08-21 12:00' },
+      { project: 'Project B', typeproject: 'SpringBoot', status: 'Warning', grade: 'B', time: '2025-08-19 15:00' },
+      { project: 'Project C', typeproject: 'Angular', status: 'Failed', grade: 'C', time: '2025-08-18 09:00' },
+      { project: 'Project D', typeproject: 'SpringBoot', status: 'Failed', grade: 'E', time: '2025-08-17 09:00' },
+      { project: 'Project E', typeproject: 'Angular', status: 'Passed', grade: 'A', time: '2025-08-20 12:00' },
+      { project: 'Project F', typeproject: 'SpringBoot', status: 'Warning', grade: 'B', time: '2025-08-15 15:00' },
+      { project: 'Project G', typeproject: 'Angular', status: 'Failed', grade: 'D', time: '2025-08-01 09:00' }
+    ],
+    coverageHistory: [70, 75, 80, 85, 90, 95, 100],
+    days: [1, 5, 10, 15, 20, 25, 30]
   };
 
   showNotifications = false
@@ -103,8 +119,47 @@ export class DashboardComponent {
     { type: 'info',    title: 'New comment', message: 'Please review code again', icon: 'bi bi-info-circle-fill' }
   ];
 
+  get latestScans(): ScanHistory[] {
+    return [...this.dashboardData.history] // clone array ก่อน
+      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+      .slice(0, 5);
+  }
+  
+  projectDistribution: { type: string, count: number, percent: number }[] = [];
+
+
+calculateProjectDistribution() {
+  const typeCounts: Record<string, number> = {};
+  const total = this.dashboardData.history.length;
+
+  this.dashboardData.history.forEach(h => {
+    if (typeCounts[h.typeproject]) typeCounts[h.typeproject]++;
+    else typeCounts[h.typeproject] = 1;
+  });
+
+  this.projectDistribution = Object.entries(typeCounts).map(([type, count]) => ({
+    type,
+    count,
+    percent: Math.round((count / total) * 100)
+  }));
+}
+
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
+  }
+
+  onRefresh() {
+    console.log('Refreshing dashboard...');
+  }
+
+  onExport() {
+    console.log('Exporting data...');
+  }
+
+  onLogout() {
+    console.log('Logging out...');
+    this.router.navigate(['/']);
   }
 
    // Mock data
@@ -121,20 +176,16 @@ grade = '';
 gradePercent = 0;
 loading = true;
 
-ngOnInit() {
-  this.loadDashboardData();
-}
-
 // ฟังก์ชันคำนวณสีตามเกรด
 getGradeColor(grade: string): string {
   switch (grade) {
-    case 'A': return '#10B981'; // Green
-    case 'B': return '#84CC16'; // Light Green
-    case 'C': return '#F59E0B'; // Orange
-    case 'D': return '#FB923C'; // Light Orange
-    case 'E':
-    case 'F': return '#EF4444'; // Red
-    default: return '#6B7280';   // Gray fallback
+    case 'A': return '#10B981'; 
+    case 'B': return '#84CC16'; 
+    case 'C': return '#F59E0B'; 
+    case 'D': return '#FB923C'; 
+    case 'E': return '#EF4444'; 
+    case 'F': return '#EF4444'; 
+    default: return '#6B7280';   
   }
 }
 
@@ -184,18 +235,39 @@ loadDashboardData() {
   this.loading = false;
 }
 
-  onRefresh() {
-    console.log('Refreshing dashboard...');
-  }
-
-  onExport() {
-    console.log('Exporting data...');
-  }
-
-  onLogout() {
-    console.log('Logging out...');
-    this.router.navigate(['/']);
-  }
+coverageChartSeries: any[] = [];
+coverageChartOptions: ApexOptions = {};
 
 
+loadCoverageChart() {
+  this.coverageChartSeries = [
+    {
+      name: 'Coverage',
+      data: this.dashboardData.coverageHistory
+    }
+  ];
+
+  this.coverageChartOptions = {
+    chart: {
+      type: 'line',
+      height: 200
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    markers: {
+      size: 4
+    },
+    colors: ['#2563eb'],
+    xaxis: {
+      categories: this.dashboardData.days
+    },
+    yaxis: {
+      labels: {
+        formatter: (val) => val + '%'
+      }
+    }
+  };
+}
 }

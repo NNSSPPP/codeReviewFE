@@ -4,15 +4,11 @@
   background-color: #007BFF;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* สำคัญ! กระจาย space */
+  justify-content: space-between; 
   padding: 20px 0;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
   text-align: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  transition: all 0.3s;
-  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
 /* Heading */
@@ -65,40 +61,56 @@
   border-left: 4px solid #FFA500;
 }
 
-/* @media (max-width: 1023px) and (min-width: 768px) {
+/* Desktop fixed */
+@media (min-width: 768px) {
   .vertical-navbar {
-    width: 80px;
-    padding: 20px 5px;
-  }
-
-  .vertical-navbar a {
-    justify-content: center; /* icon อยู่ตรงกลาง 
-  }
-
-  .vertical-navbar a span { /* text ซ่อน
-    display: none;
-  }
-}*/
-
-/* Mobile: ซ่อน navbar, slide ได้ 
-@media (max-width: 767px) {
-  .vertical-navbar {
-    width: 200px;
-    left: -220px; /* ซ่อน navbar ออกนอกหน้าจอ 
-  }
-
-  .vertical-navbar.active { /* toggle class "active" เพื่อแสดง 
+    position: fixed;
+    top: 0;
     left: 0;
+  }
+
+  .main-content {
+    margin-left: 220px; /* เว้นพื้นที่ navbar */
   }
 }
 
-/* Hamburger button 
-.hamburger {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  font-size: 24px;
-  color: #007BFF;
-  z-index: 1100;
-  cursor: pointer;
-} */
+/* Mobile */
+@media (max-width: 767px) {
+  .vertical-navbar {
+    position: fixed;
+    top: 0;
+    left: -220px; /* ซ่อน navbar */
+    z-index: 1000;
+  }
+
+  .vertical-navbar h4 {
+    padding-left: 40px;
+  }
+
+  .vertical-navbar.active {
+    left: 0; /* slide in */
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-top: 70px; /* เว้น hamburger */
+  }
+
+  .hamburger {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+    color: #007BFF;
+    z-index: 1100;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .vertical-navbar.active + .hamburger,
+.hamburger.active {
+  color: white; /* เปลี่ยนเป็นสีขาว */
+}
+}
