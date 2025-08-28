@@ -6,6 +6,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import {AddrepositoryComponent} from './addrepository/addrepository.component';
+import {DetailrepositoryComponent} from './detailrepository/detailrepository.component';
 import { CodereviewComponent } from './codereview/codereview.component';
 import { IssueComponent } from './issue/issue.component';
 import { AnalysisComponent } from './analysis/analysis.component';
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'repositories', component: RepositoriesComponent },
       { path: 'addrepository', component: AddrepositoryComponent },
+      { path: 'detailrepo/:id', component: DetailrepositoryComponent },
       { path: 'codereview', component: CodereviewComponent },
       { path: 'issue', component: IssueComponent },
       { path: 'analysis', component: AnalysisComponent },

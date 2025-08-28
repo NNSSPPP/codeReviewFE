@@ -12,7 +12,7 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class AddrepositoryComponent {
 
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
 

@@ -14,7 +14,7 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private router: Router) { }
+  constructor(private readonly router: Router) { }
 
 
   submitted = false;

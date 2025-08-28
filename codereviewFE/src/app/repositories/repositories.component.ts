@@ -123,4 +123,8 @@ export class RepositoriesComponent {
       { label: 'Paused', count: this.filteredRepositories.filter(r => r.status === 'Paused').length, icon: 'fas fa-pause-circle', bg: 'bg-warning' }
     ];
   }
+
+  viewRepo(repo: Repository): void {
+    this.router.navigate(['/detailrepo', repo.id]);
+  }
 }
