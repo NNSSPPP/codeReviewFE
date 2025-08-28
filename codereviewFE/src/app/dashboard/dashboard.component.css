@@ -1,4 +1,4 @@
-:root {
+:host,:root {
   --bg: #f2f6ff;
   --surface: #fff;
   --text: #0f172a;
@@ -24,6 +24,11 @@
   --ease: cubic-bezier(.2, .8, .2, 1);
 }
 
+.dashboard-container, 
+.main-content {
+  overflow: visible !important; /* แก้ไข: ถ้าเคยใช้ hidden ให้เอาออก */
+}
+
 /* BASE */
 .dashboard-container {
   background:
@@ -39,6 +44,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: var(--surface);
   background: linear-gradient(180deg, #fff 0%, #f6f9ff 100%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -66,14 +72,15 @@
   transform: translateY(-1px);
 }
 .logout-btn {
-  background: #fff;
-  border: 1px solid #fecaca;
+  background: var(--surface);      /* ใช้ตัวแปรแทน #fff */
+  border: 1px solid #fecaca; 
   border-radius: 999px;
   color: var(--danger);
   font-size: 12px;
   padding: 6px 12px;
   transition: background .2s, transform .06s, box-shadow .2s;
 }
+
 .logout-btn:hover {
   background: #fff1f2;
   box-shadow: var(--shadow-soft);
@@ -86,57 +93,146 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px; height: 30px;
-  background: #fff;
-  border: 1px solid #e25151;
+  width: 38px; height: 38px;
+  background: var(--primary-100);
   border-radius: 50%;
   cursor: pointer;
-  transition: background .2s, transform .06s;
+  transition: transform .2s, box-shadow .2s;
 }
-.notification-wrapper:hover { background: #d3301a; box-shadow: 0 4px 10px rgba(0,0,0,.15); }
-.notification-icon { font-size: 16px; }
+
+
+
+.notification-wrapper:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,.15);
+}
+
+.notification-icon {
+  font-size: 18px;
+  color: var(--primary-500);
+}
+
 .notification-badge {
-  background: #fff;
-  border: 2px solid var(--danger);
-  border-radius: 999px;
-  box-shadow: 0 0 0 2px #fff;
-  color: var(--danger);
-  font-size: 10px;
-  font-weight: 800;
-  min-width: 18px;
-  padding: 2px 6px;
   position: absolute;
-  top: -5px; right: -6px;
-  text-align: center;
+  top: -4px; right: -4px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--surface);
 }
+
+/* Panel */
 .notifications-panel {
   position: absolute;
-  top: 36px; right: 0;
-  width: 320px; max-height: 350px;
-  overflow-y: auto;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  max-height: 70vh; 
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  overflow-y: auto;
   padding: 12px;
-  z-index: 1200;
+  z-index: 9999;
+
 }
-.notifications-panel h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #1f2937; }
-.notification-item {
+
+/* Header */
+.notifications-header {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  transition: transform .2s ease, background-color .3s ease;
+  color: var(--text);
 }
-.notification-item:hover { transform: translateX(3px); }
-.notification-item.error   { background:#fee2e2; color:#991b1b; }
-.notification-item.warning { background:#fef3c7; color:#92400e; }
-.notification-item.success { background:#d1fae5; color:#065f46; }
-.notification-item.info    { background:#e0e7ff; color:#1e3a8a; }
+
+.notifications-header .close-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Tabs */
+.notification-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.notification-tabs button {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.notification-tabs button:hover {
+  background: var(--primary-100);
+  border-color: var(--primary-500);
+  color: var(--primary-500);
+}
+
+/* Items */
+.notification-item {
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: var(--primary-100);
+  transition: 0.2s;
+}
+
+.notification-item:hover {
+  background: var(--primary-500);
+  color: #fff;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.item-message {
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.view-link {
+  font-size: 11px;
+  background: transparent;
+  border: none;
+  color: var(--primary-500);
+  cursor: pointer;
+}
+
+.view-link:hover { text-decoration: underline; }
+
+/* Load more */
+.load-more {
+  width: 100%;
+  padding: 6px 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary-500);
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.load-more:hover { background: var(--primary); }
+
 
 /* STATUS CARDS */
 .status-cards { display: flex; gap: 12px; margin: 16px 0 20px; }
@@ -414,15 +510,60 @@ progress.progress-bar::-moz-progress-bar {
   .dashboard-header { flex-wrap: wrap; gap: 8px; }
   .bottom-section, .row.top-section { flex-direction: column; }
   .recent-scans table { display: block; overflow-x: auto; }
-  .notifications-panel { right: 10px; left: 10px; width: auto; border-radius: 10px; }
+ 
 }
-@media (max-width: 480px) {
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .notification-wrapper {
+    position: relative; /* ให้เป็น reference ของ panel */
+    z-index: 100;       /* สูงพอให้คลิกได้ */
+  }
+
   .notifications-panel {
-    top: 0; right: 0; left: 0; bottom: 0;
-    width: 100%; height: 100%;
-    border-radius: 0;
+    position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  max-height: 70vh;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    overflow-y: auto;
+    z-index: 9999;
+    transition: none;      /* ป้องกัน animation ทำให้ panel กระโดด */
   }
 }
+
+@media (max-width: 767px) {
+  .notification-wrapper {
+    position: relative;
+    z-index: 100;
+  }
+
+  .notifications-panel {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    width: 320px;
+    max-width: calc(100% - 20px);
+    max-height: 80vh;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    overflow-y: auto;
+    z-index: 9999;
+    display: none; /* เริ่มต้นซ่อน */
+  }
+
+  .notifications-panel.visible {
+    display: block; /* แสดงทันที */
+  }
+}
+
+
+
+
+
 
 /* ANIMATIONS */
 @keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;} }

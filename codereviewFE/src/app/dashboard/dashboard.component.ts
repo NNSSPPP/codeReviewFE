@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Router , RouterModule} from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 interface Condition {
@@ -54,6 +53,17 @@ interface DashboardData {
   days: number[];
 }
 
+type NotificationTab = 'All' | 'Unread' | 'Scans' | 'Issues' | 'System';
+
+interface Notification {
+  title: string;
+  message: string;
+  icon: string;
+  type: NotificationTab;
+  timestamp: Date;
+  read: boolean;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -67,9 +77,10 @@ export class DashboardComponent {
   constructor(private readonly router: Router) {}
 
   ngOnInit() {
+
     this.loadDashboardData();
-    this.calculateProjectDistribution();
     this.loadCoverageChart();
+    this.calculateProjectDistribution();
   }
 
    // Mock Dashboard Data
@@ -111,16 +122,87 @@ export class DashboardComponent {
     days: [1, 5, 10, 15, 20, 25, 30]
   };
 
-  showNotifications = false
-  notifications = [
-    { type: 'error',   title: 'Scan failed', message: 'API-Service build failed', icon: 'bi bi-x-circle-fill' },
-    { type: 'warning', title: 'Quality gate warning', message: 'Coverage dropped below 80%', icon: 'bi bi-exclamation-triangle-fill' },
-    { type: 'success', title: 'Issue resolved', message: 'SQL Injection fixed', icon: 'bi bi-check-circle-fill' },
-    { type: 'info',    title: 'New comment', message: 'Please review code again', icon: 'bi bi-info-circle-fill' }
+  showNotifications = false;
+  isMobile = false;
+  activeTab: NotificationTab = 'All';
+  displayCount = 5;
+
+  getTimeAgo(timestamp: Date): string {
+    const now = new Date();
+    const diff = now.getTime() - timestamp.getTime(); // millisecond
+  
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
+  }
+  
+
+  notifications: Notification[] = [
+    { title: '1.New Scan Completed', message: 'Scan #123 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T10:00:00'), read: false },
+    { title: '2.System Update', message: 'Update v1.2 deployed.', icon: '⚙️', type: 'System', timestamp: new Date('2025-08-26T09:00:00'), read: false },
+    { title: '3.Error Detected', message: 'Server error reported.', icon: '❌', type: 'Issues', timestamp:new Date('2025-08-26T11:00:00'), read: true },
+    { title: '4.New Issue', message: 'Issue #456 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-25T10:00:00'), read: false },
+    { title: '5.Backup Done', message: 'Daily backup completed.', icon: '💾', type: 'System', timestamp: new Date('2025-08-25T11:00:00'), read: true },
+    { title: '6.Security Alert', message: 'Login from new device.', icon: '🔒', type: 'System', timestamp: new Date('2025-07-26T10:00:00'), read: false },
+    { title: '7.Scan #124 Completed', message: 'Scan #124 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T12:00:00'), read: false },
+    { title: '8.New Issue', message: 'Issue #457 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-26T08:00:00'), read: false }
   ];
 
+  toggleNotifications() { this.showNotifications = !this.showNotifications; }
+  closeNotifications() { this.showNotifications = false; }
+  
+  @HostListener('window:resize')
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768; // mobile ถ้าน้อยกว่า 768px
+  }
+
+  markAllRead() {
+    this.notifications.forEach(n => n.read = true);
+  }
+
+  selectTab(tab: NotificationTab) {
+    this.activeTab = tab;
+    this.displayCount = 5;
+  }
+
+
+  get filteredNotifications() {
+    let filtered = this.notifications;
+  
+    if (this.activeTab === 'Unread') filtered = filtered.filter(n => !n.read);
+    else if (this.activeTab !== 'All') filtered = filtered.filter(n => n.type === this.activeTab);
+  
+    filtered = filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  
+    return filtered.slice(0, this.displayCount);
+  }
+  
+
+  get unreadCount() {
+    return this.notifications.filter(n => !n.read).length;
+  }
+
+  loadMore() {
+    this.displayCount += 5;
+  }
+
+  get totalFilteredCount() {
+    if (this.activeTab === 'All') return this.notifications.length;
+    if (this.activeTab === 'Unread') return this.notifications.filter(n => !n.read).length;
+    return this.notifications.filter(n => n.type === this.activeTab).length;
+  }
+
+  
+  
+  
+
   get latestScans(): ScanHistory[] {
-    return [...this.dashboardData.history] // clone array ก่อน
+    return [...this.dashboardData.history] 
       .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
       .slice(0, 5);
   }
@@ -145,9 +227,6 @@ calculateProjectDistribution() {
 }
 
 
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-  }
 
   onRefresh() {
     console.log('Refreshing dashboard...');

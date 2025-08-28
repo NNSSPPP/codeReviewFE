@@ -28,10 +28,14 @@
       </a>
     </li>
 
-    <!-- กลุ่ม Setting -->
+    <!-- กลุ่ม Setting , logout-->
     <li class="nav-item mt-auto">
       <a class="nav-link" routerLink="/setting" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-gear-fill"></i> Setting
+      </a>
+
+      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
+        <i class="bi bi-box-arrow-right"></i> Logout
       </a>
     </li>
   </ul>
