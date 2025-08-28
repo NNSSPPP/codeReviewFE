@@ -4,8 +4,8 @@
     <h3 class="fw-bold">
       <i class="bi bi-folder2-open text-primary me-2"></i> Repository Management
     </h3>
-    <button class="btn btn-primary" (click)="goToAddRepository()">
-      <i class="bi bi-plus-circle me-1"></i> Add Repository
+    <button class="btn btn-circle" (click)="goToAddRepository()" title="AddRepository">
+      <i class="bi bi-plus"></i> 
     </button>
   </div>
 
@@ -113,28 +113,28 @@
           <!-- Action Buttons -->
           <div class="d-flex gap-2">
             <!-- Run -->
-            <button class="btn btn-sm btn-outline-primary"
+            <button class="btn btn-sm btn-outline-primary" title="RunScan"
               *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'">
               <i class="bi bi-play-circle"></i>
             </button>
 
             <!-- Stop (เฉพาะตอน Scanning) -->
-            <button class="btn btn-sm btn-outline-danger" *ngIf="repo.status === 'Scanning'">
+            <button class="btn btn-sm btn-outline-danger" title="StopScan" *ngIf="repo.status === 'Scanning'">
               <i class="bi bi-stop-fill"></i>
             </button>
 
             <!-- Resume (เฉพาะตอน Paused) -->
-            <button class="btn btn-sm btn-outline-success" *ngIf="repo.status === 'Paused'">
+            <button class="btn btn-sm btn-outline-success" title="ResumeScan" *ngIf="repo.status === 'Paused'">
               <i class="bi bi-play-fill"></i>
             </button>
 
             <!-- Settings -->
-            <button class="btn btn-sm btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary" title="Settings">
               <i class="bi bi-gear"></i>
             </button>
 
             <!-- View -->
-            <button class="btn btn-sm btn-outline-info" (click)="viewRepo(repo)">
+            <button class="btn btn-sm btn-outline-info" title="ViewDetails" (click)="viewRepo(repo)">
               <i class="bi bi-eye"></i>
             </button>
           </div>

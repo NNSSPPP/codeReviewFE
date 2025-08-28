@@ -1,3 +1,30 @@
+/* ปุ่มวงกลม */
+.btn-circle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #3b82f6; /* สีพื้นปุ่ม */
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+ 
+  .btn-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  }
+  
+  .btn-circle i {
+    color: #fff; /* สีไอคอน */
+  }
+  
+
 .repo-dashboard {
     background-color: #f5f5f5; /* พื้นหลังสว่าง */
     color: #000; /* ข้อความสีดำ */
