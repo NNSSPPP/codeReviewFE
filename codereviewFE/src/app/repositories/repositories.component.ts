@@ -50,8 +50,8 @@ export class RepositoriesComponent {
         status: 'Active',
         lastScan: '2 hours ago',
         qualityGate: 'Grade A',
-        bugs: 3,
-        vulnerabilities: 1,
+        bugs: 12,
+        vulnerabilities: 3,
         coverage: 85
       },
       {

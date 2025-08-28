@@ -19,7 +19,11 @@ app-navbar {
   flex: 1;               /* กินพื้นที่ที่เหลือ */
   padding: 20px;
   box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: auto; 
 }
+
+/* Responsive Ipad mini ไม่รองรับ*/
 
 /* Responsive: จอเล็กให้ navbar ขึ้นไปอยู่บน */
 @media (max-width: 768px) {

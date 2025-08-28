@@ -1,0 +1,72 @@
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px; /* เพิ่มขนาด clickable area */
+    font-size: 1.5rem; /* ขยายขนาดไอคอน */
+    color: #2563eb; /* สีน้ำเงินเข้ม */
+
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  
+  .back-btn:hover {
+    background: #cce0ff; /* เมื่อ hover ให้เด่นขึ้น */
+    transform: scale(1.1); /* ขยายเล็กน้อย */
+  }
+  
+  .back-btn i {
+    font-size: 1.6rem; /* ทำให้ลูกศรใหญ่ขึ้น */
+  }
+  
+
+.repo-detail {
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  .repo-detail .status-badge {
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  .custom-progress {
+    width: 100%;
+    height: 15px;
+  }
+  
+  .repo-stats span {
+    margin-right: 20px;
+    font-weight: 500;
+  }
+  
+  .repo-link {
+    display: inline-block;
+    margin-bottom: 5px;
+    color: #2563eb;
+    text-decoration: none;
+  }
+  
+  .repo-link:hover {
+    text-decoration: underline;
+  }
+  
+  .card-title {
+    font-weight: 600;
+  }
+  
+  .coverage-chart {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e6efff;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #2563eb;
+    font-size: 1.5rem;
+  }
+  
