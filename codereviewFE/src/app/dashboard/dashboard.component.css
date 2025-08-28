@@ -44,6 +44,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap : wrap;
   background: var(--surface);
   background: linear-gradient(180deg, #fff 0%, #f6f9ff 100%);
   border: 1px solid var(--border);
@@ -51,9 +52,16 @@
   box-shadow: var(--shadow);
   padding: 10px 18px;
   margin-bottom: 16px;
+  
 }
 .dashboard-title { font-size: 18px; font-weight: 800; color: #0b1220; }
 .dashboard-actions { display: flex; align-items: center; gap: 10px; }
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* เว้นระยะระหว่าง item */
+}
 .admin-name { font-size: 12px; color: #1f2937; }
 
 /* ACTION BUTTONS */
@@ -87,17 +95,52 @@
   transform: translateY(-1px);
 }
 
+/* EXPORT BUTTON */
+.export-btn {
+    position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 50px;     /* กำหนดความกว้าง */
+  height: 50px;     /* กำหนดความสูง */
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--primary-500);
+  color: #fff;
+  border: none;
+  border-radius: 8px; /* มุมโค้งเล็กน้อย */
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.export-btn i {
+  font-size: 20px;
+}
+
+.export-btn:hover {
+  background: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.export-btn:active {
+  transform: scale(0.96);
+}
+
+
 /* NOTIFICATIONS */
 .notification-wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px; height: 38px;
+  width: 50px; height: 50px;
   background: var(--primary-100);
   border-radius: 50%;
   cursor: pointer;
   transition: transform .2s, box-shadow .2s;
+  z-index: 1000;
 }
 
 
@@ -130,7 +173,7 @@
   top: 100%;
   right: 0;
   width: 300px;
-  max-height: 70vh; 
+  max-height: 80vh; 
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -138,6 +181,12 @@
   padding: 12px;
   z-index: 9999;
 
+}
+
+/* ป้องกัน panel แตกบรรทัด */
+.notifications-panel * {
+  white-space: normal;
+  word-break: break-word;
 }
 
 /* Header */
@@ -163,10 +212,12 @@
   flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 10px;
+  justify-content: space-between
 }
 
 .notification-tabs button {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 80px;
   padding: 4px 8px;
   font-size: 11px;
   border-radius: 6px;
@@ -513,50 +564,38 @@ progress.progress-bar::-moz-progress-bar {
  
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+
+@media (max-width: 767px) {
+  .dashboard-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dashboard-actions {
+    display: flex;
+    justify-content: flex-end; /* ชิดขวา */
+    width: 100%;               /* กินเต็มความกว้าง header */
+  }
   .notification-wrapper {
-    position: relative; /* ให้เป็น reference ของ panel */
-    z-index: 100;       /* สูงพอให้คลิกได้ */
+    position: relative;
+    z-index: 1000;
   }
 
   .notifications-panel {
     position: absolute;
-  top: 100%;
-  right: 0;
-  width: 300px;
-  max-height: 70vh;
-    border-radius: 12px;
-    background: var(--surface);
-    box-shadow: var(--shadow);
-    overflow-y: auto;
-    z-index: 9999;
-    transition: none;      /* ป้องกัน animation ทำให้ panel กระโดด */
-  }
-}
-
-@media (max-width: 767px) {
-  .notification-wrapper {
-    position: relative;
-    z-index: 100;
-  }
-
-  .notifications-panel {
-    position: fixed;
-    top: 60px;
-    right: 10px;
-    width: 320px;
-    max-width: calc(100% - 20px);
-    max-height: 80vh;
-    border-radius: 12px;
-    background: var(--surface);
-    box-shadow: var(--shadow);
-    overflow-y: auto;
-    z-index: 9999;
-    display: none; /* เริ่มต้นซ่อน */
-  }
-
-  .notifications-panel.visible {
-    display: block; /* แสดงทันที */
+    top: 100%; /* วางกล่องไว้ใต้ปุ่มแจ้งเตือน */
+    right: 5px; /* จากเดิม 10px ขยับไปขวาอีกนิด */
+    left: auto;
+    
+    /* ปรับขนาดความกว้างและสูง */
+    width: 280px; /* กำหนดความกว้างที่เหมาะสม */
+    max-width: 90vw; 
+    max-height: 90vh; 
+    
+ 
+    margin: 0; /* ลบ margin ที่เคยจัดกึ่งกลางออก */
+    box-sizing: border-box !important;
+    overflow-y: auto; /* ทำให้มี scrollbar เมื่อเนื้อหาเกินความสูง */
   }
 }
 
@@ -566,5 +605,10 @@ progress.progress-bar::-moz-progress-bar {
 
 
 /* ANIMATIONS */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;} }
 @keyframes slideUp { 0%{transform:translateY(10px);opacity:0;} 100%{transform:translateY(0);opacity:1;} }

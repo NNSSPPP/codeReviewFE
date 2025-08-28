@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router , RouterModule} from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
@@ -153,16 +153,16 @@ export class DashboardComponent {
     { title: '8.New Issue', message: 'Issue #457 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-26T08:00:00'), read: false }
   ];
 
-  toggleNotifications() { this.showNotifications = !this.showNotifications; }
-  closeNotifications() { this.showNotifications = false; }
-  
-  @HostListener('window:resize')
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768; // mobile ถ้าน้อยกว่า 768px
+  toggleNotifications() { 
+    this.showNotifications = !this.showNotifications; 
   }
-
+  closeNotifications() { 
+    this.showNotifications = false; 
+  }
+  
   markAllRead() {
     this.notifications.forEach(n => n.read = true);
+    console.log('All notifications marked as read');
   }
 
   selectTab(tab: NotificationTab) {
@@ -185,6 +185,7 @@ export class DashboardComponent {
 
   get unreadCount() {
     return this.notifications.filter(n => !n.read).length;
+    console.log('Unread count:', this.unreadCount); 
   }
 
   loadMore() {

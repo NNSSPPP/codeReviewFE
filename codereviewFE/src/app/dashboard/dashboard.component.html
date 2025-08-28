@@ -1,58 +1,72 @@
 <div class="dashboard-container">
   <!-- Header -->
   <div class="dashboard-header shadow-sm">
+
     <div class="dashboard-title">
       <strong>Dashboard Overview</strong>
     </div>
 
     <div class="dashboard-actions">
+
       <!-- <button class="btn btn-link refresh-btn" (click)="onRefresh()">Refresh</button> -->
-      <button class="btn btn-link export-btn" (click)="onExport()">Export</button>
       <span class="admin-name">Admin</span>
-      
+      <!-- ปุ่ม Export -->
+      <button class="export-btn" (click)="onExport()" title="Export">
+        <i class="bi bi-download"></i>
+      </button>
+
+
+
       <!-- ปุ่ม Notification -->
- 
-  <div class="notification-wrapper" (click)="toggleNotifications()" role="button" tabindex="0">
-  <i class="bi bi-bell-fill notification-icon"></i>
-  <span *ngIf="notifications.length > 0" class="notification-badge">
-    {{ notifications.length }}
-  </span>
+      <div class="notification-wrapper" (click)="toggleNotifications()" role="button" tabindex="0" title="Notification">
+
+        <!-- ไอคอนกระดิ่ง -->
+        <i class="bi bi-bell-fill notification-icon"></i>
+
+        <!-- Badge แสดงจำนวนแจ้งเตือน -->
+        <span *ngIf="notifications.length > 0" class="notification-badge">
+          {{ notifications.length }}
+        </span>
+
+        <!-- Panel แสดง Notifications -->
+        <div class="notifications-panel" *ngIf="showNotifications" (click)="$event.stopPropagation()">
+
+          <!-- Header -->
+          <div class="notifications-header">
+            <span><i class="bi bi-bell-fill notification-icon"></i> Notifications</span>
+            <button class="close-btn" (click)="closeNotifications()">✕</button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="notification-tabs">
+            <button [class.active]="activeTab==='All'" (click)="selectTab('All')">All</button>
+            <button [class.active]="activeTab==='Unread'" (click)="selectTab('Unread')">Unread</button>
+            <button [class.active]="activeTab==='Scans'" (click)="selectTab('Scans')">Scans</button>
+            <button [class.active]="activeTab==='Issues'" (click)="selectTab('Issues')">Issues</button>
+            <button [class.active]="activeTab==='System'" (click)="selectTab('System')">System</button>
+            <button class="mark-all" (click)="markAllRead()">Mark All Read</button>
+          </div>
+
+          <!-- รายการ Notifications -->
+          <div class="notification-item" *ngFor="let n of filteredNotifications">
+            <div class="item-header">
+              <span>{{ n.icon }} {{ n.title }}</span>
+              <span class="item-time">{{ getTimeAgo(n.timestamp) }}</span>
+            </div>
+            <div class="item-message">{{ n.message }}</div>
+            <button class="view-link">View →</button>
+          </div>
+
+          <!-- ปุ่ม Load More -->
+          <button *ngIf="displayCount < totalFilteredCount" class="load-more" (click)="loadMore()">
+            Load More...
+          </button>
+        </div>
+      </div>
 
 
-  <!-- Panel -->
-  <div class="notifications-panel" *ngIf="showNotifications" (click)="$event.stopPropagation()">
-    <div class="notifications-header">
-      <span><i class="bi bi-bell-fill notification-icon"></i> Notifications</span>
-      <button class="close-btn" (click)="closeNotifications()">✕</button>
-    </div>
-
-    <div class="notification-tabs">
-    <button [class.active]="activeTab==='All'" (click)="selectTab('All')">All</button>
-    <button [class.active]="activeTab==='Unread'" (click)="selectTab('Unread')">Unread</button>
-    <button [class.active]="activeTab==='Scans'" (click)="selectTab('Scans')">Scans</button>
-    <button [class.active]="activeTab==='Issues'" (click)="selectTab('Issues')">Issues</button>
-    <button [class.active]="activeTab==='System'" (click)="selectTab('System')">System</button>
-    <button class="mark-all" (click)="markAllRead()">Mark All Read</button>
-  </div>
-
-    <div class="notification-item" *ngFor="let n of filteredNotifications">
-    <div class="item-header">
-      <span>{{ n.icon }} {{ n.title }}</span>
-      <span class="item-time">{{ getTimeAgo(n.timestamp) }}</span>
-    </div>
-    <div class="item-message">{{ n.message }}</div>
-    <button class="view-link">View →</button>
-  </div>
-
-    <button *ngIf="displayCount < totalFilteredCount" class="load-more" (click)="loadMore()">
-    Load More...
-  </button>
-  </div>
-</div>
 
 
-
-      
     </div>
   </div>
 
@@ -126,7 +140,8 @@
             }">{{ scan.grade }}</td>
             <td>{{ scan.time }}</td>
             <td>
-              <button *ngIf="scan.status === 'Passed' || scan.status === 'Warning'" class="btn btn-primary btn-sm text-white">
+              <button *ngIf="scan.status === 'Passed' || scan.status === 'Warning'"
+                class="btn btn-primary btn-sm text-white">
                 <i class="bi bi-eye"></i>
               </button>
 
