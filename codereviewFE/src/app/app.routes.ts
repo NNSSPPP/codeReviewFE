@@ -7,7 +7,10 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import {AddrepositoryComponent} from './addrepository/addrepository.component';
 import {DetailrepositoryComponent} from './detailrepository/detailrepository.component';
-import { CodereviewComponent } from './codereview/codereview.component';
+import { ActivescanComponent } from './activescan/activescan.component';
+import { ScanhistoryComponent } from './scanhistory/scanhistory.component';
+import { ScanresultComponent } from './scanresult/scanresult.component';
+import { LogviewerComponent } from './logviewer/logviewer.component';
 import { IssueComponent } from './issue/issue.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { ReportComponent } from './report/report.component';
@@ -28,7 +31,10 @@ export const routes: Routes = [
       { path: 'repositories', component: RepositoriesComponent },
       { path: 'addrepository', component: AddrepositoryComponent },
       { path: 'detailrepo/:id', component: DetailrepositoryComponent },
-      { path: 'codereview', component: CodereviewComponent },
+      { path: 'activescan', component: ActivescanComponent },
+      { path: 'scanhistory', component: ScanhistoryComponent },
+      { path: 'scanresult', component: ScanresultComponent },
+      { path: 'logviewer', component: LogviewerComponent },
       { path: 'issue', component: IssueComponent },
       { path: 'analysis', component: AnalysisComponent },
       { path: 'report', component: ReportComponent },

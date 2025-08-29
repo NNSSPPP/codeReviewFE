@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router'; 
+import { Router } from '@angular/router'; 
 
 interface Repository {
   id: number;
@@ -22,7 +22,7 @@ interface Repository {
 @Component({
   selector: 'app-repositories',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './repositories.component.html',
   styleUrl: './repositories.component.css'
 })
@@ -117,10 +117,10 @@ export class RepositoriesComponent {
 
   updateSummaryStats(): void {
     this.summaryStats = [
-      { label: 'Total Repositories', count: this.filteredRepositories.length, icon: 'fas fa-database', bg: 'bg-primary' },
-      { label: 'Active', count: this.filteredRepositories.filter(r => r.status === 'Active').length, icon: 'fas fa-check-circle', bg: 'bg-success' },
-      { label: 'Scanning', count: this.filteredRepositories.filter(r => r.status === 'Scanning').length, icon: 'fas fa-sync-alt', bg: 'bg-info' },
-      { label: 'Paused', count: this.filteredRepositories.filter(r => r.status === 'Paused').length, icon: 'fas fa-pause-circle', bg: 'bg-warning' }
+      { label: 'Total Repositories', count: this.filteredRepositories.length, icon: 'bi bi-database', bg: 'bg-primary' },
+      { label: 'Active', count: this.filteredRepositories.filter(r => r.status === 'Active').length, icon: 'bi bi-check-circle-fill', bg: 'bg-success' },
+      { label: 'Scanning', count: this.filteredRepositories.filter(r => r.status === 'Scanning').length, icon: 'bi bi-arrow-repeat', bg: 'bg-info' },
+      { label: 'Paused', count: this.filteredRepositories.filter(r => r.status === 'Paused').length, icon: 'bi bi-pause-circle-fill', bg: 'bg-warning' }
     ];
   }
 

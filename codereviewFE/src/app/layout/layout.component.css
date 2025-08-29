@@ -24,15 +24,14 @@ app-navbar {
 }
 
 /* Responsive Ipad mini ไม่รองรับ*/
-
 /* Responsive: จอเล็กให้ navbar ขึ้นไปอยู่บน */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .app-container {
-    flex-direction: column; /* จาก row → column */
+    flex-direction: column; 
   }
 
   app-navbar {
-    width: 100%; /* Navbar เต็มจอด้านบน */
+    width: 100%; 
   }
 
   .main-content {
