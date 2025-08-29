@@ -1,0 +1,32 @@
+.scan-history-container {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .filter-row input {
+    max-width: 150px;
+  }
+  
+  .table td, .table th {
+    vertical-align: middle;
+  }
+  
+  .actions button {
+    min-width: 140px;
+  }
+  
+  .status-success {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .status-warning {
+    color: orange;
+    font-weight: bold;
+  }
+  
+  .status-failed {
+    color: red;
+    font-weight: bold;
+  }
+  
