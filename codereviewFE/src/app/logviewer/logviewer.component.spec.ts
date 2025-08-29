@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodereviewComponent } from './codereview.component';
+import { LogviewerComponent } from './logviewer.component';
 
-describe('CodereviewComponent', () => {
-  let component: CodereviewComponent;
-  let fixture: ComponentFixture<CodereviewComponent>;
+describe('LogviewerComponent', () => {
+  let component: LogviewerComponent;
+  let fixture: ComponentFixture<LogviewerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CodereviewComponent]
+      imports: [LogviewerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CodereviewComponent);
+    fixture = TestBed.createComponent(LogviewerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

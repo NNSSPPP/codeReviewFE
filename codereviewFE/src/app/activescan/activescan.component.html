@@ -1,0 +1,80 @@
+<div class="container mt-4">
+    <div class="dashboard-header">
+      <h2><i class="bi bi-search"></i> Active Code Reviews</h2>
+      <p class="subtitle">Real-time monitoring and management</p>
+      <div class="stats-counter">Currently Running: {{ activeReviews.length }} scans</div>
+    </div>
+  
+    <div class="review-card" *ngFor="let review of activeReviews; let i = index">
+      <div class="card-body">
+        <h5 class="card-title">
+          <i class="bi bi-box-seam"></i> {{ review.name }}
+        </h5>
+        
+        <div class="progress">
+          <div class="progress-bar" [style.width.%]="review.progress">
+            {{ review.progress }}%
+          </div>
+        </div>
+        
+        <p class="card-text">
+          <i class="bi bi-clock"></i> 
+          Elapsed: {{ review.elapsed }} | Est. Remaining: {{ review.remaining }}
+        </p>
+        
+        <p class="card-text status">
+          <i class="bi bi-info-circle"></i> 
+          {{ review.status }}
+        </p>
+        
+        <div class="btn-group">
+          <button class="btn-modern btn-pause" (click)="pauseReview(i)">
+            <i class="bi bi-pause"></i> Pause
+          </button>
+          <button class="btn-modern btn-stop" (click)="stopReview(i)">
+            <i class="bi bi-stop"></i> Stop
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="queue-section">
+      <div class="queue-text">
+        <i class="bi bi-clock-history"></i>
+        Queue: {{ queueCount }} projects waiting
+      </div>
+      <button class="btn-queue" (click)="openQueueModal()">
+        <i class="bi bi-list-task"></i> View Queue →
+      </button>
+    </div>
+  
+    <!-- Modal -->
+    <div class="modal fade" [ngClass]="{'show d-block': showQueueModal}" 
+         style="background: rgba(0,0,0,0.5);" 
+         (click)="closeQueueModal()">
+      <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-list-task"></i> Queue Projects
+            </h5>
+            <button type="button" class="btn-close" (click)="closeQueueModal()"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let project of queueProjects">
+                <i class="bi bi-box-seam"></i> 
+                <strong>{{ project.name }}</strong> - {{ project.status }} 
+                <small class="text-muted">(Submitted: {{ project.submitted }})</small>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-close-modal" (click)="closeQueueModal()">
+              <i class="bi bi-x-circle"></i> Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

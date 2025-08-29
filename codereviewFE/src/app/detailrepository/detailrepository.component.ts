@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule ,ActivatedRoute } from '@angular/router';
 
 interface Bug {
   title: string;
@@ -47,7 +46,7 @@ interface Repository {
 })
 export class DetailrepositoryComponent {
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
     // ดึง id จาก URL

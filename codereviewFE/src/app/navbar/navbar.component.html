@@ -13,10 +13,16 @@
         [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-folder-fill"></i> Repositories
       </a>
-      <a class="nav-link" routerLink="/codereview" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
-        <i class="bi-chat-left-text "></i> Code Review
-      </a>
+  
+      <a class="nav-link" (click)="toggleSubmenu('codeReview')">
+          <i class="bi-chat-left-text"></i> Code Review
+        </a>
+        <ul *ngIf="submenuOpen['codeReview']">
+          <li><a routerLink="/activescan" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()"><i class="bi bi-play-circle"></i>Active Scan</a></li>
+          <li><a routerLink="/scanhistory" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()"><i class="bi bi-clock-history"></i>Scan History</a></li>
+        </ul>
+   
+
       <a class="nav-link" routerLink="/issue" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">
         <i class="bi bi-exclamation-circle-fill"></i> Issue
       </a>
