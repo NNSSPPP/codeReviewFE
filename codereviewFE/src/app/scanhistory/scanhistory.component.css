@@ -1,32 +1,207 @@
-.scan-history-container {
-    background-color: #f9f9f9;
-    border-radius: 8px;
+/* ===============================
+   Container
+   =============================== */
+   .scan-history-container {
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    padding: 16px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
   
+  .scan-history-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* ===============================
+     Filter Input
+     =============================== */
   .filter-row input {
     max-width: 150px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 10px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
   
-  .table td, .table th {
+  .filter-row input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+  
+  /* ===============================
+     Table
+     =============================== */
+  .table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  .table td,
+  .table th {
     vertical-align: middle;
+    padding: 12px;
+    transition: background-color 0.25s ease;
   }
   
-  .actions button {
-    min-width: 140px;
+  .table tbody tr:hover {
+    background-color: #f9fafb;
+  }
+  
+  /* ===============================
+     Actions Buttons
+     =============================== */
+  .actions .btn {
+    min-width: 150px;
+    border-radius: 6px; /* ปรับจาก 8px -> 6px ให้คุมโทนกับ input */
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease;
+  }
+  
+  .actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  }
+  
+  .actions .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  
+  .actions .btn:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+  
+  /* Success */
+  .actions .btn-success {
+    background-color: #198754;
+    border: none;
+  }
+  .actions .btn-success:hover {
+    background-color: #157347;
+  }
+  
+  /* Info */
+  .actions .btn-info {
+    background-color: #0dcaf0;
+    border: none;
+    color: #fff;
+  }
+  .actions .btn-info:hover {
+    background-color: #0aa2c0;
+  }
+  
+  /* Danger */
+  .actions .btn-danger {
+    background-color: #dc3545;
+    border: none;
+  }
+  .actions .btn-danger:hover {
+    background-color: #bb2d3b;
+  }
+  
+  /* ===============================
+     Log Button (แทน outline-secondary เดิม)
+     =============================== */
+  .btn-log {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  }
+  
+  .btn-log:hover {
+    background-color: #e5e7eb;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .btn-log:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  
+  /* ===============================
+     Status (Badge style)
+     =============================== */
+  .status-success,
+  .status-warning,
+  .status-failed {
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    display: inline-block;
+    transition: transform 0.25s ease, background-color 0.25s ease;
   }
   
   .status-success {
-    color: green;
-    font-weight: bold;
+    color: #10b981;
+    background-color: rgba(16, 185, 129, 0.12);
+  }
+  .status-success:hover {
+    background-color: rgba(16, 185, 129, 0.2);
   }
   
   .status-warning {
-    color: orange;
-    font-weight: bold;
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.12);
+  }
+  .status-warning:hover {
+    background-color: rgba(245, 158, 11, 0.2);
   }
   
   .status-failed {
-    color: red;
-    font-weight: bold;
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.12);
+  }
+  .status-failed:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+  }
+  
+  /* ===============================
+     Table Row Fade-in Animation
+     =============================== */
+  .table tbody tr {
+    opacity: 0;
+    transform: translateY(4px);
+    animation: fadeInRow 0.4s ease forwards;
+  }
+  
+  .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+  .table tbody tr:nth-child(2) { animation-delay: 0.10s; }
+  .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+  .table tbody tr:nth-child(4) { animation-delay: 0.20s; }
+  .table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+  
+  @keyframes fadeInRow {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .btn-log {
+    background-color: #e0f2fe;   /* ฟ้าอ่อน */
+    border: 1px solid #7dd3fc;
+    color: #0369a1;              /* ฟ้าเข้ม */
+  }
+  .btn-log:hover {
+    background-color: #bae6fd;
+    border-color: #0284c7;
   }
   

@@ -8,7 +8,7 @@
       <span>to</span>
       <input type="date" [(ngModel)]="endDate" class="form-control form-control-sm" />
       <button class="btn btn-primary btn-sm" (click)="applyFilter()">
-        <i class="bi bi-search"></i> Apply
+        <i class="bi bi-search"></i> Search
       </button>
       <button class="btn btn-secondary btn-sm" (click)="clearFilter()">
         <i class="bi bi-x-circle"></i> Clear
@@ -46,7 +46,7 @@
               <span *ngIf="scan.issues.warnings"><i class="bi bi-exclamation-triangle"></i> {{scan.issues.warnings}}</span>
             </td>
             <td>
-              <button class="btn btn-outline-secondary btn-sm" (click)="viewLog(scan)">
+              <button class="btn btn-log btn-sm" (click)="viewLog(scan)">
                 <i class="bi bi-file-text"></i> View Log
               </button>
             </td>
