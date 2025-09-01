@@ -1,46 +1,220 @@
-.scan-results-container {
-    background-color: #f9f9f9;
+/* ===============================
+   Container
+   =============================== */
+   .scan-results-container {
+    background-color: #fff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+  }
+  .scan-results-container:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  
+  /* ===============================
+     Back Button
+     =============================== */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #2563eb;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .back-btn:hover {
+    background: #e0edff;
+    transform: translateX(-3px);
+  }
+  .back-btn i {
+    font-size: 1.5rem;
+  }
+  
+  /* ===============================
+     Cards (Quality Gate / Metrics)
+     =============================== */
+  .card {
+    border: none;
     border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  .card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
   }
   
- /* Back button */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #2563eb;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: background 0.25s, transform 0.25s;
-}
-.back-btn:hover {
-  background: #e0edff;
-  transform: scale(1.1);
-}
-.back-btn i {
-  font-size: 1.6rem;
-}
-
-  
+  /* Metric Card */
   .metric-card {
-    background-color: #ffffff;
+    border-radius: 12px;
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+  .metric-card h5 {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .metric-card p {
+    font-size: 0.95rem;
+    color: #374151;
+  }
+  
+  /* Metric Card Colors by Column */
+  .row .col-md-3:nth-child(1) .metric-card {
+    background-color: #fef2f2;        /* Bugs - แดงอ่อน */
+    border-left: 4px solid #ef4444;
+  }
+  .row .col-md-3:nth-child(1) .metric-card h5 i {
+    color: #ef4444;
+  }
+  .row .col-md-3:nth-child(1) .metric-card:hover {
+    background-color: #fee2e2;
+  }
+  
+  .row .col-md-3:nth-child(2) .metric-card {
+    background-color: #f0f9ff;        /* Vulns - ฟ้าอ่อน */
+    border-left: 4px solid #0ea5e9;
+  }
+  .row .col-md-3:nth-child(2) .metric-card h5 i {
+    color: #0ea5e9;
+  }
+  .row .col-md-3:nth-child(2) .metric-card:hover {
+    background-color: #e0f2fe;
+  }
+  
+  .row .col-md-3:nth-child(3) .metric-card {
+    background-color: #fff7ed;        /* Smells - ส้มอ่อน */
+    border-left: 4px solid #f97316;
+  }
+  .row .col-md-3:nth-child(3) .metric-card h5 i {
+    color: #f97316;
+  }
+  .row .col-md-3:nth-child(3) .metric-card:hover {
+    background-color: #ffedd5;
+  }
+  
+  .row .col-md-3:nth-child(4) .metric-card {
+    background-color: #ecfdf5;        /* Coverage - เขียวอ่อน */
+    border-left: 4px solid #10b981;
+  }
+  .row .col-md-3:nth-child(4) .metric-card h5 i {
+    color: #10b981;
+  }
+  .row .col-md-3:nth-child(4) .metric-card:hover {
+    background-color: #d1fae5;
+  }
+  
+  /* ===============================
+     Tables
+     =============================== */
+  .table {
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
   }
-  
-  table th, table td {
+  .table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+  }
+  .table td, .table th {
     vertical-align: middle !important;
+    padding: 12px;
+    transition: background-color 0.25s ease;
+  }
+  .table tbody tr:hover {
+    background-color: #f3f4f6;
   }
   
+  /* ===============================
+     Headings
+     =============================== */
   h2, h4 {
     font-weight: 600;
+    color: #111827;
+  }
+  h2 i, h4 i {
+    margin-right: 6px;
+    color: #2563eb;
   }
   
+  /* ===============================
+     Buttons
+     =============================== */
+  .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
   .btn i {
-    margin-right: 5px;
+    margin-right: 4px;
+    transition: transform 0.25s ease;
   }
- 
+  .btn:hover i {
+    transform: translateX(2px);
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
   
+  /* Specific Button Colors */
+  .btn-primary {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    border: none;
+  }
+  .btn-info {
+    background-color: #0dcaf0;
+    border: none;
+    color: #fff !important;
+  }
+  .btn-warning {
+    background-color: #f59e0b;
+    border: none;
+    color: #fff !important;
+  }
+  .metric-card {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .metric-card:nth-child(1) { animation-delay: 0.1s; }
+  .metric-card:nth-child(2) { animation-delay: 0.2s; }
+  .metric-card:nth-child(3) { animation-delay: 0.3s; }
+  .metric-card:nth-child(4) { animation-delay: 0.4s; }
+  
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .metric-card.coverage p::after {
+    content: "";
+    display: block;
+    height: 6px;
+    margin-top: 6px;
+    border-radius: 4px;
+    background: #d1fae5;
+    position: relative;
+  }
+  .metric-card.coverage p::after {
+    width: 78.5%; /* ใส่ค่าครอบไว้ก่อน หรือใช้ inline style binding ได้ */
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+      
