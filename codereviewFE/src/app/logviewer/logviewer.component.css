@@ -1,0 +1,31 @@
+/* Card container */
+.log-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  
+  /* Section headings */
+  .log-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: #333;
+  }
+  
+  /* List group items spacing */
+  .list-group-item {
+    padding: 0.5rem 1rem;
+    font-family: monospace;
+  }
+  
+  /* Responsive font scaling */
+  @media (max-width: 576px) {
+    .log-card h4 {
+      font-size: 1rem;
+    }
+    .list-group-item {
+      font-size: 0.875rem;
+    }
+  }
+  
