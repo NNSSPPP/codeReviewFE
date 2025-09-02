@@ -1,0 +1,23 @@
+.table td, .table th {
+    vertical-align: middle;
+  }
+  
+  .table td i.bi {
+    margin-right: 5px;
+    font-size: 1.1rem;
+  }
+  
+  .filters select,
+  .filters input {
+    min-width: 150px;
+  }
+
+  .btn-big {
+    font-size: 1.25rem;   /* ขนาดข้อความใหญ่ขึ้น */
+    padding: 0.75rem 1.5rem; /* เพิ่ม padding ให้ปุ่มใหญ่ขึ้น */
+  }
+  
+  .actions button {
+    cursor: pointer;
+  }
+  
