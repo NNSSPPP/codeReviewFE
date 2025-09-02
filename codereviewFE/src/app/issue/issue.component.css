@@ -1,23 +1,207 @@
-.table td, .table th {
-    vertical-align: middle;
+/* ===============================
+   TABLE BASE STYLE
+   =============================== */
+   .table {
+    border-radius: 10px;                          /* ขอบโค้งมน */
+    overflow: hidden;                             /* ซ่อนขอบที่เกิน */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);       /* เงาอ่อน */
+    transition: box-shadow 0.3s ease;             /* เคลื่อนไหวตอน hover */
+  }
+  .table:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);      /* เงาเข้มขึ้นเมื่อ hover */
   }
   
+  .table thead th {
+    background-color: #f9fafb;                    /* พื้นหลังหัวตาราง */
+    font-weight: 600;                             /* หนากว่า */
+    color: #374151;                               /* สีเทาเข้ม */
+  }
+  
+  .table td,
+  .table th {
+    vertical-align: middle;                       /* จัดข้อความให้อยู่กึ่งกลาง */
+    padding: 12px;                                /* ช่องว่างรอบตัวอักษร */
+    transition: background-color 0.25s ease;      /* เคลื่อนไหวสีพื้นหลัง */
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f3f4f6;                    /* แถวเปลี่ยนสีเมื่อ hover */
+  }
+  
+  .table tbody tr:nth-child(even) {
+    background-color: #fafafa;                    /* Zebra effect: แถวคู่สีอ่อน */
+  }
+  
+  .table tbody tr {
+    border-bottom: 1px solid #f0f0f0;             /* เส้นกั้นแต่ละแถว */
+  }
+  
+  
+  /* ===============================
+     ICONS IN TABLE
+     =============================== */
   .table td i.bi {
-    margin-right: 5px;
-    font-size: 1.1rem;
+    margin-right: 5px;                            /* ระยะห่างระหว่างไอคอนกับข้อความ */
+    font-size: 1.1rem;                            /* ขนาดไอคอน */
+    transition: transform 0.25s ease;             /* เคลื่อนไหวเวลา hover */
+  }
+  .table td:hover i.bi {
+    transform: scale(1.15);                       /* ไอคอนขยายเล็กน้อย */
   }
   
+  
+  /* ===============================
+     FILTERS (select / input)
+     =============================== */
   .filters select,
-  .filters input {
-    min-width: 150px;
+  .filters input,
+  .form-select,
+  .form-control {
+    min-width: 150px;                             /* กำหนดความกว้างขั้นต่ำ */
+    border-radius: 8px;                           /* มุมโค้ง */
+    border: 1px solid #d1d5db;                    /* เส้นขอบเทา */
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease;
   }
-
-  .btn-big {
-    font-size: 1.25rem;   /* ขนาดข้อความใหญ่ขึ้น */
-    padding: 0.75rem 1.5rem; /* เพิ่ม padding ให้ปุ่มใหญ่ขึ้น */
+  .filters select:focus,
+  .filters input:focus,
+  .form-select:focus,
+  .form-control:focus {
+    border-color: #2563eb;                        /* ขอบฟ้าเมื่อ focus */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    outline: none;
   }
   
-  .actions button {
-    cursor: pointer;
+  
+  /* ===============================
+     BUTTONS (ทั่วไป)
+     =============================== */
+  .btn {
+    border-radius: 8px;                           /* ขอบมน */
+    font-weight: 500;                             /* หนากลาง */
+    display: inline-flex;                         /* จัดให้อยู่แถวเดียวกับไอคอน */
+    align-items: center;
+    gap: 6px;                                     /* ระยะห่างระหว่าง icon/text */
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease;
+  }
+  .btn i {
+    transition: transform 0.25s ease;             /* ไอคอนเคลื่อนไหว */
+  }
+  .btn:hover i {
+    transform: translateX(2px);                   /* ไอคอนขยับนิดๆ เวลา hover */
+  }
+  .btn:hover {
+    transform: translateY(-2px);                  /* ปุ่มยกขึ้น */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);      /* มีเงา */
+  }
+  .btn:active {
+    transform: translateY(0);                     /* กดแล้วปุ่มกดยุบลง */
+    box-shadow: none;
+  }
+  
+  
+  /* ===============================
+     BUTTONS (ขนาดใหญ่)
+     =============================== */
+  .btn-big {
+    font-size: 1.1rem;                            /* ข้อความใหญ่ขึ้น */
+    padding: 0.6rem 1.2rem;                       /* เพิ่ม padding */
+    border-radius: 10px;
+  }
+  
+  
+  /* ===============================
+     BUTTON COLORS
+     =============================== */
+  .btn-primary {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8); /* ฟ้า gradient */
+    border: none;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+  }
+  
+  .btn-secondary {
+    background-color: #e5e7eb;                    /* เทา */
+    border: none;
+    color: #374151;
+  }
+  .btn-secondary:hover {
+    box-shadow: 0 0 8px rgba(107, 114, 128, 0.4);
+  }
+  
+  .btn-success {
+    background-color: #10b981;                    /* เขียว */
+    border: none;
+  }
+  .btn-success:hover {
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  }
+  
+  .btn-outline-primary {
+    border: 1px solid #2563eb;
+    color: #2563eb;
+  }
+  .btn-outline-primary:hover {
+    background-color: #2563eb;
+    color: #fff;
+  }
+  
+  .btn-info {
+    background-color: #95cbf0;                    /* ฟ้าอ่อน */
+    border: 1px solid #7dd3fc;
+    color: #0369a1;
+  }
+  .btn-info:hover {
+    background-color: #bae6fd;
+    border-color: #0284c7;
+    color: #075985;
+  }
+  
+  
+  /* ===============================
+     CHECKBOX
+     =============================== */
+  input[type="checkbox"] {
+    accent-color: #2563eb;                        /* สี checkbox */
+    transform: scale(1.1);                        /* ขยายเล็กน้อย */
+    transition: transform 0.2s ease;
+  }
+  input[type="checkbox"]:checked {
+    transform: scale(1.2);                        /* ขยายเพิ่มเวลา checked */
+  }
+  
+  
+  /* ===============================
+     FOOTER
+     =============================== */
+  footer,
+  .d-flex.my-3 {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 12px;
+    margin-top: 20px;
+  }
+  
+  
+  /* ===============================
+     ROW ANIMATION
+     =============================== */
+  .table tbody tr {
+    opacity: 0;
+    transform: translateY(5px);
+    animation: fadeInRow 0.4s ease forwards;
+  }
+  .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+  .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+  .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+  .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+  
+  @keyframes fadeInRow {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
