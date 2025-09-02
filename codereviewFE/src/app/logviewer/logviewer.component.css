@@ -1,25 +1,146 @@
-/* Card container */
-.log-card {
+/* ===============================
+   Card container
+   =============================== */
+   .log-card {
     background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .log-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   }
   
-  /* Section headings */
+  /* ===============================
+     Section headings
+     =============================== */
   .log-card h4 {
     font-size: 1.2rem;
     margin-bottom: 0.75rem;
-    color: #333;
+    color: #111827;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.25s ease;
+  }
+  .log-card h4 i {
+    color: #2563eb;
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+  .log-card h4:hover {
+    color: #2563eb;
+  }
+  .log-card h4:hover i {
+    transform: scale(1.2);
   }
   
-  /* List group items spacing */
+  /* ===============================
+     List group items (Default)
+     =============================== */
   .list-group-item {
-    padding: 0.5rem 1rem;
+    padding: 0.65rem 1rem;
     font-family: monospace;
+    background-color: #fafafa;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    transition: background-color 0.25s ease, transform 0.2s ease;
+  }
+  .list-group-item:hover {
+    background-color: #f3f4f6;
+    transform: translateX(3px);
   }
   
-  /* Responsive font scaling */
+  /* ===============================
+     Warnings & Errors more visible
+     =============================== */
+  
+  /* Error items */
+  section:has(h4 i.text-danger) .list-group-item {
+    font-weight: 600;
+    background-color: #fef2f2;
+    box-shadow: inset 2px 0 0 #dc2626;
+    color: #b91c1c;
+  }
+  
+  /* Warning items */
+  section:has(h4 i.text-warning) .list-group-item {
+    font-weight: 600;
+    background-color: #fff7ed;
+    box-shadow: inset 2px 0 0 #f59e0b;
+    color: #92400e;
+  }
+  
+  /* Keep icons in headings consistent */
+  section h4 .text-warning {
+    color: #f59e0b !important;
+  }
+  section h4 .text-danger {
+    color: #dc2626 !important;
+  }
+  
+  /* ===============================
+     Buttons
+     =============================== */
+  .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease;
+  }
+  .btn i {
+    transition: transform 0.25s ease;
+  }
+  .btn:hover i {
+    transform: translateX(2px);
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  
+  /* Specific Button Colors */
+  .btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+    border: none;
+  }
+  .btn-secondary:hover {
+    background-color: #d1d5db;
+  }
+  .btn-success {
+    background-color: #10b981;
+    border: none;
+  }
+  .btn-success:hover {
+    background-color: #059669;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    border: none;
+  }
+  .btn-warning {
+    background-color: #f59e0b;
+    border: none;
+    color: #fff;
+  }
+  .btn-warning:hover {
+    background-color: #d97706;
+  }
+  
+  /* ===============================
+     Responsive font scaling
+     =============================== */
   @media (max-width: 576px) {
     .log-card h4 {
       font-size: 1rem;
