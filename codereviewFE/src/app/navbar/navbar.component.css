@@ -52,6 +52,14 @@
   margin-right: 10px; /* เว้นช่องว่างไอคอนกับข้อความ */
 }
 
+/* Submenu items */
+.vertical-navbar ul li ul li a {
+  font-weight: normal; /* ทำให้ตัวอักษรไม่หนา */
+  padding-left: 1.2rem; /* กำหนดระยะย่อหน้าซ้ายเล็กน้อย */
+  font-size: 0.95rem; /* ปรับขนาดตัวอักษรถ้าต้องการ */
+}
+
+
 .vertical-navbar a:hover {
   background-color: #3399FF;
 }

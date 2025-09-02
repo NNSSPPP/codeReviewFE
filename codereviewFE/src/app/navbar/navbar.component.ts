@@ -2,6 +2,21 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 
+interface SubmenuItem {
+  label: string;
+  icon: string;
+  link: string;
+}
+
+interface MenuItem {
+  label: string;
+  icon: string;
+  link?: string;
+  submenu?: SubmenuItem[];
+  key?: string; // ใช้สำหรับ toggle
+}
+
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -11,25 +26,39 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 })
 export class NavbarComponent {
   
-
   navbarOpen = false;
-  submenuOpen: { [key: string]: boolean } = {
-    codeReview: false,
-    report: false
-  };
-  
+  submenuOpen: { [key: string]: boolean } = {};
+
+  menu: MenuItem[] = [
+    { label: 'Dashboard', icon: 'bi-speedometer2', link: '/dashboard' },
+    { label: 'Repositories', icon: 'bi-folder-fill', link: '/repositories' },
+    { 
+      label: 'Code Review', icon: 'bi-chat-left-text', key: 'codeReview', submenu: [
+        { label: 'Active Scan', icon: 'bi-play-circle', link: '/activescan' },
+        { label: 'Scan History', icon: 'bi-clock-history', link: '/scanhistory' },
+      ] 
+    },
+    { 
+      label: 'Report', icon: 'bi-file-earmark-text-fill', key: 'report', submenu: [
+        { label: 'Generate Report', icon: 'bi-file-earmark-plus', link: '/generatereport' },
+        { label: 'Report History', icon: 'bi-clock-history', link: '/reporthistory' },
+      ] 
+    },
+    { label: 'Setting', icon: 'bi-gear-fill', link: '/setting' },
+    { label: 'Logout', icon: 'bi-box-arrow-right', link: '/' }
+  ];
+
   constructor(private readonly router: Router) {
 
-    // ปิด submenu ถ้าไปหน้าอื่นที่ไม่ใช่ submenu
+    
+    // ตั้ง submenu ให้เปิดตาม URL ตอนโหลดและเปลี่ยน route
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const url = event.urlAfterRedirects;
-        if (!url.startsWith('/activescan') && !url.startsWith('/scanhistory')) {
-          this.submenuOpen['codeReview'] = false;
-        }
-        if (!url.startsWith('/generatereport') && !url.startsWith('/reporthistory')) {
-          this.submenuOpen['report'] = false;
-        }
+        this.menu.forEach(item => {
+          if (item.submenu && item.key) {
+            this.submenuOpen[item.key] = item.submenu.some(sub => event.urlAfterRedirects.startsWith(sub.link));
+          }
+        });
       }
     });
   }
@@ -42,11 +71,12 @@ export class NavbarComponent {
     this.navbarOpen = false;
   }
 
-  codeReviewOpen = false;
-
-  toggleSubmenu(menu: string) {
-    this.submenuOpen[menu] = !this.submenuOpen[menu];
+  toggleSubmenu(key: string) {
+    this.submenuOpen[key] = !this.submenuOpen[key];
   }
 
+  
+
+    
 
 }
