@@ -1,0 +1,60 @@
+body {
+    background-color: #f8faff; /* ฟ้าอ่อนสบายตา */
+    color: #212529; /* สีตัวอักษรเข้ม อ่านง่าย */
+  }
+  
+  .summary-card {
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .summary-card h5 {
+    color: #0d6efd; /* ฟ้าเฉพาะหัวข้อ */
+  }
+  
+  .summary-card p {
+    color: #212529; /* ตัวเลขเข้ม อ่านง่าย */
+  }
+  
+  .summary-card button {
+    color: #0d6efd;
+    border-color: #0d6efd;
+  }
+  
+  .summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+  }
+  
+  .list-group-item {
+    background: #ffffff;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #212529; /* ตัวอักษรเข้ม */
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  
+  .list-group-item:hover {
+    transform: translateX(5px);
+    background-color: #e6f0ff;
+  }
+  
+  .badge {
+    padding: 0.4em 0.7em;
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+  
+  .red { background-color: #ff6b6b; color: white; }
+  .orange { background-color: #ffa94d; color: white; }
+  .yellow { background-color: #ffd43b; color: black; }
+  .green { background-color: #51cf66; color: white; }
+  
+  .text-primary { color: #0d6efd !important; } /* หัวข้อ, icon, badge */
+  .text-info { color: #17a2b8 !important; }    /* ไฮไลต์ปุ่ม / icon */
+  .text-warning { color: #ffc107 !important; } /* เตือน */
+  
