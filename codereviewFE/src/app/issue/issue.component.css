@@ -1,3 +1,21 @@
+.custom-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background-color: #FFC107; /* สีเหลืองเข้ม */
+  color: #1A1A1A; /* ข้อความเข้ม */
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.custom-btn:hover {
+  background-color: #FFB300; /* เหลืองเข้มขึ้น */
+  transform: scale(1.05);
+}
+
 /* ===============================
    TABLE BASE STYLE
    =============================== */

@@ -12,7 +12,8 @@ import { ScanhistoryComponent } from './scanhistory/scanhistory.component';
 import { ScanresultComponent } from './scanresult/scanresult.component';
 import { LogviewerComponent } from './logviewer/logviewer.component';
 import { IssueComponent } from './issue/issue.component';
-import{IssuedetailComponent} from './issuedetail/issuedetail.component';
+import {IssuedetailComponent} from './issuedetail/issuedetail.component';
+import {AssignmentComponent} from './assignment/assignment.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { ReportComponent } from './report/report.component';
 import { SettingComponent } from './setting/setting.component';
@@ -38,6 +39,7 @@ export const routes: Routes = [
       { path: 'logviewer/:id', component: LogviewerComponent },
       { path: 'issue', component: IssueComponent },
       { path: 'issuedetail/:id_issue', component: IssuedetailComponent },
+      { path: 'assignment', component: AssignmentComponent },
       { path: 'analysis', component: AnalysisComponent },
       { path: 'report', component: ReportComponent },
       { path: 'setting', component: SettingComponent },
