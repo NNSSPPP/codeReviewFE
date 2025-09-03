@@ -1,0 +1,37 @@
+
+/* Backdrop */
+.modal-backdrop-custom {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Show modal */
+  .modal-show {
+    display: block;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  /* Hide modal */
+  .modal-hide {
+    display: none;
+    opacity: 0;
+  }
+  
+  /* Modal dialog */
+  .modal-dialog-custom {
+    max-width: 800px;
+    margin: 1.75rem auto;
+  }
+  
+  /* Modal content styling (optional) */
+  .modal-content {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Close button hover */
+  .btn-close:hover {
+    cursor: pointer;
+  }
+  
