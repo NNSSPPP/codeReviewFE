@@ -15,6 +15,8 @@ import { IssueComponent } from './issue/issue.component';
 import {IssuedetailComponent} from './issuedetail/issuedetail.component';
 import {AssignmentComponent} from './assignment/assignment.component';
 import { AnalysisComponent } from './analysis/analysis.component';
+import {SecuritydashboardComponent} from './securitydashboard/securitydashboard.component';
+import { TechnicaldebtComponent } from './technicaldebt/technicaldebt.component';
 import { ReportComponent } from './report/report.component';
 import { SettingComponent } from './setting/setting.component';
 
@@ -41,6 +43,8 @@ export const routes: Routes = [
       { path: 'issuedetail/:id_issue', component: IssuedetailComponent },
       { path: 'assignment', component: AssignmentComponent },
       { path: 'analysis', component: AnalysisComponent },
+      { path: 'security-dashboard', component: SecuritydashboardComponent },
+      { path: 'technical-debt', component: TechnicaldebtComponent },
       { path: 'report', component: ReportComponent },
       { path: 'setting', component: SettingComponent },
     ]
