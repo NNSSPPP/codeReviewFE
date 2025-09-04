@@ -1,67 +1,107 @@
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: #2563eb;
-  text-decoration: none;
-  border: none; 
-  border-radius: 10px;
-  transition: background 0.25s ease, transform 0.25s ease;
-}
-.back-btn:hover {
-  background: #f0f6ff;
-  transform: translateX(-4px);
-}
-.back-btn i {
-  font-size: 1.5rem;
-}
-
-.vulnerability-item {
-    margin-bottom: 1rem;
+/* =========================
+   BACK BUTTON
+   ========================= */
+   .back-btn {
+    display: inline-flex;                 /* ทำให้ปุ่มจัดไอคอนกับตัวอักษรในแนวนอน */
+    align-items: center;                  /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    justify-content: center;              /* จัดให้อยู่กึ่งกลางแนวนอน */
+    padding: 8px 12px;                    /* ระยะห่างรอบปุ่ม */
+    font-size: 1.3rem;                    /* ขนาดตัวอักษรในปุ่ม */
+    margin-bottom: 15px;                  /* เว้นด้านล่าง */
+    color: #2563eb;                       /* ฟ้าเข้ม */
+    text-decoration: none;                /* ตัดเส้นใต้ลิงก์ออก */
+    border: none;                         /* ไม่มีเส้นขอบ */
+    border-radius: 12px;                  /* มุมโค้งมน */
+    background: #ffffff;                  /* พื้นหลังขาว */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06); /* เงาบาง */
+    transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .back-btn:hover {
+    background: #f0f6ff;                  /* เปลี่ยนพื้นหลังเมื่อ hover */
+    transform: translateX(-4px);          /* ขยับไปทางซ้ายเล็กน้อย */
+    box-shadow: 0 4px 12px rgba(37,99,235,0.2); /* เงาเข้มขึ้น */
+  }
+  .back-btn i {
+    font-size: 1.5rem;                    /* ไอคอนใหญ่กว่าตัวอักษร */
   }
   
+  /* =========================
+     CARD & HEADER
+     ========================= */
+  .card {
+    border: none;                         /* ไม่ใช้เส้นขอบ */
+    border-radius: 14px;                  /* มุมโค้งมน */
+    overflow: hidden;                     /* กันเงาล้น */
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .card:hover {
+    transform: translateY(-3px);          /* ยกการ์ดขึ้นเล็กน้อย */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08); /* เพิ่มเงา */
+  }
+  .card-header {
+    font-weight: 600;                     /* ตัวหนา */
+    font-size: 1rem;                      /* ขนาดกลาง */
+    background-color: #f8faff;            /* เทาอ่อนอมฟ้า */
+    border-bottom: 1px solid #e5e7eb;     /* เส้นคั่นด้านล่าง */
+    padding: 12px 16px;                   /* padding ด้านใน */
+  }
+  
+  /* =========================
+     VULNERABILITIES
+     ========================= */
+  .vulnerability-item {
+    margin-bottom: 1rem;                  /* เว้นระยะระหว่างรายการ */
+  }
   .progress-bar-container {
-    height: 20px;
-    background-color: #e9ecef; /* สี background ของ progress bar */
-    border-radius: 0.25rem;
-    overflow: hidden;
+    height: 18px;                         /* ความสูงของ progress bar */
+    background-color: #f1f3f5;            /* เทาอ่อน */
+    border-radius: 10px;                  /* มุมโค้งมน */
+    overflow: hidden;                     /* กัน progress bar ล้น */
   }
-  
   .progress-bar {
-    height: 100%;
-    transition: width 0.6s ease;
+    height: 100%;                         /* สูงเต็ม container */
+    transition: width 0.6s ease;          /* ความกว้างเปลี่ยนแบบ smooth */
+    border-radius: 10px;                  /* มุมโค้งมน */
+  }
+  /* สีของ bar ตามระดับ severity */
+  .bg-critical { background-color: #dc3545; } /* แดง */
+  .bg-high     { background-color: #fd7e14; } /* ส้ม */
+  .bg-medium   { background-color: #ffc107; } /* เหลือง */
+  .bg-low      { background-color: #198754; } /* เขียว */
+  
+  /* =========================
+     OWASP LIST
+     ========================= */
+  .list-group-item {
+    border: 1px solid #f1f3f5;            /* เส้นบาง ๆ */
+    border-radius: 8px;                   /* มุมโค้ง */
+    margin-bottom: 8px;                   /* เว้นระหว่าง item */
+    transition: background 0.25s, transform 0.25s;
+  }
+  .list-group-item:hover {
+    background: #f9fbff;                  /* ฟ้าอ่อนเมื่อ hover */
+    transform: translateX(4px);           /* ขยับไปขวานิดหน่อย */
   }
   
-  /* ตัวอย่างสี severity */
-  .bg-critical {
-    background-color: #dc3545; /* แดง */
+  /* =========================
+     HOT ISSUES
+     ========================= */
+  ol {
+    padding-left: 18px;                   /* เว้นซ้ายของตัวเลขลำดับ */
+    margin-bottom: 12px;                  /* เว้นด้านล่าง */
+  }
+  ol li {
+    margin-bottom: 6px;                   /* เว้นระหว่างบรรทัด */
+    font-weight: 500;                     /* ตัวกลาง */
   }
   
-  .bg-high {
-    background-color: #fd7e14; /* ส้ม */
+  /* =========================
+     SECURITY TREND CHART
+     ========================= */
+  .apexcharts-canvas {
+    border-radius: 12px;                  /* มุมโค้ง */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04); /* เงาอ่อน */
+    padding: 10px;                        /* padding รอบกราฟ */
+    background: #ffffff;                  /* พื้นหลังขาว */
   }
-  
-  .bg-medium {
-    background-color: #ffc107; /* เหลือง */
-  }
-  
-  .bg-low {
-    background-color: #198754; /* เขียว */
-  }
-  
-
-.card-header {
-    font-weight: bold;
-    background-color: #f8f9fa;
-  }
-  
-  .bg-danger { background-color: #dc3545 !important; }
-  .bg-warning { background-color: #fd7e14 !important; }
-  .bg-secondary { background-color: #6c757d !important; }
-  .bg-success { background-color: #198754 !important; }
-  
-  .rounded-circle { width: 12px; height: 12px; }
   
