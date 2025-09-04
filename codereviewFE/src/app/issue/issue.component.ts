@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import{FormsModule} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {RouterLink, ActivatedRoute} from '@angular/router';
 
 interface Issue {
   id_issue: string;
@@ -25,11 +25,16 @@ interface Issue {
 export class IssueComponent {
   issueId: string | null = null;
 
-  constructor(private readonly route: Router) {}
+  
+constructor(private readonly route: ActivatedRoute) {}
 
   ngOnInit(): void {
    // this.issueId = this.route.snapshot.paramMap.get('id');
     // To be continue : ดึงข้อมูลจาก service ตาม issueId
+
+    this.route.queryParams.subscribe(params => {
+      this.filterType = params['type'] || 'All Types';
+    });
   }
 
   filterType = 'All Types';
