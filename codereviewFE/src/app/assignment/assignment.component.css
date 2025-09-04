@@ -1,37 +1,177 @@
-
-/* Backdrop */
-.modal-backdrop-custom {
+/* ===============================
+   Backdrop (พื้นหลังมืดของ Modal)
+   =============================== */
+   .modal-backdrop-custom {
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px); /* ทำให้พื้นหลังฟุ้งเบลอ */
+    transition: opacity 0.3s ease;
   }
   
-  /* Show modal */
+  
+  /* ===============================
+     Modal Show / Hide (การแสดงผล)
+     =============================== */
   .modal-show {
     display: block;
     opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease forwards;
   }
-  
-  /* Hide modal */
   .modal-hide {
     display: none;
     opacity: 0;
+    animation: fadeOut 0.3s ease forwards;
   }
   
-  /* Modal dialog */
+  /* Keyframes สำหรับ Fade Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; transform: scale(1) translateY(0); }
+    to   { opacity: 0; transform: scale(0.95) translateY(10px); }
+  }
+  
+  
+  /* ===============================
+     Modal Dialog & Content
+     =============================== */
   .modal-dialog-custom {
     max-width: 800px;
     margin: 1.75rem auto;
   }
   
-  /* Modal content styling (optional) */
   .modal-content {
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: none;
+    overflow: hidden;
+    animation: slideUp 0.4s ease;
   }
   
-  /* Close button hover */
+  /* Keyframes สำหรับ Slide-Up ตอน modal โผล่ขึ้นมา */
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  
+  
+  /* ===============================
+     Modal Header
+     =============================== */
+  .modal-header {
+    border-bottom: 1px solid #f1f1f1;
+    padding: 16px 20px;
+  }
+  .modal-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  /* ปุ่ม Close */
+  .btn-close {
+    transition: transform 0.25s ease;
+  }
   .btn-close:hover {
     cursor: pointer;
+    transform: rotate(90deg) scale(1.1);
+  }
+  
+  
+  /* ===============================
+     Modal Body & Footer
+     =============================== */
+  .modal-body {
+    padding: 20px;
+  }
+  .modal-footer {
+    border-top: 1px solid #f1f1f1;
+    padding: 14px 20px;
+  }
+  
+  
+  /* ===============================
+     Table Styling (ตาราง My Assignments)
+     =============================== */
+  .table {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .table thead th {
+    background: #f9fafb;
+    font-weight: 600;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  
+  /* Animation เวลา row โผล่มาทีละแถว */
+  .table tbody tr {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: rowFadeIn 0.4s ease forwards;
+    transition: background 0.25s ease;
+  }
+  .table tbody tr:hover {
+    background: #f8faff;
+  }
+  
+  /* Delay ให้แต่ละแถวขึ้นทีละนิด */
+  .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+  .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+  .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+  .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+  .table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+  
+  /* Keyframes สำหรับ Row Fade-In */
+  @keyframes rowFadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  
+  /* ===============================
+     Buttons
+     =============================== */
+  .btn {
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .btn-primary {
+    background: #2563eb;
+    border: none;
+  }
+  .btn-primary:hover {
+    background: #1e40af;
+  }
+  .btn-outline-primary {
+    border: 1px solid #2563eb;
+    color: #2563eb;
+  }
+  .btn-outline-primary:hover {
+    background: #2563eb;
+    color: #fff;
+  }
+  
+  
+  /* ===============================
+     Form Inputs
+     =============================== */
+  .form-select,
+  .form-control {
+    border-radius: 10px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .form-select:focus,
+  .form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
   }
   
