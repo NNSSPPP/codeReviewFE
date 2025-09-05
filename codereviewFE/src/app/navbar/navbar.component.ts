@@ -38,6 +38,8 @@ export class NavbarComponent {
         { label: 'Scan History', icon: 'bi-clock-history', link: '/scanhistory' },
       ] 
     },
+    { label: 'Issue', icon: 'bi-exclamation-circle-fill', link: '/issue' },
+    { label: 'Analytics', icon: 'bi-graph-up', link: '/analysis' },
     { 
       label: 'Report', icon: 'bi-file-earmark-text-fill', key: 'report', submenu: [
         { label: 'Generate Report', icon: 'bi-file-earmark-plus', link: '/generatereport' },

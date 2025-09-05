@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router} from '@angular/router';
 
 interface SecurityIssue {
   name: string;
@@ -20,7 +20,7 @@ interface DebtItem {
 @Component({
   selector: 'app-analysis',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule],
   templateUrl: './analysis.component.html',
   styleUrl: './analysis.component.css'
 })
