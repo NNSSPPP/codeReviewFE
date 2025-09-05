@@ -1,0 +1,63 @@
+.report-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid ;
+    border-radius: 12px;
+    background: #f9f9f9;
+    font-family: Arial, sans-serif;
+  }
+  
+  .report-container h2 {
+    color: #2563eb;
+    margin-bottom: 20px;
+  }
+  
+  .report-section {
+    margin-bottom: 20px;
+  }
+  
+  .report-section label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+  }
+  
+  .checkbox-group label {
+    display: block;
+    font-weight: normal;
+    margin-bottom: 4px;
+  }
+  
+  input[type="date"], select, input[type="email"] {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+    margin-right: 10px;
+  }
+  
+  .report-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .report-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .report-actions button:nth-child(1) { background: #888; }
+  .report-actions button:nth-child(2) { background: #2563eb; }
+  .report-actions button:nth-child(3) { background: #16a34a; }
+  
+  .report-actions button:hover {
+    opacity: 0.9;
+  }
+  
