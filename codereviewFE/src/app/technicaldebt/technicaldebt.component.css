@@ -1,91 +1,175 @@
-/* Back Button */
+/* =========================
+   GLOBAL STYLE
+   ========================= */
+   body {
+    background: linear-gradient(180deg, #f9fbff 0%, #eef2f7 100%); /* ไล่สีพื้นหลัง: ฟ้าอ่อน → เทาอ่อน */
+    color: #212529;                                                /* สีข้อความหลัก (เทาเข้ม) */
+    font-family: "Inter", "Prompt", sans-serif;                    /* ฟอนต์หลักแบบ modern, อ่านง่าย */
+  }
+  
+ /* =========================
+   BACK BUTTON (Neumorphism)
+   ========================= */
 .back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 14px;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: #2563eb;
-  text-decoration: none;
-  border: none;
-  border-radius: 12px;
-  transition: background 0.25s ease, transform 0.25s ease;
+  display: flex;                                                 /* ใช้ flex จัด icon ให้อยู่กลาง */
+  align-items: center;                                           /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  justify-content: center;                                       /* จัดให้อยู่กึ่งกลางแนวนอน */
+  width: 48px;                                                   /* ความกว้างปุ่ม */
+  height: 48px;                                                  /* ความสูงปุ่ม */
+  border: none;                                                  /* ไม่ต้องมีเส้นขอบ */
+  border-radius: 12px;                                           /* มุมโค้งมน */
+  background: #ffffff;                                           /* พื้นหลังขาว */
+  color: #2563eb;                                                /* ไอคอนฟ้า */
+  font-size: 1.5rem;                                             /* ขนาดไอคอน */
+  cursor: pointer;                                               /* เมาส์เปลี่ยนเป็น pointer */
+  box-shadow:                                                   /* เงาแบบ Neumorphism */
+    4px 4px 12px rgba(0, 0, 0, 0.08),                           /* เงามืด */
+    -4px -4px 12px rgba(255, 255, 255, 0.9);                    /* ไฮไลต์สว่าง */
+  transition: all 0.25s ease;                                    /* ทำให้ hover ลื่น */
 }
+
 .back-btn:hover {
-  background: #e0f0ff;
-  transform: translateX(-3px);
-}
-.back-btn i {
-  font-size: 1.4rem;
-}
-
-/* Cards */
-.card {
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-2px);
+  box-shadow:                                                   /* เงาเข้มขึ้นเล็กน้อย */
+    2px 2px 6px rgba(0, 0, 0, 0.1),
+    -2px -2px 6px rgba(255, 255, 255, 1);
+  transform: translateY(-2px);                                   /* ยกขึ้นนิดหน่อย */
 }
 
-/* Progress bars */
-progress {
-  width: 100%;
-  height: 16px;
-  border-radius: 10px;
-  overflow: hidden;
-  appearance: none;
-}
-progress::-webkit-progress-bar {
-  background-color: #e9ecef;
-}
-progress::-webkit-progress-value {
-  background-color: #0d6efd;
-  border-radius: 10px;
-}
-progress::-moz-progress-bar {
-  background-color: #0d6efd;
-  border-radius: 10px;
+.back-btn:active {
+  transform: scale(0.95);                                        /* กดแล้วหดลง */
 }
 
-/* Table */
-.table th, .table td {
-  vertical-align: middle;
+  
+  /* =========================
+     CARD
+     ========================= */
+  .card {
+    border-radius: 14px;                                           /* มุมโค้งมน */
+    border: none;                                                  /* ไม่มีเส้นขอบ */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);                       /* เงาเบา */
+    transition: transform 0.25s ease;                              /* ให้ effect ลื่นเวลา hover */
+  }
+  .card:hover {
+    transform: translateY(-4px);                                   /* ยกขึ้นเล็กน้อยเวลา hover */
+    box-shadow: 0 8px 18px rgba(0,0,0,0.1);                        /* เงาเข้มขึ้น */
+  }
+  .card-header {
+    font-weight: 600;                                              /* ตัวหนา */
+    font-size: 1rem;                                               /* ขนาดหัวข้อ */
+    background: #f1f5fb;                                           /* พื้นหลังเทาอมฟ้า */
+    border-bottom: 1px solid #e5e7eb;                              /* เส้นคั่นด้านล่าง */
+  }
+  
+  /* =========================
+     PROGRESS BAR
+     ========================= */
+  progress {
+    width: 100%;                                                   /* กว้างเต็มบรรทัด */
+    height: 16px;                                                  /* ความสูงของ progress */
+    border-radius: 12px;                                           /* มุมโค้งมน */
+    overflow: hidden;                                              /* กันล้น */
+    appearance: none;                                              /* รีเซ็ตสไตล์ default */
+  }
+  progress::-webkit-progress-bar {
+    background-color: #e9ecef;                                     /* สีพื้นหลัง progress */
+  }
+  progress::-webkit-progress-value {
+    background: linear-gradient(90deg, #4f8ef7, #7c3aed);           /* แถบสี gradient ฟ้า → ม่วง */
+    border-radius: 12px;                                           /* มุมโค้ง */
+    transition: width 0.6s ease;                                   /* ความกว้างขยาย smooth */
+  }
+  progress::-moz-progress-bar {
+    background: linear-gradient(90deg, #4f8ef7, #7c3aed);           /* สำหรับ Firefox */
+    border-radius: 12px;
+  }
+  
+  /* =========================
+     TABLE
+     ========================= */
+  .table th,
+  .table td {
+    vertical-align: middle;                                        /* จัดให้อยู่กลางแนวตั้ง */
+  }
+  .table thead {
+    background: #f8faff;                                           /* พื้นหลังหัวตารางสีฟ้าอ่อน */
+  }
+  .table tbody tr {
+    transition: background 0.25s ease;                             /* hover smooth */
+  }
+  .table tbody tr:hover {
+    background-color: #f1f5f9;                                     /* แถวเปลี่ยนเป็นเทาอ่อน */
+  }
+  
+  /* =========================
+     LIST GROUP
+     ========================= */
+  .list-group-item {
+    border-radius: 10px;                                           /* มุมโค้งมน */
+    margin-bottom: 6px;                                            /* เว้นระยะระหว่างรายการ */
+    transition: all 0.25s ease;
+  }
+  .list-group-item:hover {
+    background-color: #f5f9ff;                                     /* hover แล้วฟ้าอ่อน */
+    transform: translateX(4px);                                    /* ขยับไปทางขวาเล็กน้อย */
+  }
+  
+  /* =========================
+     BADGES
+     ========================= */
+  .badge {
+    padding: 0.4em 0.7em;                                          /* ขนาด badge */
+    font-weight: 600;                                              /* ตัวหนา */
+    border-radius: 8px;                                            /* มุมโค้งมน */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);                        /* เงาเบา */
+  }
+  .bg-danger  { background: #ff6b6b !important; }                  /* แดง */
+  .bg-warning { background: #ffd43b !important; color: #212529 !important; } /* เหลือง */
+  .bg-success { background: #51cf66 !important; }                  /* เขียว */
+  
+  /* =========================
+     BUTTONS
+     ========================= */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;                                                      /* ระยะห่างระหว่าง icon + text */
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);                                   /* ยกขึ้นเล็กน้อย */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);                        /* เพิ่มเงา */
+  }
+  .btn:active {
+    transform: scale(0.96);                                        /* กดแล้วหดเล็กน้อย */
+  }
+  
+  /* =========================
+     FADE-IN ANIMATION
+     ========================= */
+  .fade-in-up {
+    opacity: 0;                                                    /* เริ่มมองไม่เห็น */
+    transform: translateY(20px);                                   /* เลื่อนลงเล็กน้อย */
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in-up.show {
+    opacity: 1;                                                    /* แสดง */
+    transform: translateY(0);                                      /* เลื่อนขึ้นมาอยู่ที่เดิม */
+  }
+  /* =========================
+   TABLE HOVER EFFECT
+   ========================= */
+.table tbody tr {
+  transition: 
+    background 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;   /* ทำให้แอนิเมชันเนียน */
 }
-.table thead {
-  background-color: #f8f9fa;
-}
+
 .table tbody tr:hover {
-  background-color: #f1f5f9;
+  background-color: #f8fbff;        /* เปลี่ยนสีพื้นหลังอ่อน ๆ */
+  transform: translateY(-2px);      /* ลอยขึ้นมาเล็กน้อย */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06); /* เงาเบา ๆ */
 }
 
-/* Category list */
-.list-group-item {
-  border-radius: 8px;
-  margin-bottom: 5px;
-  transition: background 0.2s ease;
-}
-.list-group-item:hover {
-  background-color: #f8f9fa;
-}
-
-/* Buttons */
-.btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 10px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* Section spacing */
-.progress-wrapper {
-  margin-top: 6px;
-  margin-bottom: 4px;
-}
+  
