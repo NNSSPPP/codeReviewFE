@@ -1,63 +1,180 @@
-.report-container {
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid ;
-    border-radius: 12px;
-    background: #f9f9f9;
-    font-family: Arial, sans-serif;
+/* ===============================
+   Container
+   =============================== */
+   .report-container {
+    max-width: 900px;                  /* กำหนดความกว้างสูงสุดของ container ไม่ให้เกิน 900px */
+    margin: 30px auto;                 /* ทำให้มีระยะห่างด้านบน/ล่าง 30px และชิดกลางแนวนอน */
+    padding: 24px 28px;                /* ระยะห่างด้านใน (บน-ล่าง 24px, ซ้าย-ขวา 28px) */
+    border: 1px solid #e5e7eb;         /* เส้นขอบสีเทาอ่อน */
+    border-radius: 16px;               /* มุมโค้งมน 16px */
+    background: #ffffff;               /* พื้นหลังสีขาว */
+    font-family: "Inter", Arial, sans-serif; /* ฟอนต์หลัก Inter ถ้าไม่มีใช้ Arial หรือ sans-serif */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* เงาจางๆ ด้านล่าง */
+    animation: fadeIn 0.5s ease;       /* แอนิเมชันค่อยๆ โผล่ขึ้นมา (fadeIn) */
   }
   
+  /* Title */
   .report-container h2 {
-    color: #2563eb;
-    margin-bottom: 20px;
+    color: #2563eb;                    /* สีตัวอักษรน้ำเงิน */
+    margin-bottom: 20px;               /* เว้นด้านล่าง 20px */
+    font-size: 1.4rem;                 /* ขนาดฟอนต์ 1.4rem */
+    font-weight: 600;                  /* ทำให้หนา (semibold) */
+    display: flex;                     /* ใช้ flex สำหรับจัดเรียงแนวนอน */
+    align-items: center;               /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    gap: 8px;                          /* เว้นระยะห่างระหว่าง element ลูก 8px */
   }
   
+  /* ===============================
+     Sections
+     =============================== */
   .report-section {
-    margin-bottom: 20px;
+    margin-bottom: 20px;               /* เว้นระยะด้านล่างแต่ละ section */
   }
   
   .report-section label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
+    font-weight: 600;                  /* ตัวหนา */
+    display: block;                    /* ให้ label กินเต็มบรรทัด */
+    margin-bottom: 6px;                /* เว้นช่องว่างด้านล่าง */
+    color: #374151;                    /* สีเทาเข้ม */
   }
   
-  .checkbox-group label {
-    display: block;
-    font-weight: normal;
-    margin-bottom: 4px;
+  /* Checkbox / Radio group */
+  .checkbox-group label,
+  .form-check-label {
+    display: block;                    /* แต่ละ label อยู่คนละบรรทัด */
+    font-weight: 400;                  /* ความหนาปกติ */
+    margin-bottom: 4px;                /* เว้นด้านล่างนิดหน่อย */
+    color: #4b5563;                    /* สีเทา */
+    cursor: pointer;                   /* เปลี่ยนเป็นรูปมือเวลา hover */
   }
   
-  input[type="date"], select, input[type="email"] {
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    width: 100%;
-    max-width: 300px;
-    margin-right: 10px;
+  /* Inputs & Select */
+  input[type="date"], 
+  select, 
+  input[type="email"], 
+  .form-control {
+    padding: 8px 10px;                 /* ระยะห่างภายในกล่อง */
+    border-radius: 8px;                /* มุมโค้งมน */
+    border: 1px solid #d1d5db;         /* ขอบสีเทา */
+    width: 100%;                       /* กว้างเต็มพื้นที่ */
+    max-width: 320px;                  /* ไม่เกิน 320px */
+    margin-right: 10px;                /* เว้นขวา */
+    transition: all 0.2s ease;         /* ใส่อนิเมชันเปลี่ยนลื่น */
+    font-size: 0.95rem;                /* ขนาดฟอนต์เล็กนิดหน่อย */
   }
   
-  .report-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  input:focus, 
+  select:focus, 
+  .form-control:focus {
+    outline: none;                     /* ตัดเส้นขอบฟ้า default */
+    border-color: #2563eb;             /* เปลี่ยนสีขอบเป็นน้ำเงิน */
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.2); /* เงาเรืองรอบๆ น้ำเงิน */
   }
   
-  .report-actions button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #fff;
+  /* ===============================
+     Actions
+     =============================== */
+  .report-actions,
+  .d-flex.justify-content-end {
+    display: flex;                     /* จัดเรียงแบบ flex */
+    justify-content: flex-end;         /* จัดชิดขวา */
+    gap: 12px;                         /* ระยะห่างระหว่างปุ่ม */
+    margin-top: 20px;                  /* เว้นด้านบน */
   }
   
-  .report-actions button:nth-child(1) { background: #888; }
-  .report-actions button:nth-child(2) { background: #2563eb; }
-  .report-actions button:nth-child(3) { background: #16a34a; }
+  .report-actions button,
+  .d-flex.justify-content-end button {
+    padding: 9px 18px;                 /* ระยะห่างในปุ่ม */
+    border: none;                      /* ไม่มีเส้นขอบ */
+    border-radius: 10px;               /* มุมโค้งมน */
+    cursor: pointer;                   /* เปลี่ยนเป็นมือ */
+    font-weight: 600;                  /* หนาหน่อย */
+    color: #fff;                       /* ตัวอักษรสีขาว */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* ลื่นเวลา hover */
+  }
   
-  .report-actions button:hover {
-    opacity: 0.9;
+  .report-actions button:nth-child(1),
+  .btn-secondary { background: #9ca3af; } /* ปุ่มเทา */
+  
+  .report-actions button:nth-child(2),
+  .btn-primary { background: #2563eb; }   /* ปุ่มน้ำเงิน */
+  
+  .report-actions button:nth-child(3),
+  .btn-success { background: #16a34a; }   /* ปุ่มเขียว */
+  
+  .report-actions button:hover,
+  .d-flex.justify-content-end button:hover {
+    transform: translateY(-2px);       /* ขยับขึ้นเล็กน้อย */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12); /* เพิ่มเงา */
+    opacity: 0.95;                     /* จางลงนิด */
+  }
+  
+  /* ===============================
+     Error Text
+     =============================== */
+  .text-danger.small {
+    margin-top: 4px;                   /* เว้นด้านบน */
+    font-size: 0.8rem;                 /* ฟอนต์เล็ก */
+    color: #dc2626;                    /* สีแดงแจ้ง error */
+  }
+  
+  /* ===============================
+     Animation
+     =============================== */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); } /* เริ่มจางและเลื่อนลง */
+    to { opacity: 1; transform: translateY(0); }     /* จบที่ชัดและอยู่ปกติ */
+  }
+  
+  /* Hover effect on inputs */
+  input[type="date"]:hover,
+  select:hover,
+  input[type="email"]:hover,
+  .form-control:hover {
+    border-color: #93c5fd;             /* เปลี่ยนขอบเป็นฟ้าอ่อนเวลา hover */
+  }
+  
+  /* Checkbox & Radio smooth animation */
+  .form-check-input {
+    transition: transform 0.15s ease, background-color 0.2s ease; /* ลื่นตอนกด */
+  }
+  
+  .form-check-input:checked {
+    background-color: #2563eb;         /* พื้นหลังน้ำเงินเมื่อเลือก */
+    border-color: #2563eb;             /* ขอบน้ำเงิน */
+    transform: scale(1.05);            /* ขยายเล็กน้อย */
+  }
+  
+  /* Divider between sections */
+  .report-section:not(:last-child) {
+    padding-bottom: 16px;              /* เว้นด้านล่าง */
+    border-bottom: 1px dashed #e5e7eb; /* เส้นประแบ่ง section */
+  }
+  
+  /* Button loading state */
+  button.loading {
+    opacity: 0.7;                      /* จางลง */
+    cursor: not-allowed;               /* เปลี่ยนเมาส์เป็นห้ามกด */
+    pointer-events: none;              /* กดไม่ได้ */
+    position: relative;                /* ใช้สำหรับวาง spinner */
+  }
+  
+  button.loading::after {
+    content: "";                       /* สร้าง element เปล่า */
+    position: absolute;                /* วางแบบ absolute */
+    right: 12px;                       /* ชิดขวา */
+    top: 50%;                          /* กึ่งกลางแนวตั้ง */
+    width: 14px;                       /* ขนาดวงกลม */
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.6); /* วงกลมโปร่งบางส่วน */
+    border-top-color: #fff;            /* ขอบด้านบนสีขาว (ไว้หมุน) */
+    border-radius: 50%;                /* ให้เป็นวงกลม */
+    animation: spin 0.6s linear infinite; /* หมุนตลอดเวลา */
+    transform: translateY(-50%);       /* จัดให้อยู่ตรงกลาง */
+  }
+  
+  @keyframes spin {
+    from { transform: translateY(-50%) rotate(0); }   /* เริ่มที่ 0 องศา */
+    to { transform: translateY(-50%) rotate(360deg);} /* หมุนครบวงรอบ */
   }
   
