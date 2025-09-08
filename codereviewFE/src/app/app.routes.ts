@@ -17,7 +17,6 @@ import {AssignmentComponent} from './assignment/assignment.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import {SecuritydashboardComponent} from './securitydashboard/securitydashboard.component';
 import { TechnicaldebtComponent } from './technicaldebt/technicaldebt.component';
-import { ReportComponent } from './report/report.component';
 import { GeneratereportComponent } from './generatereport/generatereport.component';
 import { ReporthistoryComponent } from './reporthistory/reporthistory.component';
 import { SettingComponent } from './setting/setting.component';
@@ -47,7 +46,6 @@ export const routes: Routes = [
       { path: 'analysis', component: AnalysisComponent },
       { path: 'security-dashboard', component: SecuritydashboardComponent },
       { path: 'technical-debt', component: TechnicaldebtComponent },
-      { path: 'report', component: ReportComponent },
       { path: 'generatereport', component: GeneratereportComponent },
       { path: 'reporthistory', component: ReporthistoryComponent },
       { path: 'setting', component: SettingComponent },
