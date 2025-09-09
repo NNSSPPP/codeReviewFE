@@ -1,0 +1,90 @@
+.settings-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+}
+
+h2 {
+  padding : 1rem;
+}
+
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h4 {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* toggle switch */
+.switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .6rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  display: none;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #ccc;
+  border-radius: 24px;
+  transition: .2s;
+}
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: .2s;
+}
+.switch input:checked + .slider {
+  background: #2b8aef;
+}
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  gap: .8rem;
+  margin-top: 1rem;
+}
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: .5rem 1rem;
+  cursor: pointer;
+  font-size: .95rem;
+}
+.btn.primary {
+  background: #2b8aef;
+  color: #fff;
+}
+.btn.secondary {
+  background: #f1f1f1;
+  color: #333;
+}
