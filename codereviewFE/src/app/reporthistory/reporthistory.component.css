@@ -1,94 +1,174 @@
-.report-history-container {
-    padding: 20px;
-    max-width: 1000px;
-    margin: 0 auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+/* ===============================
+   Report History Container
+   =============================== */
+   .report-history-container {
+    padding: 24px;                          /* เว้นระยะห่างด้านใน */
+    max-width: 1000px;                      /* จำกัดความกว้างสูงสุด */
+    margin: 0 auto;                         /* จัดให้อยู่กึ่งกลาง */
+    background: #ffffff;                    /* พื้นหลังสีขาว */
+    border-radius: 16px;                    /* มุมโค้งมน */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);/* เงาเบา ๆ */
+    transition: all 0.3s ease;              /* transition เวลาเปลี่ยนแปลง */
+    font-family: "Inter", sans-serif;       /* ฟอนต์หลัก */
+  }
+  
+  /* ===============================
+     Header Section
+     =============================== */
+  .header-row {
+    display: flex;                          /* ใช้ Flex จัด layout */
+    justify-content: space-between;         /* กระจายซ้าย-ขวา */
+    align-items: center;                    /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    margin-bottom: 16px;                    /* เว้นระยะล่าง */
+    padding-bottom: 10px;                   /* เพิ่ม padding ด้านล่าง */
+    border-bottom: 1px solid #f0f0f0;       /* เส้นแบ่งระหว่าง header กับ table */
   }
   
   h2 {
-    color: #007bff;
-    margin-bottom: 20px;
+    color: #007bff;                         /* สีฟ้า */
+    font-size: 1.4rem;                      /* ขนาดตัวอักษร */
+    font-weight: 600;                       /* ความหนา */
+    display: flex;                          /* ใช้ flex จัด icon กับข้อความ */
+    align-items: center;                    /* จัดให้อยู่กลางแนวตั้ง */
+    gap: 8px;                               /* ระยะห่างระหว่าง icon กับข้อความ */
   }
   
-
-.header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
+  /* ===============================
+     Search Input
+     =============================== */
   .search-input {
-    padding: 5px 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    padding: 8px 14px;                      /* padding ด้านใน */
+    border-radius: 12px;                    /* มุมโค้งมน */
+    border: 1px solid #e0e0e0;              /* เส้นขอบเทาอ่อน */
+    transition: all 0.2s ease;              /* เอฟเฟกต์เวลา focus */
   }
   
+  .search-input:focus {
+    outline: none;                          /* เอาเส้นขอบ default ออก */
+    border-color: #007bff;                  /* เปลี่ยนเส้นขอบเป็นฟ้า */
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1); /* Glow effect สีฟ้า */
+  }
+  
+  /* ===============================
+     Report Table
+     =============================== */
   .report-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .report-table th, .report-table td {
-    border: 1px solid #ddd;
-    text-align: center;
-  vertical-align: middle;
-  padding: 8px;
+    width: 100%;                            /* กว้างเต็ม */
+    border-collapse: separate;              /* แยก border ออกจากกัน */
+    border-spacing: 0 6px;                  /* ระยะห่างระหว่างแถว */
   }
   
   .report-table th {
-    background-color: #f5f5f5;
+    background: #f8f9fa;                    /* พื้นหลังหัวตารางสีเทาอ่อน */
+    padding: 10px;                          /* เว้นระยะด้านใน */
+    font-weight: 600;                       /* ตัวหนา */
+    color: #444;                            /* สีเทาเข้ม */
+    border-bottom: 2px solid #eee;          /* เส้นคั่นด้านล่าง */
   }
   
-  .report-table tr:nth-child(even) {
-    background-color: #f9f9f9;
+  .report-table td {
+    background: #fff;                       /* พื้นหลังสีขาว */
+    border: none;                           /* ไม่มีเส้นขอบ */
+    padding: 12px;                          /* เว้นระยะด้านใน */
+    text-align: center;                     /* จัดข้อความกึ่งกลาง */
+    vertical-align: middle;                 /* จัดข้อความตรงกลางแนวตั้ง */
+    transition: all 0.2s ease;              /* motion เวลา hover */
   }
   
+  /* Row hover effect */
+  .report-table tr:hover td {
+    background: #f9fbff;                    /* เปลี่ยนเป็นฟ้าอ่อนเวลา hover */
+    transform: translateY(-2px);            /* ลอยขึ้นเล็กน้อย */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05); /* เงาเบา ๆ */
+  }
+  
+  /* ===============================
+     Download Button
+     =============================== */
   .download-btn {
-    width: 40px;          /* ความกว้าง */
-    height: 40px;         /* ความสูง เท่ากับความกว้าง */
-    display: flex;        /* จัดให้ไอคอนอยู่ตรงกลาง */
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;      /* ขนาดไอคอน */
-    background-color: #28a745;
-    border: none;
-    color: #fff;
-    border-radius: 6px;   /* ถ้าอยากเป็นเหลี่ยมจัด ใส่ 0px */
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    width: 36px;                            /* ความกว้าง */
+    height: 36px;                           /* ความสูง */
+    display: flex;                          /* ใช้ flex จัด icon */
+    align-items: center;                    /* จัด icon กลางแนวตั้ง */
+    justify-content: center;                /* จัด icon กลางแนวนอน */
+    font-size: 18px;                        /* ขนาด icon */
+    background: linear-gradient(135deg, #28a745, #20c997); /* พื้นหลัง gradient เขียว */
+    border: none;                           /* ไม่มีเส้นขอบ */
+    color: #fff;                            /* สีตัวอักษรขาว */
+    border-radius: 10px;                    /* มุมโค้งมน */
+    cursor: pointer;                        /* เปลี่ยน cursor เป็น pointer */
+    transition: all 0.25s ease;             /* motion ตอน hover */
   }
   
   .download-btn:hover {
-    background-color: #218838;
+    transform: scale(1.08);                 /* ขยายเล็กน้อย */
+    box-shadow: 0 4px 10px rgba(40,167,69,0.25); /* เงาเข้มขึ้น */
   }
   
-  
-  
+  /* ===============================
+     Empty State (No Data)
+     =============================== */
   .no-data {
-    text-align: center;
-    color: #888;
-    font-style: italic;
+    text-align: center;                     /* จัดกลาง */
+    color: #666;                            /* สีเทา */
+    font-style: normal;                     /* เอา italic ออก */
+    font-size: 0.95rem;                     /* ขนาดตัวอักษรเล็กลง */
+    padding: 16px;                          /* เว้นระยะด้านใน */
   }
-
+  
+  /* Icon หน้าข้อความ "No data" */
+  .no-data::before {
+    content: "📄 ";                         /* ใส่ emoji */
+    font-size: 1.2rem;                      /* ขนาดใหญ่ขึ้น */
+    opacity: 0.6;                           /* โปร่งใสเล็กน้อย */
+  }
+  
+  /* ===============================
+     Pagination Controls
+     =============================== */
   .pagination {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    margin-top: 18px;                       /* เว้นระยะด้านบน */
+    display: flex;                          /* ใช้ flex */
+    justify-content: center;                /* จัดกลาง */
+    gap: 10px;                              /* เว้นระหว่างปุ่ม */
   }
   
   .pagination button {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 6px 14px;                      /* เว้นระยะด้านใน */
+    border: 1px solid #ddd;                 /* เส้นขอบเทาอ่อน */
+    background: #fff;                       /* พื้นหลังขาว */
+    border-radius: 8px;                     /* มุมโค้งมน */
+    cursor: pointer;                        /* เปลี่ยนเป็น pointer */
+    font-size: 0.9rem;                      /* ขนาดตัวอักษร */
+    transition: all 0.2s ease;              /* motion ตอน hover */
   }
   
-  .pagination button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
+  /* Hover state (ยกเว้น disabled) */
+  .pagination button:hover:not(:disabled) {
+    background: #007bff;                    /* พื้นหลังฟ้า */
+    color: #fff;                            /* ตัวอักษรขาว */
+    border-color: #007bff;                  /* ขอบฟ้า */
   }
+  
+  /* Disabled state */
+  .pagination button:disabled {
+    background: #f1f1f1;                    /* พื้นหลังเทาอ่อน */
+    color: #999;                            /* สีตัวอักษรจาง */
+    cursor: not-allowed;                    /* แสดงว่ากดไม่ได้ */
+  }
+  .report-table td {
+    background: #fff;                       
+    border: none;                           
+    padding: 12px;                          
+    text-align: center;                     
+    vertical-align: middle;                 
+    transition: all 0.2s ease;              
+    border-bottom: 1px solid #f0f0f0;       /* เส้นแบ่งแต่ละแถว */
+  }
+  
+  /* ให้แถวสุดท้ายไม่มีเส้นล่าง */
+  .report-table tr:last-child td {
+    border-bottom: none;
+  }
+  
   
