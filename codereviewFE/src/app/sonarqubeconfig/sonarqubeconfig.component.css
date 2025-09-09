@@ -1,0 +1,86 @@
+.config-container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+  }
+  
+  h3 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input, select {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .password-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .password-group input {
+    flex: 1;
+  }
+  
+  .password-group button {
+    padding: 6px 10px;
+    border: none;
+    background: #eee;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .actions {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .actions button {
+    margin: 0 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .actions button:nth-child(1) {
+    background: #3498db;
+    color: #fff;
+  }
+  
+  .actions button:nth-child(2) {
+    background: #e67e22;
+    color: #fff;
+  }
+  
+  .actions button:nth-child(3) {
+    background: #2ecc71;
+    color: #fff;
+  }
+  

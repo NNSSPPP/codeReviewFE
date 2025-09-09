@@ -46,7 +46,11 @@ export class NavbarComponent {
         { label: 'Report History', icon: 'bi-clock-history', link: '/reporthistory' },
       ] 
     },
-    { label: 'Setting', icon: 'bi-gear-fill', link: '/setting' },
+    { label: 'Setting', icon: 'bi-gear-fill', key: 'Setting', submenu: [
+      { label: 'sonarqubeconfig', icon: 'bi-gear-fill', link: '/sonarqubeconfig' },
+      { label: 'Notification Setting', icon: 'bi-file-earmark-plus', link: '/notificationsetting' },
+      { label: 'User Management', icon: 'bi-clock-history', link: '/usermanagement' },
+    ] },
     { label: 'Logout', icon: 'bi-box-arrow-right', link: '/' }
   ];
 

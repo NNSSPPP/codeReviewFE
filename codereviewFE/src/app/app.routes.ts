@@ -20,6 +20,9 @@ import { TechnicaldebtComponent } from './technicaldebt/technicaldebt.component'
 import { GeneratereportComponent } from './generatereport/generatereport.component';
 import { ReporthistoryComponent } from './reporthistory/reporthistory.component';
 import { SettingComponent } from './setting/setting.component';
+import { SonarqubeconfigComponent } from './sonarqubeconfig/sonarqubeconfig.component';
+import { NotificationsettingComponent } from './notificationsetting/notificationsetting.component';
+import { UsermanagementComponent } from './usermanagement/usermanagement.component';
 
 export const routes: Routes = [
  
@@ -49,6 +52,9 @@ export const routes: Routes = [
       { path: 'generatereport', component: GeneratereportComponent },
       { path: 'reporthistory', component: ReporthistoryComponent },
       { path: 'setting', component: SettingComponent },
+      { path: 'sonarqubeconfig', component: SonarqubeconfigComponent },
+      { path: 'notificationsetting', component: NotificationsettingComponent },
+      { path: 'usermanagement', component: UsermanagementComponent },
     ]
   },
 
