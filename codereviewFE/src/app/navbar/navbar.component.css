@@ -1,7 +1,8 @@
 .vertical-navbar {
   width: 220px;
   min-height: 100vh;
-  background-color: #007BFF;
+  background-color: var(--navbar-bg);
+  color: var(--navbar-text);
   display: flex;
   flex-direction: column;
   justify-content: space-between; 
@@ -13,7 +14,7 @@
 
 /* Heading */
 .vertical-navbar h4 {
-  color: white;
+  color: var(--navbar-text);
   margin-bottom: 20px;
   font-size: 16px;
   font-weight: bold;
@@ -38,7 +39,7 @@
 }
 
 .vertical-navbar a {
-  color: white;
+  color: var(--navbar-text);
   text-decoration: none;
   padding: 10px 20px;
   display: flex;
@@ -61,12 +62,12 @@
 
 
 .vertical-navbar a:hover {
-  background-color: #3399FF;
+  background-color: var(--navbar-hover);
 }
 
 .vertical-navbar a.active {
-  background-color: #0056b3;
-  border-left: 4px solid #FFA500;
+  background-color: var(--navbar-active-bg);
+  border-left: 4px solid var(--navbar-active-border);
 }
 
 /* Desktop fixed */
