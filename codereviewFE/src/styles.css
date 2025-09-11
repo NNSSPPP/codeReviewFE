@@ -11,6 +11,8 @@
     /* Toggle button */
     --toggle-btn-bg: #1E90FF;   /* สีฟ้าเข้มเด่น */
     --toggle-btn-text: #ffffff; /* ข้อความสีขาวชัดเจน */
+
+    --repo-tab-text:#ffffff;
 }
 
 /* Dark mode */
@@ -26,6 +28,8 @@ body.dark-mode {
   /* Toggle button */
   --toggle-btn-bg: #FFA500;   
   --toggle-btn-text: #000000; 
+
+  --repo-tab-text:#ffffff;
 }
 
 /* ใช้ตัวแปร CSS */
