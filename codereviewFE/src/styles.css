@@ -1,1 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+/* Light mode (default) */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --navbar-bg: #b3e5fc ;/*#d0d9ff*/
+  --navbar-hover: #ADD8E6;
+  --navbar-active-bg: #1E90FF;
+  --navbar-active-border: #FFA500;
+  --detail-bg: #f8f9fa;
+
+    /* Toggle button */
+    --toggle-btn-bg: #1E90FF;   /* สีฟ้าเข้มเด่น */
+    --toggle-btn-text: #ffffff; /* ข้อความสีขาวชัดเจน */
+}
+
+/* Dark mode */
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --navbar-bg: #1e1e1e;
+  --navbar-hover: #333333;
+  --navbar-active-bg: #333333;
+  --navbar-active-border: #FFA500;
+  --detail-bg: #2c2c2c;
+
+  /* Toggle button */
+  --toggle-btn-bg: #FFA500;   
+  --toggle-btn-text: #000000; 
+}
+
+/* ใช้ตัวแปร CSS */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.navbar {
+  background-color: var(--navbar-bg);
+  color: var(--text-color);
+}
+
+.detail {
+  background-color: var(--detail-bg);
+  color: var(--text-color);
+}
+
+.vertical-navbar a:hover {
+  background-color: var(--navbar-hover);
+}
+
+.vertical-navbar a.active {
+  background-color: var(--navbar-active-bg);
+  border-left: 4px solid var(--navbar-active-border);
+}
