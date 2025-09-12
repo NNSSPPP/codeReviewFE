@@ -1,38 +1,145 @@
-/* Light mode (default) */
+/* ===============================
+   Light mode (default)
+   =============================== */
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
-  --navbar-bg: #b3e5fc ;/*#d0d9ff*/
-  --navbar-hover: #ADD8E6;
-  --navbar-active-bg: #1E90FF;
-  --navbar-active-border: #FFA500;
+
+  /* ===== พื้นหลัง / ตัวอักษร ===== */
+  --bg-main: #ffffff;
+  --bg-card: #ffffff;
+  --bg-panel: #f8f9fa;
+  --text-main: #0f172a;
+  --text-muted: #42526e;
+  --text-heading: #0b1220;
+
+  /* ===== Navbar ===== */
+  --navbar-bg: #b3e5fc;
+  --navbar-hover: #add8e6;
+  --navbar-active-bg: #1e90ff;
+  --navbar-active-border: #ffa500;
+
+  /* ===== ปุ่มหลัก ===== */
+  --btn-primary-bg: #3b82f6;
+  --btn-primary-bg-hover: #2563eb;
+  --btn-primary-text: #ffffff;
+
+  /* ===== ปุ่ม logout / stop ===== */
+  --btn-logout-bg: #ffffff;
+  --btn-logout-border: #fecaca;
+  --btn-logout-text: #dc2626;
+  --btn-logout-hover: #fff1f2;
+  --btn-stop: #ef4444;
+  --btn-stop-hover: #b91c1c;
+
+  /* ===== Notification ===== */
+  --notification-bg: #e6efff;
+  --notification-icon: #3b82f6;
+  --notification-badge: #dc2626;
+  --notification-panel-bg: #ffffff;
+
+  /* ===== Card / Table ===== */
+  --card-border: #dbe1f1;
+  --card-shadow: rgba(15, 23, 42, 0.08);
+  --table-header-bg: #f2f6ff;
+  --table-header-bg2: #e8efff;
+  --table-header-text: #334155;
+  --table-border: #eef2f7;
+
+  /* ===== Status Colors ===== */
+  --status-passed-bg: #d1fae5;
+  --status-passed-text: #065f46;
+  --status-warning-bg: #fef3c7;
+  --status-warning-text: #92400e;
+  --status-failed-bg: #fee2e2;
+  --status-failed-text: #991b1b;
+
+  /* ===== Grade Colors ===== */
+  --grade-a: #10b981;
+  --grade-b: #84cc16;
+  --grade-c: #f59e0b;
+  --grade-d: #fb923c;
+  --grade-e: #ef4444;
+
+  /* ===== Metrics Icon Colors ===== */
+  --metric-bugs: #dc2626;
+  --metric-security: #d97706;
+  --metric-code-smells: #0ea5e9;
+  --metric-coverage: #16a34a;
+
+  /* ===== Progress Bar ===== */
+  --progress-bg: #e9ecef;
+  --progress-value: #3b82f6;
+  --progress-success: #16a34a;
+  --progress-primary: #3b82f6;
+
+  /* ===== Shadows ===== */
+  --shadow-primary: 0 6px 20px rgba(37, 99, 235, 0.25);
+  --shadow-primary-hover: 0 8px 24px rgba(37, 99, 235, 0.15);
+  --shadow-danger: 0 4px 12px rgba(239, 68, 68, 0.25);
+
   --detail-bg: #f8f9fa;
 
-    /* Toggle button */
-    --toggle-btn-bg: #1E90FF;   /* สีฟ้าเข้มเด่น */
-    --toggle-btn-text: #ffffff; /* ข้อความสีขาวชัดเจน */
+  /* Toggle button */
+  --toggle-btn-bg: #1E90FF;
+  --toggle-btn-text: #ffffff;
 
-    --repo-tab-text:#ffffff;
+  /* Repo tab (Light mode → น้ำเงิน) */
+  --repo-tab-text: #1e40af;
+
+   /* Calendar Icon (Light → ฟ้า) */
+   --calendar-icon-filter: invert(40%) sepia(90%) saturate(500%) hue-rotate(200deg);
 }
 
-/* Dark mode */
-body.dark-mode {
+/* ===============================
+   Dark mode
+   =============================== */
+.dark-mode {
   --bg-color: #121212;
   --text-color: #ffffff;
+
   --navbar-bg: #1e1e1e;
   --navbar-hover: #333333;
   --navbar-active-bg: #333333;
-  --navbar-active-border: #FFA500;
+  --navbar-active-border: #ffa500;
+
   --detail-bg: #2c2c2c;
 
-  /* Toggle button */
-  --toggle-btn-bg: #FFA500;   
-  --toggle-btn-text: #000000; 
+  --bg-main: #121212;
+  --bg-card: #1e1e1e;
+  --bg-panel: #2c2c2c;
+  --text-main: #ffffff;
+  --text-muted: #a0aec0;
+  --text-heading: #f9fafb;
 
-  --repo-tab-text:#ffffff;
+  --btn-primary-bg: #2563eb;
+  --btn-primary-bg-hover: #1e40af;
+
+  --notification-bg: #2d3748;
+  --notification-icon: #60a5fa;
+  --notification-badge: #f87171;
+  --notification-panel-bg: #1e293b;
+
+  --card-border: #374151;
+  --table-header-bg: #2c2c2c;
+  --table-header-bg2: #1f2937;
+  --table-header-text: #e5e7eb;
+  --table-border: #4b5563;
+
+  /* Toggle button */
+  --toggle-btn-bg: #ffa500;
+  --toggle-btn-text: #000000;
+
+  /* Repo tab (Dark mode → ขาว) */
+  --repo-tab-text: #ffffff;
+
+  /* Calendar Icon (Dark → ส้ม) */
+  --calendar-icon-filter: brightness(0) invert(1);
 }
 
-/* ใช้ตัวแปร CSS */
+/* ===============================
+   Global usage
+   =============================== */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -52,7 +159,11 @@ body {
   background-color: var(--navbar-hover);
 }
 
-.vertical-navbar a.active {
+.vertical-navbar a.active,
+.repo-tab {
+  color: var(--repo-tab-text);
   background-color: var(--navbar-active-bg);
   border-left: 4px solid var(--navbar-active-border);
 }
+
+
