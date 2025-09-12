@@ -126,6 +126,11 @@
      Repo Card
      =============================== */
   .repo-card {
+
+    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
     background-color: var(--detail-bg); 
     color: var(--text-color);
     border-radius: 12px;
@@ -143,6 +148,7 @@
      Repo Link
      =============================== */
   .repo-link {
+    
     color: #2563eb;
     font-size: 0.9rem;
     text-decoration: none;
@@ -256,6 +262,58 @@ body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
 }
 
 
+@media (max-width: 576px) {
+  .repo-stats {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+  }
+
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+
+  .repo-card {
+    padding: 14px;
+  }
+
+  .repo-link {
+    font-size: 0.8rem;
+    word-break: break-word; /* กันล้นจอ */
+  }
+}
+
+/* iPad (portrait/landscape) ให้เป็น 1 คอลัมน์ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .repo-dashboard .col-md-3 {
+    flex: 0 0 50% !important;  /* จาก 25% → 50% */
+    max-width: 50% !important;
+  }
+
+  .repo-dashboard .col-md-6 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+  }
+/* ===============================
+   Force Override Badge (Dark Mode)
+   =============================== */
+
+/* All Repositories (จากเทา → ขาว) */
+body.dark-mode .repo-tabs .nav-link.active .badge.bg-secondary,
+body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
+  background-color: #ffffff !important; /* ขาว */
+  color: #000000 !important;           /* ตัวอักษรดำ */
+}
+/* Force Override Badge (Dark Mode) */
+body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
+  background-color: #ffffff !important; /* เปลี่ยนเป็นขาว */
+  color: #000000 !important;            /* ตัวหนังสือดำ */
+}
 
 
-  
+
+
