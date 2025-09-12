@@ -411,4 +411,35 @@
    @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
    @keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;} }
    @keyframes slideUp { 0%{transform:translateY(10px);opacity:0;} 100%{transform:translateY(0);opacity:1;} }
-   
+   .chart text {
+    fill: var(--text-main) !important;
+    color: var(--text-main) !important;
+  }
+  /* ปกติ */
+.notification-tabs button {
+  flex: 1 1 auto;
+  min-width: 80px;
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: var(--bg-panel);
+  color: var(--text-main);   /* ✅ เพิ่มตรงนี้ */
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* Hover */
+.notification-tabs button:hover {
+  background: var(--notification-bg);
+  border-color: var(--btn-primary-bg);
+  color: var(--btn-primary-bg);
+}
+
+/* Dark mode */
+.dark-mode .notification-tabs button {
+  color: var(--text-main);   /* ✅ จะดึงสีขาวจาก --text-main */
+}
+
+  
+  
