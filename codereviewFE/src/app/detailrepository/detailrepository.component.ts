@@ -18,7 +18,7 @@ interface ScanHistory {
 }
 
 interface Repository {
-  id: number;
+  project_id: number;
   name: string;
   framework: string;
   language: string;
@@ -50,7 +50,7 @@ export class DetailrepositoryComponent {
 
   ngOnInit(): void {
     // ดึง id จาก URL
-    this.repoId = Number(this.route.snapshot.paramMap.get('id'));
+    this.repoId = Number(this.route.snapshot.paramMap.get('project_id'));
     this.loadRepository(this.repoId);
   }
 
@@ -60,7 +60,7 @@ export class DetailrepositoryComponent {
   // ตัวอย่าง repository data
   allRepos: Repository[] = [
     {
-      id: 1,
+      project_id: 1,
       name: 'E-Commerce Platform',
       framework: 'Angular',
       language: 'TypeScript',
@@ -83,7 +83,7 @@ export class DetailrepositoryComponent {
       ]
     },
     {
-      id: 2,
+      project_id: 2,
       name: 'Payment API Service',
       framework: 'Spring Boot',
       language: 'Java',
@@ -108,9 +108,8 @@ export class DetailrepositoryComponent {
 
   activeTab: string = 'overview';
 
-  loadRepository(id: number) {
-    // ดึง repo ตาม id
-    this.repo = this.allRepos.find(r => r.id === id)!;
+  loadRepository(project_id: number) {
+    this.repo = this.allRepos.find(r => r.project_id === project_id)!;
   }
 
   switchTab(tab: string) {

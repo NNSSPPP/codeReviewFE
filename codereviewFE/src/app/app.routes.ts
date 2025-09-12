@@ -37,7 +37,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'repositories', component: RepositoriesComponent },
       { path: 'addrepository', component: AddrepositoryComponent },
-      { path: 'detailrepo/:id', component: DetailrepositoryComponent },
+      { path: 'detailrepo/:project_id', component: DetailrepositoryComponent },
       { path: 'activescan', component: ActivescanComponent },
       { path: 'scanhistory', component: ScanhistoryComponent },
       { path: 'scanresult/:id', component: ScanresultComponent },
