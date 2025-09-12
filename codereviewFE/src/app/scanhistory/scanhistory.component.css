@@ -2,188 +2,178 @@
    Container
    =============================== */
    .scan-history-container {
-    background-color: var(--bg-card);
-    border-radius: 10px;
-    border: 1px solid var(--card-border);
-    padding: 16px 20px;
-    box-shadow: var(--card-shadow);
+    background-color: var(--bg-card); /* พื้นหลัง container */
+    border-radius: 10px; /* มุมโค้ง */
+    border: 1px solid var(--card-border); /* เส้นขอบ */
+    padding: 16px 20px; /* ระยะห่างด้านใน */
+    box-shadow: var(--card-shadow); /* เงา */
     transition: background-color 0.35s ease,
                 border-color 0.35s ease,
                 box-shadow 0.35s ease,
-                color 0.35s ease;
+                color 0.35s ease; /* effect เวลาเปลี่ยนธีม */
+  }
+  .scan-history-container:hover {
+    box-shadow: var(--shadow-primary-hover); /* hover = เงาชัดขึ้น */
   }
   
-  .scan-history-container:hover {
-    box-shadow: var(--shadow-primary-hover);
-  }
   
   /* ===============================
-   Filter Input
-   =============================== */
-.filter-row input {
-  max-width: 150px;
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  background-color: var(--bg-panel);
-  color: var(--text-main);
-  transition: border-color 0.25s ease,
-              box-shadow 0.25s ease,
-              background-color 0.35s ease,
-              color 0.35s ease;
-}
-
-.filter-row input:focus {
-  outline: none;
-  border-color: var(--btn-primary-bg-hover);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
-}
-
-/* ===============================
-   Date Wrapper (Custom icon)
-   =============================== */
-.date-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.date-wrapper input[type="date"] {
-  padding-right: 36px;
-  position: relative;
-  z-index: 1;
-  background-color: var(--bg-panel);
-  color: var(--text-main);
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-}
-
-/* ซ่อน icon เดิมแต่ยังให้กดได้ */
-.date-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0;
-  position: absolute;
-  right: 10px;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  z-index: 2;
-}
-
-/* custom icon (ใช้ filter จากตัวแปร) */
-.date-wrapper .calendar-icon {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  width: 18px;
-  height: 18px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 3;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z'/></svg>");
-  filter: var( --calendar-icon-filter);
-}
+     Filter Input
+     =============================== */
+  .filter-row input {
+    max-width: 150px; /* จำกัดความกว้าง */
+    border: 1px solid var(--card-border); /* เส้นขอบ */
+    border-radius: 6px; /* มุมโค้ง */
+    padding: 6px 10px; /* ระยะห่างด้านใน */
+    background-color: var(--bg-panel); /* พื้นหลังช่อง */
+    color: var(--text-main); /* สีตัวอักษร */
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.35s ease,
+                color 0.35s ease;
+  }
+  .filter-row input:focus {
+    outline: none; /* ไม่แสดงเส้นขอบค่า default */
+    border-color: var(--btn-primary-bg-hover); /* เปลี่ยนสีเส้นขอบ */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); /* เพิ่มเงารอบ */
+  }
+  
+  
+  /* ===============================
+     Date Wrapper (Custom icon)
+     =============================== */
+  .date-wrapper {
+    position: relative; /* ให้ไอคอนอยู่ใน container */
+    display: inline-block;
+  }
+  .date-wrapper input[type="date"] {
+    padding-right: 36px; /* เว้นด้านขวาให้ไอคอน */
+    position: relative;
+    z-index: 1;
+    background-color: var(--bg-panel);
+    color: var(--text-main);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+  }
+  /* ซ่อน icon เดิมแต่ยังให้กดได้ */
+  .date-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0; /* โปร่งใส */
+    position: absolute;
+    right: 10px;
+    width: 18px; height: 18px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  /* custom icon (ใช้ filter จากตัวแปร) */
+  .date-wrapper .calendar-icon {
+    position: absolute;
+    top: 50%; right: 10px;
+    width: 18px; height: 18px;
+    transform: translateY(-50%); /* จัดกึ่งกลางแนวตั้ง */
+    pointer-events: none; /* ไม่บังการคลิก */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 3;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z'/></svg>");
+    filter: var(--calendar-icon-filter); /* ใช้สี filter จาก theme */
+  }
+  
   
   /* ===============================
      Table
      =============================== */
   .table th {
-    background-color: var(--table-header-bg);
+    background-color: var(--table-header-bg); /* พื้นหลังหัวตาราง */
     font-weight: 600;
-    color: var(--table-header-text);
+    color: var(--table-header-text); /* สีข้อความหัว */
     transition: background-color 0.35s ease, color 0.35s ease;
   }
-  
   .table td,
   .table th {
-    vertical-align: middle;
-    padding: 12px;
-    border-bottom: 1px solid var(--table-border);
+    vertical-align: middle; /* จัดกึ่งกลางแนวตั้ง */
+    padding: 12px; /* ระยะห่างด้านใน */
+    border-bottom: 1px solid var(--table-border); /* เส้นคั่น */
     transition: background-color 0.35s ease,
                 color 0.35s ease,
                 border-color 0.35s ease;
   }
-  
   .table tbody tr:hover {
-    background-color: var(--table-header-bg2);
+    background-color: var(--table-header-bg2); /* hover = แถวสว่างขึ้น */
   }
+  
   
   /* ===============================
      Actions Buttons
      =============================== */
   .actions .btn {
-    min-width: 150px;
-    border-radius: 6px;
+    min-width: 150px; /* ปุ่มกว้างขั้นต่ำ */
+    border-radius: 6px; /* มุมโค้ง */
     font-weight: 500;
-    display: inline-flex;
+    display: inline-flex; /* จัด icon + text */
     align-items: center;
-    gap: 6px;
+    gap: 6px; /* ระยะห่าง icon-text */
     cursor: pointer;
     transition: transform 0.25s ease,
                 box-shadow 0.25s ease,
                 background-color 0.35s ease,
                 color 0.35s ease;
   }
-  
   .actions .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px); /* ยกขึ้น */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* เงา */
   }
-  
   .actions .btn:active {
-    transform: translateY(0);
+    transform: translateY(0); /* กลับลงมา */
     box-shadow: none;
   }
-  
   /* Success */
   .actions .btn-success {
-    background-color: var(--status-passed-text);
+    background-color: var(--status-passed-text); /* เขียวเข้ม */
     border: none;
     color: #fff;
   }
   .actions .btn-success:hover {
-    background-color: #065f46;
+    background-color: #065f46; /* hover */
   }
-  
   /* Info */
   .actions .btn-info {
-    background-color: var(--metric-code-smells);
+    background-color: var(--metric-code-smells); /* ฟ้า */
     border: none;
     color: #fff;
   }
   .actions .btn-info:hover {
     background-color: #0284c7;
   }
-  
   /* Danger */
   .actions .btn-danger {
-    background-color: var(--btn-stop);
+    background-color: var(--btn-stop); /* แดง */
     border: none;
     color: #fff;
   }
   .actions .btn-danger:hover {
-    background-color: var(--btn-stop-hover);
+    background-color: var(--btn-stop-hover); /* hover แดงเข้ม */
   }
+  
   
   /* ===============================
      Log Button
      =============================== */
   .btn-log {
-    background-color: var(--table-header-bg);
-    border: 1px solid var(--card-border);
-    color: var(--text-main);
+    background-color: var(--table-header-bg); /* พื้นหลัง */
+    border: 1px solid var(--card-border); /* กรอบ */
+    color: var(--text-main); /* ตัวอักษร */
     transition: background-color 0.35s ease,
                 border-color 0.35s ease,
                 color 0.35s ease,
                 box-shadow 0.25s ease,
                 transform 0.25s ease;
   }
-  
   .btn-log:hover {
-    background-color: var(--table-header-bg2);
+    background-color: var(--table-header-bg2); /* hover */
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* เงา */
   }
+  
   
   /* ===============================
      Status (Badge style)
@@ -193,14 +183,13 @@
   .status-failed {
     font-weight: 600;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: 999px; /* pill shape */
     font-size: 13px;
     display: inline-block;
     transition: background-color 0.35s ease,
                 color 0.35s ease,
                 transform 0.25s ease;
   }
-  
   .status-success {
     color: var(--status-passed-text);
     background-color: var(--status-passed-bg);
@@ -213,12 +202,12 @@
     color: var(--status-failed-text);
     background-color: var(--status-failed-bg);
   }
-  
   .status-success:hover,
   .status-warning:hover,
   .status-failed:hover {
-    transform: scale(1.03);
+    transform: scale(1.03); /* ขยายเล็กน้อย */
   }
+  
   
   /* ===============================
      Table Row Fade-in Animation
@@ -226,9 +215,8 @@
   .table tbody tr {
     opacity: 0;
     transform: translateY(4px);
-    animation: fadeInRow 0.4s ease forwards;
+    animation: fadeInRow 0.4s ease forwards; /* แอนิเมชันแถว */
   }
-  
   .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
   .table tbody tr:nth-child(2) { animation-delay: 0.10s; }
   .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
@@ -245,6 +233,4 @@
       transform: translateY(0);
     }
   }
-  
-  
   
