@@ -297,22 +297,6 @@ body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
   }
 }
 
-  }
-/* ===============================
-   Force Override Badge (Dark Mode)
-   =============================== */
-
-/* All Repositories (จากเทา → ขาว) */
-body.dark-mode .repo-tabs .nav-link.active .badge.bg-secondary,
-body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
-  background-color: #ffffff !important; /* ขาว */
-  color: #000000 !important;           /* ตัวอักษรดำ */
-}
-/* Force Override Badge (Dark Mode) */
-body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
-  background-color: #ffffff !important; /* เปลี่ยนเป็นขาว */
-  color: #000000 !important;            /* ตัวหนังสือดำ */
-}
 
 
 
