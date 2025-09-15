@@ -1,24 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; 
-
-interface Repository {
-  project_id: number;
-  name: string;
-  framework: string;
-  language: string;
-  repoUrl: string;
-  branch: string;
-  status: 'Active' | 'Scanning' | 'Paused';
-  lastScan?: string;
-  scanningProgress?: number;
-  qualityGate?: string;
-  bugs: number;
-  vulnerabilities: number;
-  coverage: number;
-  previousGrade?: string;
-}
+import { Router } from '@angular/router';
+import { Repository, RepositoryService } from '../services/repository.service';
 
 @Component({
   selector: 'app-repositories',
@@ -27,67 +11,31 @@ interface Repository {
   templateUrl: './repositories.component.html',
   styleUrl: './repositories.component.css'
 })
-export class RepositoriesComponent {
+export class RepositoriesComponent implements OnInit {
+  repositories: Repository[] = [];
   filteredRepositories: Repository[] = [];
   summaryStats: { label: string; count: number; icon: string; bg: string }[] = [];
   searchText: string = '';
   activeFilter: string = 'all';
-  selectedStatus: string = 'all'; 
+  selectedStatus: string = 'all';
 
-  repositories: Repository[] = [
-    {
-      project_id: 1,
-      name: 'E-Commerce Platform',
-      framework: 'Angular 18',
-      language: 'TypeScript',
-      repoUrl: 'https://github.com/pccth/ecommerce-frontend.git',
-      branch: 'main',
-      status: 'Active',
-      lastScan: '2 hours ago',
-      qualityGate: 'Grade A',
-      bugs: 12,
-      vulnerabilities: 3,
-      coverage: 85
-    },
-    {
-      project_id: 2,
-      name: 'Payment API Service',
-      framework: 'Spring Boot 3.2',
-      language: 'Java 17',
-      repoUrl: 'https://github.com/pccth/payment-service.git',
-      branch: 'develop',
-      status: 'Scanning',
-      scanningProgress: 45,
-      previousGrade: 'Grade B',
-      bugs: 8,
-      vulnerabilities: 3,
-      coverage: 72
-    },
-    {
-      project_id: 3,
-      name: 'User Management Service',
-      framework: 'Angular 18',
-      language: 'TypeScript',
-      repoUrl: 'https://github.com/pccth/user-service.git',
-      branch: 'main',
-      status: 'Paused',
-      bugs: 5,
-      vulnerabilities: 2,
-      coverage: 68,
-      previousGrade: 'Grade C'
-    }
-  ];
-  
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly repoService: RepositoryService
+  ) { }
+
+  ngOnInit(): void {
+    // ดึงข้อมูลจาก service
+    this.repositories = this.repoService.getAll();
+    this.filteredRepositories = [...this.repositories];
+    this.updateSummaryStats();
+  }
 
   goToAddRepository() {
     this.router.navigate(['/addrepository']);
   }
 
-  ngOnInit(): void {
-    this.filteredRepositories = this.repositories;
-    this.updateSummaryStats();
-  }
+
   searchRepositories(event: Event): void {
     this.searchText = (event.target as HTMLInputElement).value.toLowerCase();
     this.applyFilters();
@@ -105,13 +53,13 @@ export class RepositoriesComponent {
   private applyFilters(): void {
     this.filteredRepositories = this.repositories.filter(repo =>
       // 1. filter ตาม tab (framework)
-      (this.activeFilter === 'all' || repo.framework.toLowerCase().includes(this.activeFilter.toLowerCase())) &&
+      (this.activeFilter === 'all' || repo.type?.toLowerCase().includes(this.activeFilter.toLowerCase())) &&
       // 2. filter ตาม status
       (this.selectedStatus === 'all' || repo.status === this.selectedStatus) &&
       // 3. filter ตาม search text
       (this.searchText === '' ||
         repo.name.toLowerCase().includes(this.searchText) ||
-        repo.framework.toLowerCase().includes(this.searchText) ||
+        repo.type?.toLowerCase().includes(this.searchText) ||
         repo.language.toLowerCase().includes(this.searchText))
     );
 
@@ -121,7 +69,7 @@ export class RepositoriesComponent {
 
   countByFramework(framework: string): number {
     return this.filteredRepositories.filter(repo =>
-      repo.framework.toLowerCase().includes(framework.toLowerCase())
+      repo.type?.toLowerCase().includes(framework.toLowerCase())
     ).length;
   }
 
@@ -133,6 +81,30 @@ export class RepositoriesComponent {
       { label: 'Paused', count: this.filteredRepositories.filter(r => r.status === 'Paused').length, icon: 'bi bi-pause-circle-fill', bg: 'bg-warning' }
     ];
   }
+
+  runScan(repo: Repository) {
+    console.log('Run scan for', repo.name);
+    repo.status = 'Scanning';
+    // เรียก service API เพื่อเริ่ม scan
+  }
+
+  stopScan(repo: Repository) {
+    console.log('Stop scan for', repo.name);
+    repo.status = 'Paused';
+    // เรียก service API เพื่อหยุด scan
+  }
+
+  resumeScan(repo: Repository) {
+    console.log('Resume scan for', repo.name);
+    repo.status = 'Scanning';
+    // เรียก service API เพื่อเริ่ม scan ต่อ
+  }
+
+
+  editRepo(repo: Repository) {
+    this.router.navigate(['/settingrepo', repo.project_id]);
+  }
+
 
   viewRepo(repo: Repository): void {
     this.router.navigate(['/detailrepo', repo.project_id]);
