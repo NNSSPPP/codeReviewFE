@@ -1,8 +1,8 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule} from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { Repository, RepositoryService } from '../services/repository.service';
+import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 
 @Component({
   selector: 'app-addrepository',
@@ -12,36 +12,25 @@ import { Repository, RepositoryService } from '../services/repository.service';
   styleUrl: './addrepository.component.css'
 })
 export class AddrepositoryComponent implements OnInit {
- 
+
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly repositoryService: RepositoryService
   ) {}
-
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
   isEditMode: boolean = false;
+
   gitRepository: Repository = {
     project_id: '',
+    user_id: '',
     name: '',
-    type: undefined ,        
-    language: '',
-    repoUrl: '',
+    project_type: undefined,
+    repository_url: '',
     branch: 'main',
-    status: 'Active',
-    credentials: { username: '', password: '', token: '' },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    lastScan: undefined,
-    scanningProgress: undefined,
-    qualityGate: undefined,
-    previousGrade: undefined,
-    bugs: undefined,
-    vulnerabilities: undefined,
-    coverage: undefined
+    created_at: new Date(),
+    updated_at: new Date()
   };
-  
- 
 
   sonarConfig = {
     projectKey: '',
@@ -69,7 +58,7 @@ export class AddrepositoryComponent implements OnInit {
     }
   }
 
-  onSubmit(form: any) {
+  onSubmit(form: NgForm) {
     if (form.valid) {
       if (this.isEditMode) {
         this.repositoryService.updateRepo(this.gitRepository.project_id, this.gitRepository);
@@ -100,29 +89,18 @@ export class AddrepositoryComponent implements OnInit {
       this.router.navigate(['/repositories']);
     }
   }
-  
 
-  clearForm(form: any) {
+  clearForm(form?: NgForm) {
     this.gitRepository = {
       project_id: '',
+      user_id: '',
       name: '',
-      type: undefined,
-      language: '',
-      repoUrl: '',
+      project_type: undefined,
+      repository_url: '',
       branch: 'main',
-      status: 'Active',
-      credentials: { username: '', password: '', token: '' },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastScan: undefined,
-      scanningProgress: undefined,
-      qualityGate: undefined,
-      previousGrade: undefined,
-      bugs: undefined,
-      vulnerabilities: undefined,
-      coverage: undefined
+      created_at: new Date(),
+      updated_at: new Date()
     };
-    
 
     this.sonarConfig = {
       projectKey: '',
@@ -140,12 +118,9 @@ export class AddrepositoryComponent implements OnInit {
     if (form) {
       form.resetForm({
         name: '',
-        url: '',
-        type: undefined,
+        repository_url: '',
+        project_type: undefined,
         branch: 'main',
-        username: '',
-        password: '',
-        token: '',
         serverUrl: 'https://code.pccth.com',
         projectKey: '',
         enableAutoScan: true,

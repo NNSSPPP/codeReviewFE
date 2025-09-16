@@ -160,6 +160,7 @@
   }
   
   
+  
   /* ===============================
      Status Badge
      =============================== */
@@ -183,6 +184,23 @@
   .status-badge.bg-warning {
     background: linear-gradient(90deg, #f59e0b, #e3881f);
   }
+
+   /* ===============================
+     Grade Badge
+     =============================== */
+  .grade-badge {
+    color: white;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+  }
+  
+  .grade-a { background-color: var(--grade-a); }
+  .grade-b { background-color: var(--grade-b); }
+  .grade-c { background-color: var(--grade-c); }
+  .grade-d { background-color: var(--grade-d); }
+  .grade-e { background-color: var(--grade-e); }
   
   
   /* ===============================

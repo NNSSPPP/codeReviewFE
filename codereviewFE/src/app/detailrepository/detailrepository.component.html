@@ -1,144 +1,166 @@
 <div class="container repo-detail">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <a routerLink="/repositories" class="back-btn">
-            <i class="bi bi-arrow-left"></i>
-          </a>
-        <h3 class="fw-bold">
-          <i class="bi bi-folder2-open text-primary me-2"></i>{{ repo.name }}
-        </h3>
-        <p class="text-muted mb-0">{{ repo.framework }} + {{ repo.language }} | Branch: {{ repo.branch }}</p>
-        <a [href]="repo.repoUrl" target="_blank" class="repo-link">
-          <i class="bi bi-link-45deg me-1"></i>{{ repo.repoUrl }}
-        </a>
-      </div>
-  
-      <span class="status-badge" [ngClass]="getStatusClass(repo.status)">
-        {{ repo.status }}
-      </span>
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <a routerLink="/repositories" class="back-btn">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <h3 class="fw-bold">
+        <i class="bi bi-folder2-open text-primary me-2"></i>{{ repo.name }}
+      </h3>
+      <p class="text-muted mb-0">{{ repo.framework }} + {{ repo.language }} | Branch: {{ repo.branch }}</p>
+      <a [href]="repo.repoUrl" target="_blank" class="repo-link">
+        <i class="bi bi-link-45deg me-1"></i>{{ repo.repoUrl }}
+      </a>
     </div>
-  
-    <!-- Actions -->
-    <div class="mb-4 d-flex gap-2 flex-wrap">
-      <button class="btn btn-primary" *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'">
-        <i class="bi bi-play-circle me-1"></i> Run Scan
-      </button>
-      <button class="btn btn-danger" *ngIf="repo.status === 'Scanning'">
-        <i class="bi bi-stop-fill me-1"></i> Stop Scan
-      </button>
-      <button class="btn btn-success" *ngIf="repo.status === 'Paused'">
-        <i class="bi bi-play-fill me-1"></i> Resume Scan
-      </button>
-      <button class="btn btn-secondary">
-        <i class="bi bi-gear me-1"></i> Settings
-      </button>
-    </div>
-  
-    <!-- Tabs -->
-    <ul class="nav nav-tabs mb-3">
-      <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab==='overview'" (click)="switchTab('overview')">Overview</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab==='bugs'" (click)="switchTab('bugs')">Bugs</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab==='coverage'" (click)="switchTab('coverage')">Coverage</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" [class.active]="activeTab==='history'" (click)="switchTab('history')">Scan History</a>
-      </li>
-    </ul>
-  
-    <!-- Tab Content -->
-    <div *ngIf="activeTab==='overview'">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Scan & Quality Overview</h5>
-  
-          <div *ngIf="repo.status === 'Scanning'" class="mb-3">
-            <i class="bi bi-arrow-repeat me-1"></i> Scanning: {{ repo.scanningProgress }}%
-            <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
-              {{ repo.scanningProgress }}%
-            </progress>
-          </div>
-  
-          <p *ngIf="repo.status === 'Active'"><i class="bi bi-clock me-1"></i> Last Scan: {{ repo.lastScan }}</p>
-          <p *ngIf="repo.qualityGate">Quality Gate: <span class="badge bg-success">{{ repo.qualityGate }}</span></p>
-          <p *ngIf="repo.previousGrade">Previous: <span class="badge bg-warning text-dark">{{ repo.previousGrade }}</span></p>
+
+    <span class="status-badge" [ngClass]="getStatusClass(repo.status)">
+      {{ repo.status }}
+    </span>
+  </div>
+
+  <!-- Actions -->
+  <div class="mb-4 d-flex gap-2 flex-wrap">
+    <button class="btn btn-primary" *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'">
+      <i class="bi bi-play-circle me-1"></i> Run Scan
+    </button>
+    <button class="btn btn-danger" *ngIf="repo.status === 'Scanning'">
+      <i class="bi bi-stop-fill me-1"></i> Stop Scan
+    </button>
+    <button class="btn btn-success" *ngIf="repo.status === 'Paused'">
+      <i class="bi bi-play-fill me-1"></i> Resume Scan
+    </button>
+    <button class="btn btn-secondary" (click)="editRepo(repo)">
+      <i class="bi bi-gear me-1"></i> Settings
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab==='overview'" (click)="switchTab('overview')">Overview</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab==='bugs'" (click)="switchTab('bugs')">Bugs</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab==='metrics'" (click)="switchTab('metrics')">Metrics & Analytics</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab==='history'" (click)="switchTab('history')">Scan History</a>
+    </li>
+  </ul>
+
+  <!-- Overview Tab -->
+  <div *ngIf="activeTab==='overview'">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Scan & Quality Overview</h5>
+
+        <div *ngIf="repo.status === 'Scanning'" class="mb-3">
+          <i class="bi bi-arrow-repeat me-1"></i> Scanning: {{ repo.scanningProgress }}%
+          <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
+            {{ repo.scanningProgress }}%
+          </progress>
         </div>
+
+        <p *ngIf="repo.status === 'Active'"><i class="bi bi-clock me-1"></i> Last Scan: {{ repo.lastScan }}</p>
+        <p *ngIf="repo.qualityGate">Quality Gate: <span class="badge bg-success">{{ repo.qualityGate }}</span></p>
+        <p *ngIf="repo.previousGrade">Previous: <span class="badge bg-warning text-dark">{{ repo.previousGrade }}</span></p>
+
+        <p *ngIf="repo.coverage !== undefined">
+          <i class="bi bi-bar-chart-fill me-1"></i> Coverage: 
+          <span class="badge bg-info text-dark">{{ repo.coverage }}%</span>
+        </p>
       </div>
     </div>
-  
-    <div *ngIf="activeTab==='bugs'">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Bugs & Vulnerabilities</h5>
-          <div class="repo-stats mb-3">
-            <span><i class="bi bi-bug me-1"></i>{{ repo.bugs }} Bugs</span>
-            <span><i class="bi bi-shield-lock me-1"></i>{{ repo.vulnerabilities }} Vulnerabilities</span>
-          </div>
-  
-          <table class="table table-sm table-hover">
-            <thead>
-              <tr>
-                <th>Issue</th>
-                <th>Severity</th>
-                <th>Status</th>
-                <th>Assigned To</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let bug of repo.bugList">
-                <td>{{ bug.title }}</td>
-                <td>{{ bug.severity }}</td>
-                <td>{{ bug.status }}</td>
-                <td>{{ bug.assignedTo }}</td>
-              </tr>
-            </tbody>
-          </table>
+  </div>
+
+  <!-- Bugs Tab -->
+  <div *ngIf="activeTab==='bugs'">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Bugs & Vulnerabilities</h5>
+        <div class="repo-stats mb-3">
+          <span><i class="bi bi-bug me-1"></i>{{ repo.bugs }} Bugs</span>
+          <span><i class="bi bi-shield-lock me-1"></i>{{ repo.vulnerabilities }} Vulnerabilities</span>
         </div>
+
+        <table class="table table-sm table-hover">
+          <thead>
+            <tr>
+              <th>Issue</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Assigned To</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let bug of repo.bugList">
+              <td>{{ bug.title }}</td>
+              <td>{{ bug.severity }}</td>
+              <td>{{ bug.status }}</td>
+              <td>{{ bug.assignedTo }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  
-    <div *ngIf="activeTab==='coverage'">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Code Coverage</h5>
-          <div class="coverage-chart">
-            <p>{{ repo.coverage }}% Coverage</p>
-          </div>
+  </div>
+
+  <!-- Metrics & Analytics Tab -->
+  <div *ngIf="activeTab==='metrics'">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Metrics & Analytics</h5>
+
+        <!-- Metrics Summary -->
+        <div class="metrics-summary mb-4">
+          <p><i class="bi bi-bar-chart-fill me-1"></i> Coverage: <span class="badge bg-info text-dark">{{ repo.coverage }}%</span></p>
+          <p><i class="bi bi-exclamation-triangle-fill me-1"></i> Code Smells: <span class="badge bg-warning text-dark">{{ repo.codeSmells }}</span></p>
+          <p><i class="bi bi-files me-1"></i> Duplicated Lines: <span class="badge bg-secondary text-dark">{{ repo.duplicatedLines }}</span></p>
+          <p><i class="bi bi-clock-history me-1"></i> Technical Debt: <span class="badge bg-danger text-light">{{ repo.technicalDebt }}</span></p>
         </div>
-      </div>
-    </div>
-  
-    <div *ngIf="activeTab==='history'">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Scan History</h5>
-          <table class="table table-sm table-hover">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Bugs</th>
-                <th>Vulnerabilities</th>
-                <th>Coverage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let history of repo.scanHistory">
-                <td>{{ history.date }}</td>
-                <td>{{ history.status }}</td>
-                <td>{{ history.bugs }}</td>
-                <td>{{ history.vulnerabilities }}</td>
-                <td>{{ history.coverage }}%</td>
-              </tr>
-            </tbody>
-          </table>
+
+        <!-- Analytics / Trends -->
+        <div class="analytics-trends">
+          <h6>Trends</h6>
+          <p>แนวโน้ม Bugs, Vulnerabilities, Coverage ย้อนหลัง</p>
+          <div class="chart-placeholder">
+            <span class="text-muted">[Chart จะอยู่ตรงนี้]</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- History Tab -->
+  <div *ngIf="activeTab==='history'">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Scan History</h5>
+        <table class="table table-sm table-hover">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Bugs</th>
+              <th>Vulnerabilities</th>
+              <th>Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let history of repo.scanHistory">
+              <td>{{ history.date }}</td>
+              <td>{{ history.status }}</td>
+              <td>{{ history.bugs }}</td>
+              <td>{{ history.vulnerabilities }}</td>
+              <td>{{ history.coverage }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
