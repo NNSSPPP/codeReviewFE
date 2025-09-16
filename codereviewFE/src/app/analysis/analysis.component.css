@@ -1,10 +1,11 @@
 /* =========================
-   GLOBAL STYLE
+   GLOBAL STYLE (Component Scope)
    ========================= */
-   body {
-    background: linear-gradient(180deg, #f8faff 0%, #eef4ff 100%); /* พื้นหลังแบบไล่สี ฟ้าอ่อน → ฟ้าอมเทา */
-    color: #212529; /* สีตัวอักษรหลัก */
-    font-family: "Inter", "Prompt", sans-serif; /* ฟอนต์สวย มินิมอล อ่านง่าย */
+   :host {
+    display: block;
+    background: linear-gradient(180deg, #f8faff 0%, #eef4ff 100%);
+    color: #212529;
+    font-family: "Inter", "Prompt", sans-serif;
   }
   
   /* =========================
@@ -13,38 +14,33 @@
   .summary-card {
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 16px; /* มุมโค้งมน */
+    border-radius: 16px;
     background: #ffffff;
-    border: 1px solid #edf2f7; /* เส้นขอบบาง ๆ */
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.05); /* เงาจาง ๆ */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* ทำให้ hover สมูท */
+    border: 1px solid #edf2f7;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  
   .summary-card h5 {
-    color: #0d6efd; /* ฟ้าเฉพาะหัวข้อ */
+    color: #0d6efd;
     font-weight: 600;
   }
-  
   .summary-card p {
     color: #212529;
     font-weight: 500;
   }
-  
   .summary-card button {
     color: #0d6efd;
     border-color: #0d6efd;
     border-radius: 8px;
     transition: background-color 0.25s ease, color 0.25s ease;
   }
-  
   .summary-card button:hover {
     background-color: #0d6efd;
     color: #ffffff;
   }
-  
   .summary-card:hover {
-    transform: translateY(-6px) scale(1.02); /* ยกขึ้นเล็กน้อย */
-    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.15); /* เงาเข้มขึ้น */
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.15);
   }
   
   /* =========================
@@ -59,10 +55,9 @@
     font-weight: 500;
     transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
   }
-  
   .list-group-item:hover {
-    transform: translateX(6px); /* ขยับไปทางขวา */
-    background-color: #f0f7ff;  /* พื้นหลังฟ้าอ่อน */
+    transform: translateX(6px);
+    background-color: #f0f7ff;
     box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08);
   }
   
@@ -74,10 +69,8 @@
     font-size: 0.85em;
     font-weight: 600;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08); /* เพิ่มมิติ */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
-  
-  /* สี Badge ตาม priority */
   .red    { background-color: #ff6b6b; color: white; }
   .orange { background-color: #ffa94d; color: white; }
   .yellow { background-color: #ffd43b; color: #212529; }
@@ -86,30 +79,54 @@
   /* =========================
      TEXT COLORS OVERRIDE
      ========================= */
-  .text-primary { color: #0d6efd !important; } /* ฟ้า: หัวข้อหลัก, icon */
-  .text-info    { color: #17a2b8 !important; } /* ฟ้าอมเขียว: ปุ่ม, icon */
-  .text-warning { color: #ffc107 !important; } /* เหลือง: คำเตือน */
+  .text-primary { color: #0d6efd !important; }
+  .text-info    { color: #17a2b8 !important; }
+  .text-warning { color: #ffc107 !important; }
   
   /* =========================
      HEADINGS
      ========================= */
   h3, h5 {
     font-weight: 600;
-    letter-spacing: 0.3px; /* ระยะห่างตัวอักษรเล็กน้อย */
+    letter-spacing: 0.3px;
   }
   h3.text-primary {
     font-size: 1.6rem;
-    font-weight: 700;     /* เน้นสุด */
+    font-weight: 700;
   }
-  
   .summary-card p.display-6 {
-    font-weight: 700;     /* ค่าใหญ่เช่นตัวเลข metric */
+    font-weight: 700;
     letter-spacing: 0.5px;
   }
-  
   p strong {
-    font-weight: 600;     /* ข้อความเน้น เช่น Security Score */
-    color: #111827;       /* เข้มขึ้นกว่า default */
+    font-weight: 600;
+    color: #111827;
   }
   
+  /* =========================
+     DARK MODE OVERRIDE
+     ========================= */
+  :host-context(body.dark-mode) {
+    background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+    color: #f9fafb;
+  }
+  :host-context(body.dark-mode) .summary-card {
+    background: #1e1e1e;
+    border: 1px solid #374151;
+    color: #f9fafb;
+  }
+  :host-context(body.dark-mode) .summary-card h5 {
+    color: #60a5fa;
+  }
+  :host-context(body.dark-mode) .list-group-item {
+    background: #2c2c2c;
+    border: 1px solid #4b5563;
+    color: #e5e7eb;
+  }
+  :host-context(body.dark-mode) .list-group-item:hover {
+    background-color: #374151;
+  }
+  :host-context(body.dark-mode) .badge.yellow {
+    color: #000; /* ให้ badge เหลืองยังอ่านออก */
+  }
   

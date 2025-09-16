@@ -227,3 +227,44 @@
     border-color: var(--card-border) !important;
   }
   
+  /* Dark mode override for Issues */
+
+/* Table base */
+body.dark-mode .issues-container .table {
+  background-color: var(--bg-card) !important;
+  border-color: var(--card-border) !important;
+}
+
+body.dark-mode .issues-container .table th {
+  background-color: var(--table-header-bg) !important;
+  color: var(--table-header-text) !important;
+}
+
+body.dark-mode .issues-container .table td {
+  background-color: var(--bg-card) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-main) !important;
+}
+
+/* ✅ Force keep severity/status colors */
+body.dark-mode .issues-container .table td.text-danger { color: #ef4444 !important; }   /* แดง */
+body.dark-mode .issues-container .table td.text-warning { color: #f59e0b !important; } /* ส้ม */
+body.dark-mode .issues-container .table td.text-success { color: #10b981 !important; } /* เขียว */
+
+/* Stripe rows */
+body.dark-mode .issues-container .table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--bg-panel) !important;
+}
+
+/* Hover rows */
+body.dark-mode .issues-container .table tbody tr:hover {
+  background-color: var(--table-header-bg2) !important;
+}
+
+/* Dark mode filters */
+body.dark-mode .issues-container .form-control,
+body.dark-mode .issues-container .form-select {
+  background-color: var(--bg-panel) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-main) !important;
+}

@@ -222,4 +222,67 @@
       transform: translateY(0);
     }
   }
+  :host ::ng-deep body.dark-mode table.table {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--card-border) !important;
+  }
+  
+  :host ::ng-deep body.dark-mode table.table th {
+    background-color: var(--table-header-bg) !important;
+    color: var(--table-header-text) !important;
+  }
+  
+  :host ::ng-deep body.dark-mode table.table td {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--card-border) !important;
+  }
+  
+  /* zebra effect */
+  :host ::ng-deep body.dark-mode table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--bg-panel) !important;
+  }
+  
+  /* hover */
+  :host ::ng-deep body.dark-mode table.table tbody tr:hover {
+    background-color: var(--table-header-bg2) !important;
+  }
+  /* ===============================
+   Dark mode fixes: placeholder & muted text
+   =============================== */
+
+/* input / search bar placeholder */
+:host-context(body.dark-mode) ::placeholder {
+  color: #ffffff !important;       /* ทำให้ตัวหนังสือ placeholder เป็นสีขาว */
+  opacity: 0.7;                    /* จางลงหน่อย จะได้ไม่กลืน */
+}
+
+/* ข้อความเล็กใต้ issue (Line ... in file) */
+:host-context(body.dark-mode) small,
+:host-context(body.dark-mode) .text-muted {
+  color: #d1d5db !important;       /* เทาอ่อนที่มองเห็นชัด */
+}
+/* ===============================
+   Dark mode: Select dropdown arrow
+   =============================== */
+   :host-context(body.dark-mode) select.form-select {
+    color: #ffffff !important;                   /* ตัวอักษรใน select */
+    background-color: var(--bg-panel) !important;
+    border: 1px solid var(--card-border) !important;
+  
+    /* reset default arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  
+    /* เพิ่ม custom arrow ขาว */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6 6.5-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1rem 1rem;
+    padding-right: 2rem; /* เว้นที่ให้ arrow */
+  }
+  
+  
   
