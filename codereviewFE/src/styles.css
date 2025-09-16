@@ -227,44 +227,118 @@
     border-color: var(--card-border) !important;
   }
   
-  /* Dark mode override for Issues */
+  /* ===============================
+   Dark Mode Override (Assignment Page)
+   =============================== */
 
-/* Table base */
-body.dark-mode .issues-container .table {
+/* Table */
+body.dark-mode .assignment-wrapper .assignment-table {
   background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
   border-color: var(--card-border) !important;
 }
 
-body.dark-mode .issues-container .table th {
+body.dark-mode .assignment-wrapper .assignment-table thead th {
   background-color: var(--table-header-bg) !important;
   color: var(--table-header-text) !important;
-}
-
-body.dark-mode .issues-container .table td {
-  background-color: var(--bg-card) !important;
   border-color: var(--card-border) !important;
-  color: var(--text-main) !important;
 }
 
-/* ✅ Force keep severity/status colors */
-body.dark-mode .issues-container .table td.text-danger { color: #ef4444 !important; }   /* แดง */
-body.dark-mode .issues-container .table td.text-warning { color: #f59e0b !important; } /* ส้ม */
-body.dark-mode .issues-container .table td.text-success { color: #10b981 !important; } /* เขียว */
+body.dark-mode .assignment-wrapper .assignment-table td {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--card-border) !important;
+}
 
 /* Stripe rows */
-body.dark-mode .issues-container .table-striped tbody tr:nth-of-type(odd) {
+body.dark-mode .assignment-wrapper .assignment-table tbody tr:nth-child(even) {
   background-color: var(--bg-panel) !important;
 }
 
-/* Hover rows */
-body.dark-mode .issues-container .table tbody tr:hover {
+/* Hover row */
+body.dark-mode .assignment-wrapper .assignment-table tbody tr:hover {
   background-color: var(--table-header-bg2) !important;
 }
 
-/* Dark mode filters */
-body.dark-mode .issues-container .form-control,
-body.dark-mode .issues-container .form-select {
-  background-color: var(--bg-panel) !important;
-  border-color: var(--card-border) !important;
+/* Badge colors */
+body.dark-mode .assignment-wrapper .badge.bg-low {
+  background-color: #10b981 !important;
+  color: #fff !important;
+}
+body.dark-mode .assignment-wrapper .badge.bg-medium {
+  background-color: #fbbf24 !important;
+  color: #1f2937 !important;
+}
+body.dark-mode .assignment-wrapper .badge.bg-high {
+  background-color: #ef4444 !important;
+  color: #fff !important;
+}
+body.dark-mode .assignment-wrapper .badge.bg-critical {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+/* ===============================
+   Dark Mode Override (Assignment Modal)
+   =============================== */
+
+/* ตัวกล่อง modal */
+body.dark-mode .modal-content {
+  background-color: var(--bg-card) !important;
   color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Header */
+body.dark-mode .modal-header {
+  border-bottom: 1px solid var(--card-border) !important;
+  background-color: var(--bg-panel) !important;
+  color: var(--text-heading) !important;
+}
+
+/* Title */
+body.dark-mode .modal-title {
+  color: var(--text-heading) !important;
+}
+
+/* Footer */
+body.dark-mode .modal-footer {
+  border-top: 1px solid var(--card-border) !important;
+  background-color: var(--bg-panel) !important;
+}
+
+/* Inputs */
+body.dark-mode .modal-body .form-control,
+body.dark-mode .modal-body .form-select,
+body.dark-mode .modal-body textarea {
+  background-color: var(--bg-panel) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+body.dark-mode .modal-body .form-control:focus,
+body.dark-mode .modal-body .form-select:focus,
+body.dark-mode .modal-body textarea:focus {
+  border-color: var(--btn-primary-bg) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+}
+
+/* ปุ่ม */
+body.dark-mode .modal-footer .btn-secondary {
+  background-color: var(--bg-panel) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+body.dark-mode .modal-footer .btn-secondary:hover {
+  background-color: var(--table-header-bg2) !important;
+}
+
+body.dark-mode .modal-footer .btn-primary {
+  background-color: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-text) !important;
+}
+
+body.dark-mode .modal-footer .btn-primary:hover {
+  background-color: var(--btn-primary-bg-hover) !important;
 }

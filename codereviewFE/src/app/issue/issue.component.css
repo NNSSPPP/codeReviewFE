@@ -1,288 +1,255 @@
-.custom-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  background-color: #FFC107; /* สีเหลืองเข้ม */
-  color: #1A1A1A; /* ข้อความเข้ม */
-  font-weight: 500;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.custom-btn:hover {
-  background-color: #FFB300; /* เหลืองเข้มขึ้น */
-  transform: scale(1.05);
-}
-
 /* ===============================
-   TABLE BASE STYLE
+   Custom Button
    =============================== */
-   .table {
-    border-radius: 10px;                          /* ขอบโค้งมน */
-    overflow: hidden;                             /* ซ่อนขอบที่เกิน */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);       /* เงาอ่อน */
-    transition: box-shadow 0.3s ease;             /* เคลื่อนไหวตอน hover */
+   :host ::ng-deep .issues-container .custom-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background-color: #FFC107; /* สีเหลืองเข้ม */
+    color: #1A1A1A; /* ข้อความเข้ม */
+    font-weight: 500;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
   }
-  .table:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);      /* เงาเข้มขึ้นเมื่อ hover */
+  :host ::ng-deep .issues-container .custom-btn:hover {
+    background-color: #FFB300; /* เหลืองเข้มขึ้น */
+    transform: scale(1.05);
   }
-  
-  .table thead th {
-    background-color: #f9fafb;                    /* พื้นหลังหัวตาราง */
-    font-weight: 600;                             /* หนากว่า */
-    color: #374151;                               /* สีเทาเข้ม */
-  }
-  
-  .table td,
-  .table th {
-    vertical-align: middle;                       /* จัดข้อความให้อยู่กึ่งกลาง */
-    padding: 12px;                                /* ช่องว่างรอบตัวอักษร */
-    transition: background-color 0.25s ease;      /* เคลื่อนไหวสีพื้นหลัง */
-  }
-  
-  .table tbody tr:hover {
-    background-color: #f3f4f6;                    /* แถวเปลี่ยนสีเมื่อ hover */
-  }
-  
-  .table tbody tr:nth-child(even) {
-    background-color: #fafafa;                    /* Zebra effect: แถวคู่สีอ่อน */
-  }
-  
-  .table tbody tr {
-    border-bottom: 1px solid #f0f0f0;             /* เส้นกั้นแต่ละแถว */
-  }
-  
   
   /* ===============================
-     ICONS IN TABLE
+     Table Base Style
      =============================== */
-  .table td i.bi {
-    margin-right: 5px;                            /* ระยะห่างระหว่างไอคอนกับข้อความ */
-    font-size: 1.1rem;                            /* ขนาดไอคอน */
-    transition: transform 0.25s ease;             /* เคลื่อนไหวเวลา hover */
+  :host ::ng-deep .issues-container .table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
   }
-  .table td:hover i.bi {
-    transform: scale(1.15);                       /* ไอคอนขยายเล็กน้อย */
+  :host ::ng-deep .issues-container .table:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
-  
+  :host ::ng-deep .issues-container .table thead th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+  }
+  :host ::ng-deep .issues-container .table td,
+  :host ::ng-deep .issues-container .table th {
+    vertical-align: middle;
+    padding: 12px;
+    transition: background-color 0.25s ease;
+  }
+  :host ::ng-deep .issues-container .table tbody tr:hover {
+    background-color: #f3f4f6;
+  }
+  :host ::ng-deep .issues-container .table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  :host ::ng-deep .issues-container .table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+  }
   
   /* ===============================
-     FILTERS (select / input)
+     Icons in Table
      =============================== */
-  .filters select,
-  .filters input,
-  .form-select,
-  .form-control {
-    min-width: 150px;                             /* กำหนดความกว้างขั้นต่ำ */
-    border-radius: 8px;                           /* มุมโค้ง */
-    border: 1px solid #d1d5db;                    /* เส้นขอบเทา */
-    transition: border-color 0.25s ease,
-                box-shadow 0.25s ease;
+  :host ::ng-deep .issues-container .table td i.bi {
+    margin-right: 5px;
+    font-size: 1.1rem;
+    transition: transform 0.25s ease;
   }
-  .filters select:focus,
-  .filters input:focus,
-  .form-select:focus,
-  .form-control:focus {
-    border-color: #2563eb;                        /* ขอบฟ้าเมื่อ focus */
+  :host ::ng-deep .issues-container .table td:hover i.bi {
+    transform: scale(1.15);
+  }
+  
+  /* ===============================
+     Filters (select/input)
+     =============================== */
+  :host ::ng-deep .issues-container .filters select,
+  :host ::ng-deep .issues-container .filters input,
+  :host ::ng-deep .issues-container .form-select,
+  :host ::ng-deep .issues-container .form-control {
+    min-width: 150px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  :host ::ng-deep .issues-container .filters select:focus,
+  :host ::ng-deep .issues-container .filters input:focus,
+  :host ::ng-deep .issues-container .form-select:focus,
+  :host ::ng-deep .issues-container .form-control:focus {
+    border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     outline: none;
   }
   
-  
   /* ===============================
-     BUTTONS (ทั่วไป)
+     Buttons
      =============================== */
-  .btn {
-    border-radius: 8px;                           /* ขอบมน */
-    font-weight: 500;                             /* หนากลาง */
-    display: inline-flex;                         /* จัดให้อยู่แถวเดียวกับไอคอน */
+  :host ::ng-deep .issues-container .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;                                     /* ระยะห่างระหว่าง icon/text */
+    gap: 6px;
     transition: transform 0.25s ease,
                 box-shadow 0.25s ease,
                 background-color 0.25s ease;
   }
-  .btn i {
-    transition: transform 0.25s ease;             /* ไอคอนเคลื่อนไหว */
+  :host ::ng-deep .issues-container .btn i {
+    transition: transform 0.25s ease;
   }
-  .btn:hover i {
-    transform: translateX(2px);                   /* ไอคอนขยับนิดๆ เวลา hover */
+  :host ::ng-deep .issues-container .btn:hover i {
+    transform: translateX(2px);
   }
-  .btn:hover {
-    transform: translateY(-2px);                  /* ปุ่มยกขึ้น */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);      /* มีเงา */
+  :host ::ng-deep .issues-container .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
   }
-  .btn:active {
-    transform: translateY(0);                     /* กดแล้วปุ่มกดยุบลง */
+  :host ::ng-deep .issues-container .btn:active {
+    transform: translateY(0);
     box-shadow: none;
   }
-  
-  
-  /* ===============================
-     BUTTONS (ขนาดใหญ่)
-     =============================== */
-  .btn-big {
-    font-size: 1.1rem;                            /* ข้อความใหญ่ขึ้น */
-    padding: 0.6rem 1.2rem;                       /* เพิ่ม padding */
+  :host ::ng-deep .issues-container .btn-big {
+    font-size: 1.1rem;
+    padding: 0.6rem 1.2rem;
     border-radius: 10px;
   }
   
-  
-  /* ===============================
-     BUTTON COLORS
-     =============================== */
-  .btn-primary {
-    background: linear-gradient(90deg, #2563eb, #1d4ed8); /* ฟ้า gradient */
+  /* Button Colors */
+  :host ::ng-deep .issues-container .btn-primary {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
     border: none;
   }
-  .btn-primary:hover {
+  :host ::ng-deep .issues-container .btn-primary:hover {
     box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
   }
-  
-  .btn-secondary {
-    background-color: #e5e7eb;                    /* เทา */
+  :host ::ng-deep .issues-container .btn-secondary {
+    background-color: #e5e7eb;
     border: none;
     color: #374151;
   }
-  .btn-secondary:hover {
+  :host ::ng-deep .issues-container .btn-secondary:hover {
     box-shadow: 0 0 8px rgba(107, 114, 128, 0.4);
   }
-  
-  .btn-success {
-    background-color: #10b981;                    /* เขียว */
+  :host ::ng-deep .issues-container .btn-success {
+    background-color: #10b981;
     border: none;
   }
-  .btn-success:hover {
+  :host ::ng-deep .issues-container .btn-success:hover {
     box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
   }
-  
-  .btn-outline-primary {
+  :host ::ng-deep .issues-container .btn-outline-primary {
     border: 1px solid #2563eb;
     color: #2563eb;
   }
-  .btn-outline-primary:hover {
+  :host ::ng-deep .issues-container .btn-outline-primary:hover {
     background-color: #2563eb;
     color: #fff;
   }
-  
-  .btn-info {
-    background-color: #95cbf0;                    /* ฟ้าอ่อน */
+  :host ::ng-deep .issues-container .btn-info {
+    background-color: #95cbf0;
     border: 1px solid #7dd3fc;
     color: #0369a1;
   }
-  .btn-info:hover {
+  :host ::ng-deep .issues-container .btn-info:hover {
     background-color: #bae6fd;
     border-color: #0284c7;
     color: #075985;
   }
   
-  
   /* ===============================
-     CHECKBOX
+     Checkbox
      =============================== */
-  input[type="checkbox"] {
-    accent-color: #2563eb;                        /* สี checkbox */
-    transform: scale(1.1);                        /* ขยายเล็กน้อย */
+  :host ::ng-deep .issues-container input[type="checkbox"] {
+    accent-color: #2563eb;
+    transform: scale(1.1);
     transition: transform 0.2s ease;
   }
-  input[type="checkbox"]:checked {
-    transform: scale(1.2);                        /* ขยายเพิ่มเวลา checked */
+  :host ::ng-deep .issues-container input[type="checkbox"]:checked {
+    transform: scale(1.2);
   }
   
-  
   /* ===============================
-     FOOTER
+     Footer
      =============================== */
-  footer,
-  .d-flex.my-3 {
+  :host ::ng-deep .issues-container footer,
+  :host ::ng-deep .issues-container .d-flex.my-3 {
     border-top: 1px solid #e5e7eb;
     padding-top: 12px;
     margin-top: 20px;
   }
   
-  
   /* ===============================
-     ROW ANIMATION
+     Row Animation
      =============================== */
-  .table tbody tr {
+  :host ::ng-deep .issues-container .table tbody tr {
     opacity: 0;
     transform: translateY(5px);
     animation: fadeInRow 0.4s ease forwards;
   }
-  .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
-  .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
-  .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
-  .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
-  
+  :host ::ng-deep .issues-container .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+  :host ::ng-deep .issues-container .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+  :host ::ng-deep .issues-container .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+  :host ::ng-deep .issues-container .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
   @keyframes fadeInRow {
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  :host ::ng-deep body.dark-mode table.table {
-    background-color: var(--bg-card) !important;
-    color: var(--text-main) !important;
-    border-color: var(--card-border) !important;
-  }
   
-  :host ::ng-deep body.dark-mode table.table th {
+  /* ===============================
+     Dark Mode (Issues Page)
+     =============================== */
+  :host-context(body.dark-mode) .issues-container table {
+    background-color: var(--bg-card) !important;
+    border-color: var(--card-border) !important;
+    color: #ffffff !important; /* ค่าเริ่มต้นข้อความใน dark mode */
+  }
+  :host-context(body.dark-mode) .issues-container th {
     background-color: var(--table-header-bg) !important;
-    color: var(--table-header-text) !important;
+    color: #ffffff !important;
   }
-  
-  :host ::ng-deep body.dark-mode table.table td {
+  :host-context(body.dark-mode) .issues-container td {
     background-color: var(--bg-card) !important;
-    color: var(--text-main) !important;
     border-color: var(--card-border) !important;
+    color: #ffffff !important; /* ทำให้ตัวหนังสือหลักเป็นสีขาว */
   }
-  
-  /* zebra effect */
-  :host ::ng-deep body.dark-mode table.table-striped tbody tr:nth-of-type(odd) {
+  :host-context(body.dark-mode) .issues-container tr:nth-of-type(odd) {
     background-color: var(--bg-panel) !important;
   }
-  
-  /* hover */
-  :host ::ng-deep body.dark-mode table.table tbody tr:hover {
+  :host-context(body.dark-mode) .issues-container tr:hover {
     background-color: var(--table-header-bg2) !important;
   }
+  
   /* ===============================
-   Dark mode fixes: placeholder & muted text
-   =============================== */
-
-/* input / search bar placeholder */
-:host-context(body.dark-mode) ::placeholder {
-  color: #ffffff !important;       /* ทำให้ตัวหนังสือ placeholder เป็นสีขาว */
-  opacity: 0.7;                    /* จางลงหน่อย จะได้ไม่กลืน */
-}
-
-/* ข้อความเล็กใต้ issue (Line ... in file) */
-:host-context(body.dark-mode) small,
-:host-context(body.dark-mode) .text-muted {
-  color: #d1d5db !important;       /* เทาอ่อนที่มองเห็นชัด */
-}
-/* ===============================
-   Dark mode: Select dropdown arrow
-   =============================== */
-   :host-context(body.dark-mode) select.form-select {
-    color: #ffffff !important;                   /* ตัวอักษรใน select */
-    background-color: var(--bg-panel) !important;
-    border: 1px solid var(--card-border) !important;
-  
-    /* reset default arrow */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  
-    /* เพิ่ม custom arrow ขาว */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6 6.5-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.8rem center;
-    background-size: 1rem 1rem;
-    padding-right: 2rem; /* เว้นที่ให้ arrow */
+     Severity/Status Colors (ไม่ถูก override)
+     =============================== */
+  :host-context(body.dark-mode) .issues-container td.text-danger {
+    color: #ef4444 !important; /* แดง */
   }
-  
-  
-  
+  :host-context(body.dark-mode) .issues-container td.text-warning {
+    color: #f59e0b !important; /* เหลือง */
+  }
+  :host-context(body.dark-mode) .issues-container td.text-success {
+    color: #10b981 !important; /* เขียว */
+  }
+  :host-context(body.dark-mode) .issues-container td.text-primary {
+    color: #2563eb !important; /* น้ำเงิน */
+  }
+  :host-context(body.dark-mode) .issues-container .btn-outline-primary {
+    background-color: #2563eb;
+    color: #fff;
+    border: 1px solid #1d4ed8;
+  }
+  :host-context(body.dark-mode) .issues-container .btn-outline-primary:hover {
+    background-color: #1d4ed8;
+  }
+  :host-context(body.dark-mode) .issues-container .table td small,
+:host-context(body.dark-mode) .issues-container .table td .text-muted {
+  color: #9ca3af !important; /* เทาอ่อน */
+}
+
+    
