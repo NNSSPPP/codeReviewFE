@@ -52,10 +52,9 @@
 
     <!-- Search + Status -->
     <div class="d-flex flex-wrap gap-2 ms-auto mb-2 search-box">
-      <input type="text" class="form-control" placeholder="Search repositories..." (input)="searchRepositories($event)"
-        style="min-width:200px" />
+      <input type="text" class="form-control" placeholder="Search repositories..." (input)="searchRepositories($event)">
 
-      <select class="form-select" [(ngModel)]="selectedStatus" (change)="filterByStatus()" style="min-width:150px">
+      <select class="form-select" [(ngModel)]="selectedStatus" (change)="filterByStatus()">
         <option value="all">All Status</option>
         <option value="Active">Active</option>
         <option value="Scanning">Scanning</option>
@@ -75,29 +74,49 @@
         <div class="d-flex justify-content-between align-items-start">
           <div>
             <h5 class="fw-bold mb-1">{{ repo.name }}</h5>
-            <p class="text-muted mb-2">{{ repo.type }}</p>
-            <a [href]="repo.repoUrl" target="_blank" class="repo-link">
-              <i class="bi bi-link-45deg me-1"></i>{{ repo.repoUrl }}
+            <p class="text-muted mb-2">{{ repo.project_type }}</p>
+            <a [href]="repo.repository_url" target="_blank" class="repo-link">
+              <i class="bi bi-link-45deg me-1"></i>{{ repo.repository_url }}
             </a>
             <p class="mb-1"><i class="bi bi-git me-1"></i> Branch: {{ repo.branch }}</p>
 
-            <p class="mb-1" *ngIf="repo.status === 'Active'">
-              <i class="bi bi-clock me-1"></i> Last Scan: <strong>{{ repo.lastScan }}</strong>
-            </p>
+            <!-- Status / Scan Progress -->
+            <div>
+              <i class="bi me-1" [ngClass]="repo.status === 'Scanning' ? 'bi-arrow-repeat' : 'bi-clock'"></i>
 
-            <div *ngIf="repo.status === 'Scanning'" class="mb-2">
-              <i class="bi bi-arrow-repeat me-1"></i> Scanning: <strong>{{ repo.scanningProgress }}%</strong>
-              <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
-                {{ repo.scanningProgress }}%
-              </progress>
+              <span *ngIf="repo.status === 'Scanning'"> Scanning: <strong>{{ repo.scanningProgress }}%</strong>
+                <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
+                  {{ repo.scanningProgress }}%
+                </progress>
+              </span>
+              <span *ngIf="repo.status !== 'Scanning'">
+                Last Scan: <strong>{{ repo.lastScan }}</strong>
+              </span>
             </div>
 
-            <p *ngIf="repo.qualityGate" class="mb-1">Quality Gate:
-              <span class="badge bg-success">{{ repo.qualityGate }}</span>
-            </p>
-            <p *ngIf="repo.previousGrade" class="mb-1">Previous:
-              <span class="badge bg-warning text-dark">{{ repo.previousGrade }}</span>
-            </p>
+            <!-- Quality Gate Badge -->
+            <div>
+              <div>
+                <span class="badge grade-badge" [ngClass]="{
+                    'grade-a': repo.qualityGate === 'A',
+                    'grade-b': repo.qualityGate === 'B',
+                    'grade-c': repo.qualityGate === 'C',
+                    'grade-d': repo.qualityGate === 'D',
+                    'grade-e': repo.qualityGate === 'E'
+                  }">
+                  <i class="bi me-1"
+                     [ngClass]="{
+                       'bi-check-circle': repo.qualityGate === 'A' || repo.qualityGate === 'B',
+                       'bi-exclamation-triangle': repo.qualityGate === 'C' || repo.qualityGate === 'D',
+                       'bi-x-circle': repo.qualityGate === 'E'
+                     }"></i>
+                  {{ repo.status === 'Scanning' ? 'Previous: ' : 'Quality Gate: ' }}{{ repo.qualityGate }}
+                </span>
+              </div>
+              
+            </div>
+
+
           </div>
 
           <span class="status-badge" [ngClass]="{
@@ -114,15 +133,15 @@
           <!-- Stats -->
           <div class="repo-stats">
             <span>
-              <i class="bi bi-bug me-1 text-danger"></i>{{ repo.bugs }} Bugs
+              <i class="bi bi-bug me-1 text-danger"></i>{{ repo.metrics?.bugs }} Bugs
             </span>
 
             <span>
-              <i class="bi bi-shield-lock me-1 text-warning"></i>{{ repo.vulnerabilities }} Vulnerabilities
+              <i class="bi bi-shield-lock me-1 text-warning"></i>{{ repo.metrics?.vulnerabilities }} Vulnerabilities
             </span>
 
             <span>
-              <i class="bi bi-graph-up me-1 text-success"></i>{{ repo.coverage }}% Coverage
+              <i class="bi bi-graph-up me-1 text-success"></i>{{ repo.metrics?.coverage }}% Coverage
             </span>
 
           </div>

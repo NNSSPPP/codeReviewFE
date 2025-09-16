@@ -1,21 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule ,ActivatedRoute } from '@angular/router';
-
-interface Bug {
-  title: string;
-  severity: string;
-  status: string;
-  assignedTo: string;
-}
-
-interface ScanHistory {
-  date: string;
-  status: string;
-  bugs: number;
-  vulnerabilities: number;
-  coverage: number;
-}
+import { RouterModule ,ActivatedRoute, Router } from '@angular/router';
 
 interface Repository {
   project_id: number;
@@ -34,7 +19,27 @@ interface Repository {
   coverage: number;
   bugList: Bug[];
   scanHistory: ScanHistory[];
+  codeSmells?: number;
+  duplicatedLines?: number;
+  technicalDebt?: number;
 }
+
+interface Bug {
+  title: string;
+  severity: string;
+  status: string;
+  assignedTo: string;
+}
+
+interface ScanHistory {
+  date: string;
+  status: string;
+  bugs: number;
+  vulnerabilities: number;
+  coverage: number;
+}
+
+
 
 
 @Component({
@@ -46,16 +51,19 @@ interface Repository {
 })
 export class DetailrepositoryComponent {
 
-  constructor(private readonly route: ActivatedRoute) { }
+  repoId!: number;
+  repo!: Repository;
+
+  activeTab: 'overview' | 'bugs' | 'history' | 'metrics' = 'overview';
+
+  constructor(
+    private router: Router,
+    private readonly route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    // ดึง id จาก URL
     this.repoId = Number(this.route.snapshot.paramMap.get('project_id'));
     this.loadRepository(this.repoId);
   }
-
-  repoId!: number;
-  repo!: Repository;
 
   // ตัวอย่าง repository data
   allRepos: Repository[] = [
@@ -74,6 +82,9 @@ export class DetailrepositoryComponent {
       bugs: 12,
       vulnerabilities: 3,
       coverage: 85,
+      codeSmells: 12,
+      duplicatedLines: 30,
+      technicalDebt: 5,
       bugList: [
         { title: 'NullPointerException', severity: 'High', status: 'Open', assignedTo: 'John' },
         { title: 'UI Bug', severity: 'Low', status: 'Open', assignedTo: 'Alice' }
@@ -97,6 +108,9 @@ export class DetailrepositoryComponent {
       bugs: 8,
       vulnerabilities: 3,
       coverage: 78,
+      codeSmells: 8,
+      duplicatedLines: 15,
+      technicalDebt: 3,
       bugList: [
         { title: 'Memory Leak', severity: 'Medium', status: 'Closed', assignedTo: 'Bob' }
       ],
@@ -106,22 +120,30 @@ export class DetailrepositoryComponent {
     }
   ];
 
-  activeTab: string = 'overview';
-
-  loadRepository(project_id: number) {
-    this.repo = this.allRepos.find(r => r.project_id === project_id)!;
+  loadRepository(id: number) {
+    const found = this.allRepos.find(r => r.project_id === id);
+    if (found) {
+      this.repo = found;
+    } else {
+      console.error('Repository not found!');
+      this.repo = this.allRepos[0];
+    }
   }
 
-  switchTab(tab: string) {
+  switchTab(tab: 'overview' | 'bugs' | 'history' | 'metrics') {
     this.activeTab = tab;
   }
 
-  getStatusClass(status: string) {
-    return {
-      'bg-success': status === 'Active',
-      'bg-info': status === 'Scanning',
-      'bg-warning': status === 'Paused'
-    };
+  editRepo(repo: Repository) {
+    this.router.navigate(['/settingrepo', repo.project_id]);
   }
 
+  getStatusClass(status: string) {
+    switch (status) {
+      case 'Active': return 'badge bg-success';
+      case 'Scanning': return 'badge bg-primary';
+      case 'Paused': return 'badge bg-warning text-dark';
+      default: return '';
+    }
+  }
 }

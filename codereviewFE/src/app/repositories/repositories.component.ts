@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Repository, RepositoryService } from '../services/repository.service';
+import { Repository, RepositoryService } from '../services/reposervice/repository.service';
+import { ScanService, Scan } from '../services/scanservice/scan.service';
 
 @Component({
   selector: 'app-repositories',
@@ -21,12 +22,30 @@ export class RepositoriesComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly repoService: RepositoryService
+    private readonly repoService: RepositoryService,
+    private readonly scanService: ScanService
   ) { }
 
   ngOnInit(): void {
-    // ดึงข้อมูลจาก service
     this.repositories = this.repoService.getAll();
+
+    // map scan info เข้า repository
+    this.repositories.forEach(repo => {
+      const scans = this.scanService.getByProjectId(repo.project_id);
+      if(scans.length > 0) {
+        const latestScan = scans[scans.length - 1];
+        repo.status = latestScan.status;
+        repo.lastScan = latestScan.completed_at ? latestScan.completed_at.toLocaleString() : '-';
+        repo.scanningProgress = latestScan.status === 'Scanning' ? 50 : 100; // mock progress
+        repo.qualityGate = latestScan.quality_gate;
+        repo.metrics = latestScan.metrics;
+      } else {
+        repo.status = 'Active';
+        repo.lastScan = '-';
+        repo.scanningProgress = 0;
+      }
+    });
+
     this.filteredRepositories = [...this.repositories];
     this.updateSummaryStats();
   }
@@ -53,14 +72,13 @@ export class RepositoriesComponent implements OnInit {
   private applyFilters(): void {
     this.filteredRepositories = this.repositories.filter(repo =>
       // 1. filter ตาม tab (framework)
-      (this.activeFilter === 'all' || repo.type?.toLowerCase().includes(this.activeFilter.toLowerCase())) &&
+      (this.activeFilter === 'all' || repo.project_type?.toLowerCase().includes(this.activeFilter.toLowerCase())) &&
       // 2. filter ตาม status
-      (this.selectedStatus === 'all' || repo.status === this.selectedStatus) &&
+      // (this.selectedStatus === 'all' || repo.status === this.selectedStatus) &&
       // 3. filter ตาม search text
       (this.searchText === '' ||
         repo.name.toLowerCase().includes(this.searchText) ||
-        repo.type?.toLowerCase().includes(this.searchText) ||
-        repo.language.toLowerCase().includes(this.searchText))
+        repo.project_type?.toLowerCase().includes(this.searchText))
     );
 
     this.updateSummaryStats();
@@ -69,7 +87,7 @@ export class RepositoriesComponent implements OnInit {
 
   countByFramework(framework: string): number {
     return this.filteredRepositories.filter(repo =>
-      repo.type?.toLowerCase().includes(framework.toLowerCase())
+      repo.project_type?.toLowerCase().includes(framework.toLowerCase())
     ).length;
   }
 
