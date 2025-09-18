@@ -8,9 +8,9 @@
       <h3 class="fw-bold">
         <i class="bi bi-folder2-open text-primary me-2"></i>{{ repo.name }}
       </h3>
-      <p class="text-muted mb-0">{{ repo.framework }} + {{ repo.language }} | Branch: {{ repo.branch }}</p>
-      <a [href]="repo.repoUrl" target="_blank" class="repo-link">
-        <i class="bi bi-link-45deg me-1"></i>{{ repo.repoUrl }}
+      <p class="text-muted mb-0">Branch: {{ repo.branch }}</p>
+      <a [href]="repo.repository_url" target="_blank" class="repo-link">
+        <i class="bi bi-link-45deg me-1"></i>{{ repo.repository_url }}
       </a>
     </div>
 
@@ -30,7 +30,7 @@
     <button class="btn btn-success" *ngIf="repo.status === 'Paused'">
       <i class="bi bi-play-fill me-1"></i> Resume Scan
     </button>
-    <button class="btn btn-secondary" (click)="editRepo(repo)">
+    <button class="btn btn-secondary" >
       <i class="bi bi-gear me-1"></i> Settings
     </button>
   </div>
@@ -66,11 +66,11 @@
 
         <p *ngIf="repo.status === 'Active'"><i class="bi bi-clock me-1"></i> Last Scan: {{ repo.lastScan }}</p>
         <p *ngIf="repo.qualityGate">Quality Gate: <span class="badge bg-success">{{ repo.qualityGate }}</span></p>
-        <p *ngIf="repo.previousGrade">Previous: <span class="badge bg-warning text-dark">{{ repo.previousGrade }}</span></p>
 
-        <p *ngIf="repo.coverage !== undefined">
+
+        <p *ngIf="repo.metrics?.coverage !== undefined">
           <i class="bi bi-bar-chart-fill me-1"></i> Coverage: 
-          <span class="badge bg-info text-dark">{{ repo.coverage }}%</span>
+          <span class="badge bg-info text-dark">{{ repo.metrics?.coverage }}%</span>
         </p>
       </div>
     </div>
@@ -82,8 +82,8 @@
       <div class="card-body">
         <h5 class="card-title">Bugs & Vulnerabilities</h5>
         <div class="repo-stats mb-3">
-          <span><i class="bi bi-bug me-1"></i>{{ repo.bugs }} Bugs</span>
-          <span><i class="bi bi-shield-lock me-1"></i>{{ repo.vulnerabilities }} Vulnerabilities</span>
+          <span><i class="bi bi-bug me-1"></i>{{ repo.metrics?.bugs }} Bugs</span>
+          <span><i class="bi bi-shield-lock me-1"></i>{{ repo.metrics?.vulnerabilities }} Vulnerabilities</span>
         </div>
 
         <table class="table table-sm table-hover">
@@ -96,8 +96,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let bug of repo.bugList">
-              <td>{{ bug.title }}</td>
+            <tr *ngFor="let bug of issues">
+              <td>{{ bug.issueKey }}</td>
               <td>{{ bug.severity }}</td>
               <td>{{ bug.status }}</td>
               <td>{{ bug.assignedTo }}</td>
@@ -116,10 +116,10 @@
 
         <!-- Metrics Summary -->
         <div class="metrics-summary mb-4">
-          <p><i class="bi bi-bar-chart-fill me-1"></i> Coverage: <span class="badge bg-info text-dark">{{ repo.coverage }}%</span></p>
-          <p><i class="bi bi-exclamation-triangle-fill me-1"></i> Code Smells: <span class="badge bg-warning text-dark">{{ repo.codeSmells }}</span></p>
-          <p><i class="bi bi-files me-1"></i> Duplicated Lines: <span class="badge bg-secondary text-dark">{{ repo.duplicatedLines }}</span></p>
-          <p><i class="bi bi-clock-history me-1"></i> Technical Debt: <span class="badge bg-danger text-light">{{ repo.technicalDebt }}</span></p>
+          <p><i class="bi bi-bar-chart-fill me-1"></i> Coverage: <span class="badge bg-info text-dark">{{ repo.metrics?.coverage }}%</span></p>
+          <!-- <p><i class="bi bi-exclamation-triangle-fill me-1"></i> Code Smells: <span class="badge bg-warning text-dark">{{ repo.metrics?.codeSmells }}</span></p>
+          <p><i class="bi bi-files me-1"></i> Duplicated Lines: <span class="badge bg-secondary text-dark">{{ repo.metrics?.duplicatedLines }}</span></p>
+          <p><i class="bi bi-clock-history me-1"></i> Technical Debt: <span class="badge bg-danger text-light">{{ repo.metrics?.technicalDebt }}</span></p> -->
         </div>
 
         <!-- Analytics / Trends -->
@@ -150,12 +150,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let history of repo.scanHistory">
-              <td>{{ history.date }}</td>
+            <tr *ngFor="let history of scans">
+              <td>{{ history.completed_at }}</td>
               <td>{{ history.status }}</td>
-              <td>{{ history.bugs }}</td>
-              <td>{{ history.vulnerabilities }}</td>
-              <td>{{ history.coverage }}%</td>
+              <td>{{ history.metrics?.bugs }}</td>
+              <td>{{ history.metrics?.vulnerabilities }}</td>
+              <td>{{ history.metrics?.coverage }}%</td>
             </tr>
           </tbody>
         </table>

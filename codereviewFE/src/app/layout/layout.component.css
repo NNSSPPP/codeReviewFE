@@ -26,30 +26,6 @@ app-navbar {
   color: var(--text-color);
 }
 
-/* ปุ่ม Toggle */
-.theme-toggle-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--toggle-btn-bg);
-  color: var(--toggle-btn-text);
-  border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s, background 0.3s;
-}
-
-.theme-toggle-btn:hover {
-  transform: scale(1.1);
-}
-
 /* Responsive */
 @media (max-width: 767px) {
   .app-container {

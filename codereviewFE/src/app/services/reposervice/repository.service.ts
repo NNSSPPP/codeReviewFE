@@ -93,7 +93,7 @@ export class RepositoryService {
 
   // ดึง repository ตาม project_id
   getByIdRepo(project_id: string): Repository | undefined {
-    return this.repositories.find(r => r.project_id === project_id);
+    return this.repositories.find(r => r.project_id === project_id)??undefined;
   }
 
   // เพิ่ม repository ใหม่
