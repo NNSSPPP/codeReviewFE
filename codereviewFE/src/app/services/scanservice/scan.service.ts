@@ -112,7 +112,7 @@ export class ScanService {
   }
 
   // ดึง scan ตาม scan_id
-  getById(scans_id: string): Scan | undefined {
+  getByIdScan(scans_id: string): Scan | undefined {
     return this.scans.find(s => s.scans_id === scans_id);
   }
 
