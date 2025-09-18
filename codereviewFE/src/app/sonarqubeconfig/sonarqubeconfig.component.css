@@ -10,6 +10,7 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     animation: fadeIn 0.5s ease;
   }
+  
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -37,11 +38,11 @@
   input:focus, select:focus, textarea:focus {
     border-color: #3498db !important;
     box-shadow: 0 0 0 3px rgba(52,152,219,0.2) !important;
-    transform: scale(1.01); /* ขยายเล็กน้อย */
+    transform: scale(1.01);
   }
   
   /* ===============================
-     Buttons
+     Buttons (General)
      =============================== */
   .btn {
     border-radius: 8px !important;
@@ -94,3 +95,100 @@
     box-shadow: 0 0 0 3px rgba(52,152,219,0.25);
   }
   
+  /* ===============================
+     Dark Mode Overrides
+     =============================== */
+  
+  /* Container & Cards */
+  :host-context(.dark-mode) .config-container {
+    background: #1e1e1e !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+    color: #f3f4f6 !important;
+  }
+  :host-context(.dark-mode) .card,
+  :host-context(.dark-mode) section {
+    background: #1f2937 !important;
+    color: #e5e7eb !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+  }
+  :host-context(.dark-mode) .card:hover,
+  :host-context(.dark-mode) section:hover {
+    background: #2d3748 !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.6) !important;
+  }
+  
+  /* Inputs */
+  :host-context(.dark-mode) input,
+  :host-context(.dark-mode) select,
+  :host-context(.dark-mode) textarea {
+    background-color: #111827 !important;
+    color: #f9fafb !important;
+    border: 1px solid #374151 !important;
+  }
+  :host-context(.dark-mode) input::placeholder,
+  :host-context(.dark-mode) textarea::placeholder {
+    color: #9ca3af !important;
+  }
+  
+  /* Checkboxes */
+  :host-context(.dark-mode) .form-check-input {
+    background-color: #1f2937 !important;
+    border: 1px solid #4b5563 !important;
+  }
+  :host-context(.dark-mode) .form-check-input:checked {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+  }
+  
+  /* ===============================
+     Specific 3 Buttons in Dark Mode
+     =============================== */
+  
+  /* Test Connection = น้ำเงิน */
+  :host-context(.dark-mode) .btn-outline-primary {
+    background-color: #2563eb !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  :host-context(.dark-mode) .btn-outline-primary:hover {
+    background-color: #1e40af !important;
+  }
+  
+  /* Reset = เหลือง */
+  :host-context(.dark-mode) .btn-outline-warning {
+    background-color: #facc15 !important;
+    color: #1a1a1a !important;
+    border: none !important;
+  }
+  :host-context(.dark-mode) .btn-outline-warning:hover {
+    background-color: #eab308 !important;
+    color: #fff !important;
+  }
+  
+  /* Save Settings = เขียว */
+  :host-context(.dark-mode) .btn-success {
+    background-color: #16a34a !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  :host-context(.dark-mode) .btn-success:hover {
+    background-color: #15803d !important;
+  }
+/* ===============================
+   Show/Hide Token Button (Dark Mode)
+   =============================== */
+   :host-context(.dark-mode) .btn-outline-secondary {
+    background-color: #2563eb !important;  /* น้ำเงิน */
+    color: #fff !important;
+    border: none !important;
+  }
+  :host-context(.dark-mode) .btn-outline-secondary:hover {
+    background-color: #1e40af !important;  /* น้ำเงินเข้ม */
+  }
+/* ===============================
+   Helper Text / Form Text (Dark Mode)
+   =============================== */
+   :host-context(.dark-mode) .form-text {
+    color: #9ca3af !important;  /* เทาอ่อน → มองเห็นชัด */
+  }
+      

@@ -171,5 +171,143 @@
   transform: translateY(-2px);      /* ลอยขึ้นมาเล็กน้อย */
   box-shadow: 0 4px 10px rgba(0,0,0,0.06); /* เงาเบา ๆ */
 }
+/* ===============================
+   Dark Mode Override for ApexCharts
+   =============================== */
+
+/* Title + Subtitle */
+body.dark-mode .apexcharts-title-text,
+body.dark-mode .apexcharts-subtitle-text {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Axis Labels (X/Y) */
+body.dark-mode .apexcharts-xaxis text,
+body.dark-mode .apexcharts-yaxis text {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Grid lines */
+body.dark-mode .apexcharts-grid line {
+  stroke: #4b5563 !important; /* เทาเข้มๆ */
+}
+
+/* Tooltip */
+body.dark-mode .apexcharts-tooltip {
+  background: #1f2937 !important;   /* เทาเข้ม */
+  color: #f9fafb !important;        /* ตัวอักษรขาว */
+  border: 1px solid #374151 !important;
+}
+/* ===============================
+   Technical Debt Page Overrides
+   =============================== */
+
+/* Card */
+:host-context(.dark-mode) .card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+}
+:host-context(.dark-mode) .card-header {
+  background-color: var(--table-header-bg) !important;
+  color: var(--table-header-text) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+}
+
+/* Summary box (Total Debt / Estimated Cost) */
+:host-context(.dark-mode) .bg-light {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* Table */
+:host-context(.dark-mode) .table {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--card-border) !important;
+}
+:host-context(.dark-mode) .table thead th {
+  background-color: var(--table-header-bg) !important;
+  color: var(--table-header-text) !important;
+  border-color: var(--card-border) !important;
+}
+:host-context(.dark-mode) .table tbody td {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* List group */
+:host-context(.dark-mode) .list-group-item {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+}
+:host-context(.dark-mode) .list-group-item:hover {
+  background-color: var(--table-header-bg2) !important;
+}
+
+/* ApexCharts */
+:host-context(.dark-mode) .apexcharts-canvas {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+}
+:host-context(.dark-mode) .apexcharts-title-text,
+:host-context(.dark-mode) .apexcharts-subtitle-text,
+:host-context(.dark-mode) .apexcharts-xaxis text,
+:host-context(.dark-mode) .apexcharts-yaxis text {
+  fill: var(--apexcharts-text, #ffffff) !important;
+  color: var(--apexcharts-text, #ffffff) !important;
+}
+:host-context(.dark-mode) .apexcharts-grid line {
+  stroke: var(--card-border) !important;
+}
+:host-context(.dark-mode) .back-btn {
+  background: #2563eb !important; /* น้ำเงิน */
+  color: #ffffff !important;      /* ลูกศรขาว */
+  box-shadow: none !important;    /* ตัดเรืองแสงออก */
+}
+
+:host-context(.dark-mode) .back-btn:hover {
+  background: #1d4ed8 !important; /* hover → น้ำเงินเข้ม */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4) !important; /* เงาเบา ๆ ธรรมดา */
+}
+/* ===============================
+   Dark Mode ApexCharts Fix
+   =============================== */
+
+/* ใช้ ::ng-deep เพื่อเจาะเข้าไปถึง element ของ apexcharts */
+:host-context(.dark-mode) ::ng-deep .apexcharts-title-text,
+:host-context(.dark-mode) ::ng-deep .apexcharts-subtitle-text {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .apexcharts-xaxis text,
+:host-context(.dark-mode) ::ng-deep .apexcharts-yaxis text {
+  fill: #e5e7eb !important;
+  color: #e5e7eb !important;
+  font-weight: 500 !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .apexcharts-grid line {
+  stroke: #6b7280 !important;
+  stroke-width: 1.2px !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .apexcharts-xaxis line,
+:host-context(.dark-mode) ::ng-deep .apexcharts-yaxis line {
+  stroke: #9ca3af !important;
+  stroke-width: 1.2px !important;
+}
+
+
+
 
   
