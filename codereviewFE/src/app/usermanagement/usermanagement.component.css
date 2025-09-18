@@ -206,3 +206,113 @@ span.inactive {
   from { transform: scale(0.9); opacity: 0; }       /* ขยายจากเล็ก */
   to { transform: scale(1); opacity: 1; }
 }
+/* ===============================
+   Dark Mode: User Management
+   =============================== */
+   :host-context(.dark-mode) .user-management-container {
+    background: #111827;                /* พื้นหลังหลักเข้ม */
+    color: #f3f4f6;                     /* ตัวอักษรอ่อน */
+  }
+  
+  /* หัวข้อ */
+  :host-context(.dark-mode) h2 {
+    color: #e5e7eb;                     /* สีเทาอ่อน */
+  }
+  
+  /* Toolbar */
+  :host-context(.dark-mode) .search-input {
+    background: #1f2937;
+    color: #f9fafb;
+    border: 1px solid #374151;
+  }
+  :host-context(.dark-mode) .search-input::placeholder {
+    color: #9ca3af;
+  }
+  :host-context(.dark-mode) .search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+  }
+  
+  /* Table */
+  :host-context(.dark-mode) .user-table {
+    background: #1f2937;
+    color: #f9fafb;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  :host-context(.dark-mode) .user-table th {
+    background: #374151;
+    color: #e5e7eb;
+    border-bottom: 1px solid #4b5563;
+  }
+  :host-context(.dark-mode) .user-table td {
+    color: #f3f4f6;
+    border-bottom: 1px solid #374151;
+  }
+  :host-context(.dark-mode) .user-table tr:hover td {
+    background: #2d3748;
+  }
+  
+  /* Buttons */
+  :host-context(.dark-mode) .btn-primary {
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    color: #fff;
+  }
+  :host-context(.dark-mode) .btn-warning {
+    background: #facc15;
+    color: #1f2937;
+  }
+  :host-context(.dark-mode) .btn-danger {
+    background: #ef4444;
+    color: #fff;
+  }
+  :host-context(.dark-mode) .btn-secondary {
+    background: #374151;
+    color: #f9fafb;
+  }
+  
+  /* Status Badges */
+  :host-context(.dark-mode) span.active {
+    background: #064e3b;
+    color: #34d399;
+  }
+  :host-context(.dark-mode) span.inactive {
+    background: #7f1d1d;
+    color: #f87171;
+  }
+  
+  /* Modal */
+  :host-context(.dark-mode) .modal-content {
+    background: #1f2937;
+    color: #f3f4f6;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  :host-context(.dark-mode) .close-btn {
+    color: #9ca3af;
+  }
+  :host-context(.dark-mode) .close-btn:hover {
+    color: #ef4444;
+  }
+  
+  /* Form inside modal */
+  :host-context(.dark-mode) .form-control {
+    background: #111827;
+    border: 1px solid #374151;
+    color: #f9fafb;
+  }
+  :host-context(.dark-mode) .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+  }
+  :host-context(.dark-mode) .form-control::placeholder {
+    color: #9ca3af;
+  }
+  
+  /* Modal Footer Buttons */
+  :host-context(.dark-mode) .modal-footer .btn-primary {
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+  }
+  :host-context(.dark-mode) .modal-footer .btn-secondary {
+    background: #374151;
+    color: #f9fafb;
+  }
+  
