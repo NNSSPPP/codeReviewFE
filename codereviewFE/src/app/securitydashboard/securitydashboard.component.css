@@ -104,4 +104,100 @@
     padding: 10px;                        /* padding รอบกราฟ */
     background: #ffffff;                  /* พื้นหลังขาว */
   }
+  /* =========================
+   DARK MODE OVERRIDE
+   ========================= */
+:host-context(.dark-mode) .back-btn {
+  background: #2563eb !important;   /* พื้นหลังน้ำเงิน */
+  color: #ffffff !important;        /* ไอคอน/ข้อความ ขาว */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+:host-context(.dark-mode) .back-btn:hover {
+  background: #1d4ed8 !important;   /* น้ำเงินเข้ม */
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* Card */
+:host-context(.dark-mode) .card {
+  background-color: #1f2937 !important;  /* เทาเข้ม */
+  color: #f9fafb !important;             /* ตัวหนังสือขาว */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+:host-context(.dark-mode) .card-header {
+  background-color: #111827 !important;  /* ดำเข้ม */
+  border-bottom: 1px solid #374151 !important;
+  color: #f3f4f6 !important;
+}
+
+/* Vulnerabilities progress bar container */
+:host-context(.dark-mode) .progress-bar-container {
+  background-color: #374151 !important;
+}
+
+/* OWASP list */
+:host-context(.dark-mode) .list-group-item {
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  color: #e5e7eb !important;
+}
+:host-context(.dark-mode) .list-group-item:hover {
+  background: #111827 !important;
+}
+
+/* Hot issues list */
+:host-context(.dark-mode) ol li {
+  color: #f9fafb !important;
+}
+
+/* ApexCharts */
+:host-context(.dark-mode) .apexcharts-canvas {
+  background: #1f2937 !important;
+  color: #f9fafb !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+/* ===============================
+   Dark Mode Override for ApexCharts
+   =============================== */
+
+/* Axis + Labels */
+body.dark-mode .apexcharts-canvas text,
+body.dark-mode .apexcharts-canvas tspan {
+  fill: var(--apexcharts-text, #ffffff) !important;  /* ใช้สีจากตัวแปร ถ้าไม่มีก็ fallback = ขาว */
+  color: var(--apexcharts-text, #ffffff) !important;
+}
+
+/* Title + Subtitle */
+body.dark-mode .apexcharts-title-text,
+body.dark-mode .apexcharts-subtitle-text {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Tooltip */
+body.dark-mode .apexcharts-tooltip {
+  background: #1f2937 !important;   /* เทาเข้ม */
+  color: #f9fafb !important;        /* ตัวอักษรขาว */
+  border: 1px solid #374151 !important;
+}
+:host-context(.dark-mode) ::ng-deep .apexcharts-canvas text,
+:host-context(.dark-mode) ::ng-deep .apexcharts-canvas tspan {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .apexcharts-title-text,
+:host-context(.dark-mode) ::ng-deep .apexcharts-subtitle-text {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .apexcharts-tooltip {
+  background: #1f2937 !important;
+  color: #f9fafb !important;
+  border: 1px solid #374151 !important;
+}
+
+
+
   

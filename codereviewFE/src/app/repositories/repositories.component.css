@@ -3,21 +3,21 @@
    =============================== */
    .btn-circle {
     position: relative;
-    display: inline-flex;       /* จัดให้ปุ่มอยู่ตรงกลางทั้งแนวตั้งแนวนอน */
+    display: inline-flex;       
     align-items: center;
     justify-content: center;
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb); /* Gradient ฟ้า */
-    border-radius: 50%;         /* วงกลม */
+    background: linear-gradient(135deg, #3b82f6, #2563eb); 
+    border-radius: 50%;         
     border: none;
     cursor: pointer;
     font-size: 22px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* เงาเล็ก */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
   .btn-circle:hover {
-    transform: scale(1.12) rotate(6deg);   /* ขยาย+หมุนเล็กน้อยตอน hover */
+    transform: scale(1.12) rotate(6deg);   
     box-shadow: 0 6px 16px rgba(0,0,0,0.3);
   }
   .btn-circle i {
@@ -25,7 +25,7 @@
     transition: transform 0.25s ease;
   }
   .btn-circle:hover i {
-    transform: scale(1.1); /* icon โตขึ้นตอน hover */
+    transform: scale(1.1); 
   }
   
   
@@ -33,11 +33,11 @@
      Dashboard Container
      =============================== */
   .repo-dashboard {
-    background-color: #f9fafb; /* เทาอ่อน */
-    color: #000;
+    background-color: var(--bg-color); 
+    color: var(--text-color);
     min-height: 100vh;
     padding: 20px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   
@@ -50,13 +50,14 @@
     gap: 15px;
     padding: 16px;
     border-radius: 12px;
-    background-color: #ffffff;
+    background-color: var(--detail-bg); 
+    color: var(--text-color);
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
   }
   .summary-card:hover {
-    transform: translateY(-3px);                  /* ยกขึ้นเล็กน้อย */
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);      /* shadow ชัดขึ้น */
+    transform: translateY(-3px);                  
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);      
   }
   .summary-icon {
     width: 48px;
@@ -70,7 +71,7 @@
     transition: transform 0.25s ease;
   }
   .summary-card:hover .summary-icon {
-    transform: rotate(8deg) scale(1.1);           /* icon หมุน+โตขึ้น */
+    transform: rotate(8deg) scale(1.1);           
   }
   
   
@@ -78,20 +79,46 @@
      Tabs
      =============================== */
   .repo-tabs .nav-link {
-    color: #555;
+    color: var(--text-color); 
     border-radius: 20px;
     margin-right: 8px;
-    transition: background-color 0.25s ease, transform 0.2s ease;
+    transition: background-color 0.25s ease, transform 0.2s ease, color 0.25s ease;
   }
   .repo-tabs .nav-link:hover {
-    background-color: #e5e7eb;
+    background-color: var(--detail-bg); 
     transform: translateY(-2px);
   }
   .repo-tabs .nav-link.active {
-    background-color: #2563eb; 
-    color: #fff;
+    background-color: var(--navbar-active-bg); 
+    color: var(--repo-tab-text);
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  
+  /* Active tab ใน Dark Mode */
+  body.dark-mode .repo-tabs .nav-pills .nav-link.active,
+  body.dark-mode .repo-tabs .nav-link.active {
+    background-color: #ffffff !important; 
+    color: #2563eb !important;            
+    font-weight: 600 !important;          
+    border: none !important;              
+    box-shadow: none !important;          
+  }
+  
+  /* ===============================
+     Badge Overrides (Dark Mode)
+     =============================== */
+  body.dark-mode .badge.bg-secondary {
+    background-color: #2563eb !important; /* All Repositories = ฟ้า */
+    color: #ffffff !important;
+  }
+  body.dark-mode .badge.bg-warning {
+    background-color: #fbbf24 !important; /* Angular = เหลือง */
+    color: #000000 !important;
+  }
+  body.dark-mode .badge.bg-success {
+    background-color: #10b981 !important; /* Spring Boot = เขียว */
+    color: #ffffff !important;
   }
   
   
@@ -99,11 +126,17 @@
      Repo Card
      =============================== */
   .repo-card {
-    background-color: #ffffff;
+
+    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+    background-color: var(--detail-bg); 
+    color: var(--text-color);
     border-radius: 12px;
     padding: 18px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
   }
   .repo-card:hover {
     transform: translateY(-4px);
@@ -115,6 +148,7 @@
      Repo Link
      =============================== */
   .repo-link {
+    
     color: #2563eb;
     font-size: 0.9rem;
     text-decoration: none;
@@ -126,19 +160,47 @@
   }
   
   
+  
   /* ===============================
      Status Badge
      =============================== */
   .status-badge {
     padding: 5px 12px;
-    border-radius: 999px;   /* pill shape */
+    border-radius: 999px;   
     font-size: 0.8rem;
     font-weight: 600;
     transition: transform 0.25s ease;
+    color: #fff;
   }
   .status-badge:hover {
-    transform: scale(1.08); /* ขยายตอน hover */
+    transform: scale(1.08); 
   }
+  .status-badge.bg-success {
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+  .status-badge.bg-info {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+  }
+  .status-badge.bg-warning {
+    background: linear-gradient(90deg, #f59e0b, #e3881f);
+  }
+
+   /* ===============================
+     Grade Badge
+     =============================== */
+  .grade-badge {
+    color: white;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+  }
+  
+  .grade-a { background-color: var(--grade-a); }
+  .grade-b { background-color: var(--grade-b); }
+  .grade-c { background-color: var(--grade-c); }
+  .grade-d { background-color: var(--grade-d); }
+  .grade-e { background-color: var(--grade-e); }
   
   
   /* ===============================
@@ -150,14 +212,14 @@
     gap: 18px;
     margin-top: 12px;
     font-size: 0.9rem;
-    color: #555;
+    color: var(--text-color); 
   }
   .repo-stats i {
     color: #2563eb;
     transition: transform 0.25s ease;
   }
   .repo-stats span:hover i {
-    transform: scale(1.2); /* icon ขยายตอน hover */
+    transform: scale(1.2); 
   }
   
   
@@ -169,10 +231,10 @@
     height: 6px;
     border: none;
     border-radius: 4px;
-    background-color: #e5e7eb;
+    background-color: var(--detail-bg);
   }
   .custom-progress::-webkit-progress-value {
-    background: linear-gradient(90deg, #0ea5e9, #2563eb); /* gradient ฟ้า */
+    background: linear-gradient(90deg, #0ea5e9, #2563eb); 
     border-radius: 4px;
   }
   .custom-progress::-moz-progress-bar {
@@ -192,16 +254,68 @@
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
-  .status-badge.bg-success {
-    background: linear-gradient(90deg, #10b981, #059669);
-    color: #fff;
+  
+  
+  /* ===============================
+     Text Muted
+     =============================== */
+  .text-muted {
+    color: var(--text-color) !important;
+    opacity: 0.8; 
   }
-  .status-badge.bg-info {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-    color: #fff;
+/* ===============================
+   Force Override Badge (Dark Mode)
+   =============================== */
+
+/* All Repositories (จากเทา → ขาว) */
+body.dark-mode .repo-tabs .nav-link.active .badge.bg-secondary,
+body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
+  background-color: #ffffff !important; /* ขาว */
+  color: #000000 !important;           /* ตัวอักษรดำ */
+}
+/* Force Override Badge (Dark Mode) */
+body.dark-mode .repo-tabs .nav-link.active .badge.text-bg-secondary {
+  background-color: #ffffff !important; /* เปลี่ยนเป็นขาว */
+  color: #000000 !important;            /* ตัวหนังสือดำ */
+}
+
+
+@media (max-width: 576px) {
+  .repo-stats {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
   }
-  .status-badge.bg-warning {
-    background: linear-gradient(90deg, #f59e0b, #e3881f);
-    color: #fff;
+
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
   }
-    
+
+  .repo-card {
+    padding: 14px;
+  }
+
+  .repo-link {
+    font-size: 0.8rem;
+    word-break: break-word; /* กันล้นจอ */
+  }
+}
+
+/* iPad (portrait/landscape) ให้เป็น 1 คอลัมน์ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .repo-dashboard .col-md-3 {
+    flex: 0 0 50% !important;  /* จาก 25% → 50% */
+    max-width: 50% !important;
+  }
+
+  .repo-dashboard .col-md-6 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+
+
+

@@ -1,0 +1,318 @@
+.user-management-container {                     
+  padding: 20px;                                 /* ระยะห่างด้านใน container */
+  font-family: 'Inter', system-ui, sans-serif;   /* ฟอนต์หลัก Inter ถ้าไม่มีใช้ system-ui */
+  animation: fadeInUp 0.5s ease;                 /* ใส่ animation ตอนโหลดหน้า */
+}
+
+h2 {
+  font-size: 1.5rem;            /* ขนาดตัวอักษรหัวข้อใหญ่ */
+  font-weight: 600;             /* กึ่งหนา */
+  color: #1e293b;               /* สีเทาเข้ม */
+  display: flex;                /* ใช้ flex เพื่อวางไอคอน + ข้อความ */
+  align-items: center;          /* จัดกึ่งกลางแนวตั้ง */
+  gap: .5rem;                   /* ระยะห่างระหว่างไอคอนกับข้อความ */
+  margin-bottom: 1rem;          /* เว้นขอบล่าง */
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;                        /* ใช้ flex layout */
+  justify-content: space-between;       /* จัด search ไปซ้าย, ปุ่มไปขวา */
+  margin-bottom: 15px;                  /* เว้นด้านล่าง */
+}
+
+.search-input {
+  flex: 1;                              /* ขยายเต็มที่ใน flex */
+  max-width: 250px;                     /* กำหนดกว้างสุด */
+  padding: 8px 12px;                    /* ระยะห่างด้านใน */
+  border: 1px solid #e2e8f0;            /* เส้นขอบสีเทาอ่อน */
+  border-radius: 8px;                   /* มุมโค้ง */
+  transition: all .25s ease;            /* ทำให้เปลี่ยนสมูท */
+}
+.search-input:focus {
+  outline: none;                        /* เอาเส้น outline เริ่มต้นออก */
+  border-color: #2b8aef;                /* เปลี่ยนขอบเป็นฟ้า */
+  box-shadow: 0 0 0 3px rgba(43,138,239,0.2); /* glow ฟ้าอ่อน */
+}
+
+/* Table */
+.user-table {
+  width: 100%;                          /* ตารางเต็มความกว้าง */
+  border-collapse: separate;            /* แยก cell */
+  border-spacing: 0;                    /* ไม่มีช่องว่าง */
+  background: #fff;                     /* พื้นหลังขาว */
+  border-radius: 12px;                  /* มุมโค้ง */
+  overflow: hidden;                     /* กันไม่ให้ขอบล้น */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* เงาบาง */
+}
+.user-table th {
+  background: #f8fafc;                  /* พื้นหลังหัวตาราง */
+  padding: 12px;                        /* เว้นใน */
+  font-weight: 600;                     /* ตัวหนา */
+  font-size: .9rem;                     /* ขนาดเล็ก */
+  color: #475569;                       /* สีเทาเข้ม */
+  border-bottom: 1px solid #e2e8f0;     /* เส้นคั่น */
+}
+.user-table td {
+  padding: 12px;                        /* ระยะห่างภายใน cell */
+  font-size: .9rem;                     /* ขนาดฟอนต์เล็ก */
+  color: #334155;                       /* สีตัวหนังสือเทาเข้ม */
+  border-bottom: 1px solid #f1f5f9;     /* เส้นคั่นแถว */
+}
+.user-table tr:hover td {
+  background: #f9fbff;                  /* highlight row เวลา hover */
+}
+
+/* Actions */
+.actions-col {
+  text-align: center;   /* จัดปุ่มให้อยู่ตรงกลาง */
+  width: 120px;         /* กำหนดความกว้างคอลัมน์ */
+}
+.btn {
+  border: none;         /* ไม่มีเส้นขอบ */
+  border-radius: 8px;   /* มุมโค้ง */
+  padding: .4rem .8rem; /* ขนาดปุ่ม (สูง/กว้าง) */
+  font-size: .85rem;    /* ขนาดตัวอักษรเล็กลง */
+  cursor: pointer;      /* cursor เป็น pointer */
+  transition: all .2s ease; /* เวลา hover/active สมูท */
+}
+.actions-col .btn {
+  margin: 0 2px;        /* เพิ่มระยะห่างซ้าย-ขวาของปุ่ม */
+}
+.btn:hover {
+  transform: translateY(-2px);               /* ยกขึ้นเล็กน้อย */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);    /* ใส่เงา */
+}
+.btn:active {
+  transform: scale(0.96);                    /* ย่อเล็กลงตอนกด */
+}
+.btn-primary {
+  background: linear-gradient(135deg,#2b8aef,#4f9dfc); /* ไล่เฉดฟ้า */
+  color: #fff;                                        /* ตัวอักษรขาว */
+}
+.btn-warning {
+  background: #facc15; /* เหลือง */
+  color: #1f2937;      /* เทาเข้ม */
+}
+.btn-danger {
+  background: #ef4444; /* แดง */
+  color: #fff;
+}
+.btn-secondary {
+  background: #f1f5f9; /* เทาอ่อน */
+  color: #334155;      /* เทาเข้ม */
+}
+
+/* Status Badges */
+span.active {
+  display: inline-block;            /* ทำเป็นบล็อกเล็ก */
+  padding: .2rem .6rem;             /* ขนาดภายใน */
+  background: #dcfce7;              /* เขียวอ่อน */
+  color: #16a34a;                   /* เขียวเข้ม */
+  font-weight: 600;                 /* ตัวหนา */
+  border-radius: 20px;              /* pill shape */
+  font-size: .8rem;                 /* ตัวเล็ก */
+}
+span.inactive {
+  display: inline-block;
+  padding: .2rem .6rem;
+  background: #fee2e2;              /* แดงอ่อน */
+  color: #dc2626;                   /* แดงเข้ม */
+  font-weight: 600;
+  border-radius: 20px;
+  font-size: .8rem;
+}
+
+/* Modal */
+.modal {
+  display: none;                    /* เริ่มต้นซ่อน */
+  position: fixed;                  /* ลอยครอบจอ */
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);/* พื้นหลังโปร่งดำ */
+  justify-content: center;          /* จัดกึ่งกลาง */
+  align-items: center;              
+  z-index: 999;                     /* อยู่บนสุด */
+  animation: fadeIn .3s ease;       /* ค่อย ๆ โผล่มา */
+}
+.modal.show {
+  display: flex;                    /* โชว์ modal เมื่อมี class show */
+}
+.modal-content {
+  background: #fff;                 /* กล่อง modal สีขาว */
+  padding: 20px;
+  width: 420px;                     /* กำหนดความกว้าง */
+  border-radius: 14px;              /* มุมโค้ง */
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); /* เงาเข้ม */
+  animation: scaleIn .3s ease;      /* effect ขยายขึ้น */
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;   /* title ซ้าย, close button ขวา */
+  align-items: center;
+  margin-bottom: 15px;
+}
+.close-btn {
+  background: none;                 /* ปุ่มปิดไม่มีพื้นหลัง */
+  border: none;
+  font-size: 22px;                  /* ขนาดใหญ่ */
+  cursor: pointer;
+  color: #64748b;                   /* เทา */
+  transition: color .2s ease;       /* เปลี่ยนสีนุ่มนวล */
+}
+.close-btn:hover {
+  color: #ef4444;                   /* เปลี่ยนเป็นแดงเมื่อ hover */
+}
+
+/* Form inside modal */
+.modal-body .form-group {
+  margin-bottom: 12px;              /* เว้นระหว่างฟิลด์ */
+}
+.form-control {
+  width: 100%;                      /* กว้างเต็มบรรทัด */
+  padding: 8px 12px;                /* ระยะห่างด้านใน */
+  border-radius: 8px;               /* มุมโค้ง */
+  border: 1px solid #e2e8f0;        /* เส้นขอบเทา */
+  transition: all .25s ease;
+}
+.form-control:focus {
+  border-color: #2b8aef;            /* ขอบฟ้า */
+  box-shadow: 0 0 0 3px rgba(43,138,239,0.2); /* glow ฟ้า */
+  outline: none;
+}
+.text-danger {
+  font-size: .8rem;                 /* ข้อความ error เล็ก */
+}
+
+/* Modal footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;        /* ปุ่มอยู่ขวา */
+  gap: 10px;                        /* ระยะห่างระหว่างปุ่ม */
+  margin-top: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }              /* เริ่มโปร่ง */
+  to { opacity: 1; }                /* ชัดเจน */
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); } /* ลอยขึ้น */
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }       /* ขยายจากเล็ก */
+  to { transform: scale(1); opacity: 1; }
+}
+/* ===============================
+   Dark Mode: User Management
+   =============================== */
+   :host-context(.dark-mode) .user-management-container {
+    background: #111827;                /* พื้นหลังหลักเข้ม */
+    color: #f3f4f6;                     /* ตัวอักษรอ่อน */
+  }
+  
+  /* หัวข้อ */
+  :host-context(.dark-mode) h2 {
+    color: #e5e7eb;                     /* สีเทาอ่อน */
+  }
+  
+  /* Toolbar */
+  :host-context(.dark-mode) .search-input {
+    background: #1f2937;
+    color: #f9fafb;
+    border: 1px solid #374151;
+  }
+  :host-context(.dark-mode) .search-input::placeholder {
+    color: #9ca3af;
+  }
+  :host-context(.dark-mode) .search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+  }
+  
+  /* Table */
+  :host-context(.dark-mode) .user-table {
+    background: #1f2937;
+    color: #f9fafb;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  :host-context(.dark-mode) .user-table th {
+    background: #374151;
+    color: #e5e7eb;
+    border-bottom: 1px solid #4b5563;
+  }
+  :host-context(.dark-mode) .user-table td {
+    color: #f3f4f6;
+    border-bottom: 1px solid #374151;
+  }
+  :host-context(.dark-mode) .user-table tr:hover td {
+    background: #2d3748;
+  }
+  
+  /* Buttons */
+  :host-context(.dark-mode) .btn-primary {
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    color: #fff;
+  }
+  :host-context(.dark-mode) .btn-warning {
+    background: #facc15;
+    color: #1f2937;
+  }
+  :host-context(.dark-mode) .btn-danger {
+    background: #ef4444;
+    color: #fff;
+  }
+  :host-context(.dark-mode) .btn-secondary {
+    background: #374151;
+    color: #f9fafb;
+  }
+  
+  /* Status Badges */
+  :host-context(.dark-mode) span.active {
+    background: #064e3b;
+    color: #34d399;
+  }
+  :host-context(.dark-mode) span.inactive {
+    background: #7f1d1d;
+    color: #f87171;
+  }
+  
+  /* Modal */
+  :host-context(.dark-mode) .modal-content {
+    background: #1f2937;
+    color: #f3f4f6;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  :host-context(.dark-mode) .close-btn {
+    color: #9ca3af;
+  }
+  :host-context(.dark-mode) .close-btn:hover {
+    color: #ef4444;
+  }
+  
+  /* Form inside modal */
+  :host-context(.dark-mode) .form-control {
+    background: #111827;
+    border: 1px solid #374151;
+    color: #f9fafb;
+  }
+  :host-context(.dark-mode) .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+  }
+  :host-context(.dark-mode) .form-control::placeholder {
+    color: #9ca3af;
+  }
+  
+  /* Modal Footer Buttons */
+  :host-context(.dark-mode) .modal-footer .btn-primary {
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+  }
+  :host-context(.dark-mode) .modal-footer .btn-secondary {
+    background: #374151;
+    color: #f9fafb;
+  }
+  

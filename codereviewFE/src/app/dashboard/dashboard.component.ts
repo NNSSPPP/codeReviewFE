@@ -297,11 +297,15 @@ loadDashboardData() {
         donut: {
           labels: {
             show: true,
+            value: {                       // ✅ เพิ่มส่วนนี้
+              color: 'var(--text-main)',   // เปลี่ยนสีของ 83%
+            },
             total: {
               show: true,
               showAlways: true,
               label: this.grade, // ตัวอักษรเกรด
               fontSize: '24px',
+              color: 'var(--text-main)',
               formatter: () => this.gradePercent + '%' // ตัวเลข %
             }
           }
@@ -330,7 +334,8 @@ loadCoverageChart() {
   this.coverageChartOptions = {
     chart: {
       type: 'line',
-      height: 200
+      height: 200,
+      foreColor: 'var(--apexcharts-text)'
     },
     stroke: {
       curve: 'smooth',

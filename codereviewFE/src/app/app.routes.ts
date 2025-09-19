@@ -19,7 +19,6 @@ import {SecuritydashboardComponent} from './securitydashboard/securitydashboard.
 import { TechnicaldebtComponent } from './technicaldebt/technicaldebt.component';
 import { GeneratereportComponent } from './generatereport/generatereport.component';
 import { ReporthistoryComponent } from './reporthistory/reporthistory.component';
-import { SettingComponent } from './setting/setting.component';
 import { SonarqubeconfigComponent } from './sonarqubeconfig/sonarqubeconfig.component';
 import { NotificationsettingComponent } from './notificationsetting/notificationsetting.component';
 import { UsermanagementComponent } from './usermanagement/usermanagement.component';
@@ -38,11 +37,12 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'repositories', component: RepositoriesComponent },
       { path: 'addrepository', component: AddrepositoryComponent },
-      { path: 'detailrepo/:id', component: DetailrepositoryComponent },
+      { path: 'settingrepo/:project_id', component: AddrepositoryComponent },
+      { path: 'detailrepo/:project_id', component: DetailrepositoryComponent },
       { path: 'activescan', component: ActivescanComponent },
       { path: 'scanhistory', component: ScanhistoryComponent },
-      { path: 'scanresult/:id', component: ScanresultComponent },
-      { path: 'logviewer/:id', component: LogviewerComponent },
+      { path: 'scanresult/:scan_id', component: ScanresultComponent },
+      { path: 'logviewer/:scan_id', component: LogviewerComponent },
       { path: 'issue', component: IssueComponent },
       { path: 'issuedetail/:id_issue', component: IssuedetailComponent },
       { path: 'assignment', component: AssignmentComponent },
@@ -51,7 +51,6 @@ export const routes: Routes = [
       { path: 'technical-debt', component: TechnicaldebtComponent },
       { path: 'generatereport', component: GeneratereportComponent },
       { path: 'reporthistory', component: ReporthistoryComponent },
-      { path: 'setting', component: SettingComponent },
       { path: 'sonarqubeconfig', component: SonarqubeconfigComponent },
       { path: 'notificationsetting', component: NotificationsettingComponent },
       { path: 'usermanagement', component: UsermanagementComponent },

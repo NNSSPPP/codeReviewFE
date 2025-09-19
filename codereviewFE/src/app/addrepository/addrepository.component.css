@@ -101,9 +101,15 @@ legend {
 /* ====== Actions ====== */
 .actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 14px;
   margin-top: 22px;
+}
+
+.actions button {
+  flex: 1 1 auto;
+  min-width: 120px; 
 }
 
 button {
@@ -122,5 +128,12 @@ button:hover {
 
 .required {
   color: red;
+}
+
+@media (max-width: 576px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 

@@ -5,7 +5,7 @@
       <i class="bi bi-folder2-open text-primary me-2"></i> Repository Management
     </h3>
     <button class="btn btn-circle" (click)="goToAddRepository()" title="AddRepository">
-      <i class="bi bi-plus"></i> 
+      <i class="bi bi-plus"></i>
     </button>
   </div>
 
@@ -28,69 +28,95 @@
 
   <!-- Search + Filter Tabs -->
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <!-- Tabs -->
     <ul class="nav nav-pills repo-tabs mb-2">
-      <!-- All -->
       <li class="nav-item">
         <a class="nav-link" [class.active]="activeFilter === 'all'" (click)="filterBy('all')">
           All Repositories
-          <span class="badge bg-secondary ms-1">{{ repositories.length }}</span>
+          <span class="badge bg-secondary ms-1">{{ filteredRepositories.length }}</span>
         </a>
       </li>
-
-      <!-- Angular -->
       <li class="nav-item">
         <a class="nav-link" [class.active]="activeFilter === 'Angular'" (click)="filterBy('Angular')">
           Angular
           <span class="badge bg-warning text-dark ms-1">{{ countByFramework('Angular') }}</span>
         </a>
       </li>
-
-      <!-- Spring Boot -->
       <li class="nav-item">
         <a class="nav-link" [class.active]="activeFilter === 'Spring Boot'" (click)="filterBy('Spring Boot')">
           Spring Boot
           <span class="badge bg-success ms-1">{{ countByFramework('Spring Boot') }}</span>
         </a>
       </li>
-
     </ul>
 
-    <div class="search-box">
-      <input type="text" class="form-control" placeholder="Search repositories..."
-        (input)="searchRepositories($event)" />
+    <!-- Search + Status -->
+    <div class="d-flex flex-wrap gap-2 ms-auto mb-2 search-box">
+      <input type="text" class="form-control" placeholder="Search repositories..." (input)="searchRepositories($event)">
+
+      <select class="form-select" [(ngModel)]="selectedStatus" (change)="filterByStatus()">
+        <option value="all">All Status</option>
+        <option value="Active">Active</option>
+        <option value="Scanning">Scanning</option>
+        <option value="Paused">Paused</option>
+        <option value="Error">Error</option>
+      </select>
+
     </div>
+
   </div>
+
 
   <!-- Repository Cards -->
   <div class="row g-3">
-    <div class="col-md-6" *ngFor="let repo of filteredRepositories">
+    <div class="col-12 col-md-6" *ngFor="let repo of filteredRepositories">
       <div class="repo-card">
         <div class="d-flex justify-content-between align-items-start">
           <div>
             <h5 class="fw-bold mb-1">{{ repo.name }}</h5>
-            <p class="text-muted mb-2">{{ repo.framework }} + {{ repo.language }}</p>
-            <a [href]="repo.repoUrl" target="_blank" class="repo-link">
-              <i class="bi bi-link-45deg me-1"></i>{{ repo.repoUrl }}
+            <p class="text-muted mb-2">{{ repo.project_type }}</p>
+            <a [href]="repo.repository_url" target="_blank" class="repo-link">
+              <i class="bi bi-link-45deg me-1"></i>{{ repo.repository_url }}
             </a>
             <p class="mb-1"><i class="bi bi-git me-1"></i> Branch: {{ repo.branch }}</p>
 
-            <p class="mb-1" *ngIf="repo.status === 'Active'">
-              <i class="bi bi-clock me-1"></i> Last Scan: <strong>{{ repo.lastScan }}</strong>
-            </p>
+            <!-- Status / Scan Progress -->
+            <div>
+              <i class="bi me-1" [ngClass]="repo.status === 'Scanning' ? 'bi-arrow-repeat' : 'bi-clock'"></i>
 
-            <div *ngIf="repo.status === 'Scanning'" class="mb-2">
-              <i class="bi bi-arrow-repeat me-1"></i> Scanning: <strong>{{ repo.scanningProgress }}%</strong>
-              <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
-                {{ repo.scanningProgress }}%
-              </progress>
+              <span *ngIf="repo.status === 'Scanning'"> Scanning: <strong>{{ repo.scanningProgress }}%</strong>
+                <progress class="custom-progress" [value]="repo.scanningProgress" max="100">
+                  {{ repo.scanningProgress }}%
+                </progress>
+              </span>
+              <span *ngIf="repo.status !== 'Scanning'">
+                Last Scan: <strong>{{ repo.lastScan }}</strong>
+              </span>
             </div>
 
-            <p *ngIf="repo.qualityGate" class="mb-1">Quality Gate:
-              <span class="badge bg-success">{{ repo.qualityGate }}</span>
-            </p>
-            <p *ngIf="repo.previousGrade" class="mb-1">Previous:
-              <span class="badge bg-warning text-dark">{{ repo.previousGrade }}</span>
-            </p>
+            <!-- Quality Gate Badge -->
+            <div>
+              <div>
+                <span class="badge grade-badge" [ngClass]="{
+                    'grade-a': repo.qualityGate === 'A',
+                    'grade-b': repo.qualityGate === 'B',
+                    'grade-c': repo.qualityGate === 'C',
+                    'grade-d': repo.qualityGate === 'D',
+                    'grade-e': repo.qualityGate === 'E'
+                  }">
+                  <i class="bi me-1"
+                     [ngClass]="{
+                       'bi-check-circle': repo.qualityGate === 'A' || repo.qualityGate === 'B',
+                       'bi-exclamation-triangle': repo.qualityGate === 'C' || repo.qualityGate === 'D',
+                       'bi-x-circle': repo.qualityGate === 'E'
+                     }"></i>
+                  {{ repo.status === 'Scanning' ? 'Previous: ' : 'Quality Gate: ' }}{{ repo.qualityGate }}
+                </span>
+              </div>
+              
+            </div>
+
+
           </div>
 
           <span class="status-badge" [ngClass]="{
@@ -101,35 +127,49 @@
             {{ repo.status }}
           </span>
         </div>
+
         <!-- Stats + Action Buttons -->
         <div class="d-flex justify-content-between align-items-center mt-3">
           <!-- Stats -->
           <div class="repo-stats">
-            <span><i class="bi bi-bug me-1"></i>{{ repo.bugs }} Bugs</span>
-            <span><i class="bi bi-shield-lock me-1"></i>{{ repo.vulnerabilities }} Vulnerabilities</span>
-            <span><i class="bi bi-graph-up me-1"></i>{{ repo.coverage }}% Coverage</span>
+            <span>
+              <i class="bi bi-bug me-1 text-danger"></i>{{ repo.metrics?.bugs }} Bugs
+            </span>
+
+            <span>
+              <i class="bi bi-shield-lock me-1 text-warning"></i>{{ repo.metrics?.vulnerabilities }} Vulnerabilities
+            </span>
+
+            <span>
+              <i class="bi bi-graph-up me-1 text-success"></i>{{ repo.metrics?.coverage }}% Coverage
+            </span>
+
           </div>
 
           <!-- Action Buttons -->
           <div class="d-flex gap-2">
+
             <!-- Run -->
             <button class="btn btn-sm btn-outline-primary" title="RunScan"
-              *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'">
+              *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'" (click)="runScan(repo)">
               <i class="bi bi-play-circle"></i>
             </button>
 
             <!-- Stop (เฉพาะตอน Scanning) -->
-            <button class="btn btn-sm btn-outline-danger" title="StopScan" *ngIf="repo.status === 'Scanning'">
+            <button class="btn btn-sm btn-outline-danger" title="StopScan" *ngIf="repo.status === 'Scanning'"
+              (click)="stopScan(repo)">
               <i class="bi bi-stop-fill"></i>
             </button>
 
             <!-- Resume (เฉพาะตอน Paused) -->
-            <button class="btn btn-sm btn-outline-success" title="ResumeScan" *ngIf="repo.status === 'Paused'">
+            <button class="btn btn-sm btn-outline-success" title="ResumeScan" *ngIf="repo.status === 'Paused'"
+              (click)="resumeScan(repo)">
               <i class="bi bi-play-fill"></i>
             </button>
 
+
             <!-- Settings -->
-            <button class="btn btn-sm btn-outline-secondary" title="Settings">
+            <button class="btn btn-sm btn-outline-secondary" title="Settings" (click)="editRepo(repo)">
               <i class="bi bi-gear"></i>
             </button>
 
@@ -137,4 +177,10 @@
             <button class="btn btn-sm btn-outline-info" title="ViewDetails" (click)="viewRepo(repo)">
               <i class="bi bi-eye"></i>
             </button>
+
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

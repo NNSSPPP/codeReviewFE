@@ -15,6 +15,7 @@
   color: #2563eb;
   text-decoration: none;
   border-radius: 10px;
+  margin-bottom: 15px;
   transition: background 0.25s, transform 0.25s;
 }
 .back-btn:hover {
