@@ -30,7 +30,7 @@
     <button class="btn btn-success" *ngIf="repo.status === 'Paused'">
       <i class="bi bi-play-fill me-1"></i> Resume Scan
     </button>
-    <button class="btn btn-secondary" >
+    <button class="btn btn-secondary" (click)="editRepo(repo)">
       <i class="bi bi-gear me-1"></i> Settings
     </button>
   </div>
