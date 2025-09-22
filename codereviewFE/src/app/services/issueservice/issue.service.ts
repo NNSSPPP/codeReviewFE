@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
 export interface Issue {
   issues_id: string;
@@ -19,7 +20,7 @@ export interface Issue {
 })
 export class IssueService {
 
-  private issues: Issue[] = [
+  private readonly issues: Issue[] = [
     {
       issues_id: '1',
       scan_id: '1',
@@ -50,44 +51,61 @@ export class IssueService {
 
   constructor() {}
 
+  getByScanId(scan_id: string): Observable<Issue[]> {
+    const result = this.issues.filter(i => i.scan_id === scan_id);
+    return of(result);
+  }
+
+  //GET /api/issues
   // ดึง issue ทั้งหมด
   getAll(): Issue[] {
     return this.issues;
   }
 
-  // ดึง issue ตาม issues_id
+  //GET /api/issues/:id
+  // ดึง issue ตาม issues_id (detail issue)
   getById(issues_id: string): Issue | undefined {
     return this.issues.find(i => i.issues_id === issues_id);
   }
 
-  // ดึง issue ตาม scan_id
-  getByScanId(scan_id: string): Issue[] {
-    return this.issues.filter(i => i.scan_id === scan_id);
-  }
-
-  // เพิ่ม issue ใหม่
-  addIssue(issue: Issue): void {
-    const maxId = this.issues.length
-      ? Math.max(...this.issues.map(i => +i.issues_id))
-      : 0;
-    issue.issues_id = (maxId + 1).toString();
-    issue.createdAt = new Date();
-    issue.updatedAt = new Date();
-    this.issues.push(issue);
-  }
-
-  // อัพเดต issue
-  updateIssue(issues_id: string, updatedIssue: Issue): void {
-    const index = this.issues.findIndex(i => i.issues_id === issues_id);
-    if (index > -1) {
-      updatedIssue.updatedAt = new Date();
-      updatedIssue.createdAt = this.issues[index].createdAt;
-      this.issues[index] = { ...this.issues[index], ...updatedIssue };
+   
+   // PUT /api/issues/:id/assign
+   // กำหนด developer ให้กับ issue
+   assignDeveloper(issues_id: string, user_id: string): void {
+    const issue = this.getById(issues_id);
+    if (issue) {
+      issue.assignedTo = user_id;
+      issue.updatedAt = new Date();
     }
   }
 
-  // ลบ issue
-  deleteIssue(issues_id: string): void {
-    this.issues = this.issues.filter(i => i.issues_id !== issues_id);
+  //PUT /api/issues/:id/status
+  //อัปเดตสถานะของ issue
+  
+  updateStatus(issues_id: string, status: 'Open' | 'In Progress' | 'Resolved' | 'Closed'): void {
+    const issue = this.getById(issues_id);
+    if (issue) {
+      issue.status = status;
+      issue.updatedAt = new Date();
+    }
+  }
+
+  //POST /api/issues/:id/comments
+  // เพิ่ม comment ให้ issue
+   
+  addComment(issues_id: string, comment: { text: string; author: string }): void {
+    const issue = this.getById(issues_id);
+    if (issue) {
+      if (!(issue as any).comments) {
+        (issue as any).comments = [];
+      }
+      (issue as any).comments.push({
+        comment_id: `c${((issue as any).comments.length + 1).toString()}`,
+        text: comment.text,
+        author: comment.author,
+        createdAt: new Date()
+      });
+      issue.updatedAt = new Date();
+    }
   }
 }
