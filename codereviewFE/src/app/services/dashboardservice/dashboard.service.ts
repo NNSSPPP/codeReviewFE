@@ -9,7 +9,7 @@ export interface Dashboard {
   metrics: string;
 }
 
-export interface Scan {
+export interface History {
   id: string;       
   name: string;
   createdAt: Date;
@@ -32,8 +32,8 @@ export class DashboardService {
   }
 
   /** GET /api/dashboard/{userId}/history */
-  getHistory(userId: string | number): Observable<Scan[]> {
-    return this.http.get<Scan[]>(`${this.base}/${userId}/history`);
+  getHistory(userId: string | number): Observable<History[]> {
+    return this.http.get<History[]>(`${this.base}/${userId}/history`);
   }
 
   /** GET /api/dashboard/{userId}/trends */
