@@ -275,4 +275,117 @@
     .issue-info { flex-direction: column; }
     .action-icons { flex-wrap: wrap; }
   }
+  /* ===============================
+   Dark Mode (Issue Detail Page)
+   =============================== */
+:host-context(.dark-mode) .issue-container {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4) !important;
+}
+
+/* Header */
+:host-context(.dark-mode) .issue-header h2 {
+  color: var(--text-main) !important;
+}
+:host-context(.dark-mode) .issue-header h2 i {
+  color: #ef4444 !important; /* Danger icon */
+}
+
+/* Back Button */
+:host-context(.dark-mode) .back-btn {
+  color: #3b82f6 !important;
+}
+:host-context(.dark-mode) .back-btn:hover {
+  background: rgba(59,130,246,0.15) !important;
+}
+
+/* Info */
+:host-context(.dark-mode) .issue-info {
+  color: #d1d5db !important;
+}
+:host-context(.dark-mode) .issue-info strong {
+  color: #f9fafb !important;
+}
+
+/* Description */
+:host-context(.dark-mode) .issue-description h3 {
+  color: var(--text-main) !important;
+}
+:host-context(.dark-mode) .issue-description pre {
+  background: var(--bg-panel) !important;
+  border-left: 4px solid #3b82f6 !important;
+  color: var(--text-main) !important;
+}
+:host-context(.dark-mode) .issue-description pre:hover {
+  background: rgba(59,130,246,0.1) !important;
+}
+
+/* Comments */
+:host-context(.dark-mode) .issue-comments h3 {
+  color: var(--text-main) !important;
+}
+:host-context(.dark-mode) .issue-comments .comment {
+  border-color: var(--card-border) !important;
+}
+:host-context(.dark-mode) .issue-comments .comment p {
+  color: #e5e7eb !important;
+}
+:host-context(.dark-mode) .issue-comments .comment:hover {
+  background: rgba(255,255,255,0.05) !important;
+}
+:host-context(.dark-mode) .issue-comments .comment a {
+  color: #3b82f6 !important;
+}
+:host-context(.dark-mode) .issue-comments .comment a::after {
+  background: #3b82f6 !important;
+}
+
+/* Add Comment */
+:host-context(.dark-mode) .add-comment input {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-main) !important;
+}
+:host-context(.dark-mode) .add-comment input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.3) !important;
+}
+:host-context(.dark-mode) .add-comment button {
+  background-color: #2563eb !important;
+  color: #fff !important;
+}
+:host-context(.dark-mode) .add-comment button:hover {
+  background-color: #1e40af !important;
+}
+
+/* Action Icons (สีเดิมไว้เหมือน Light Mode) */
+:host-context(.dark-mode) .action-icons button {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6) !important;
+}
+/* Dark mode - comment input */
+:host-context(.dark-mode) .add-comment input {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--card-border) !important;
+  color: #ffffff !important;   /* ตัวหนังสือขาว */
+}
+
+/* Placeholder ให้เห็นชัด */
+:host-context(.dark-mode) .add-comment input::placeholder {
+  color: #ffffff !important;  /* เทาอ่อน อ่านง่าย */
+  opacity: 1 !important;
+}
+/* Dark mode - Back button */
+:host-context(.dark-mode) .back-btn {
+  background-color: #2563eb !important;  /* พื้นหลังน้ำเงิน */
+  color: #ffffff !important;             /* ไอคอน/ตัวหนังสือขาว */
+  border: none !important;
+}
+
+/* Hover effect */
+:host-context(.dark-mode) .back-btn:hover {
+  background-color: #1d4ed8 !important;  /* น้ำเงินเข้มขึ้นตอน hover */
+  transform: translateX(-4px);
+}
+
   

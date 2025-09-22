@@ -2,177 +2,202 @@
    Container
    =============================== */
    .container {
-    max-width: 1200px;
-    padding: 1rem;
+    max-width: 1200px;   /* กำหนดความกว้างสูงสุดของ container */
+    padding: 1rem;       /* ระยะห่างด้านในทั้งหมด 1rem */
   }
   
   /* ===============================
      Dashboard Header
      =============================== */
   .dashboard-header {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: #fff;
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
-    text-align: center;
-    animation: fadeSlideDown 0.6s ease-out;
+    background: linear-gradient(135deg, var(--btn-primary-bg-hover), var(--text-heading)); 
+    /* พื้นหลังแบบไล่สีจากตัวแปร --btn-primary-bg-hover → --text-heading */
+  
+    color: var(--btn-primary-text);    /* สีตัวอักษรข้างใน ใช้สีของปุ่มหลัก */
+    border-radius: 16px;               /* มุมโค้งมน 16px */
+    padding: 2rem;                     /* ระยะห่างด้านใน 2rem */
+    margin-bottom: 2rem;               /* ระยะห่างข้างล่าง 2rem */
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25); 
+    /* เงาใต้ header สีฟ้าโปร่งใส */
+  
+    text-align: center;                /* จัดข้อความให้อยู่กึ่งกลาง */
+    animation: fadeSlideDown 0.6s ease-out; 
+    /* effect เลื่อนลงเบาๆ เวลาแสดง */
   }
+  
   .dashboard-header h2 {
-    font-weight: 700;
-    font-size: 2rem;
-    margin: 0;
+    font-weight: 700;   /* ตัวหนา */
+    font-size: 2rem;    /* ขนาดใหญ่ */
+    margin: 0;          /* ไม่มีระยะห่างรอบๆ */
   }
+  
   .dashboard-header .subtitle {
-    opacity: 0.9;
-    font-size: 1rem;
-    margin-top: 0.5rem;
-    font-weight: 300;
+    opacity: 0.9;       /* โปร่งใสนิดหน่อย */
+    font-size: 1rem;    /* ขนาดปกติ */
+    margin-top: 0.5rem; /* เว้นด้านบนเล็กน้อย */
+    font-weight: 300;   /* น้ำหนักตัวบาง */
   }
+  
   .stats-counter {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    padding: 0.4rem 1.2rem;
-    border-radius: 20px;
-    display: inline-block;
-    font-weight: 600;
-    margin-top: 1rem;
-    backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, 0.15); /* พื้นหลังโปร่งใส */
+    color: var(--btn-primary-text);        /* ตัวอักษรสีของปุ่มหลัก (ขาว) */
+    padding: 0.4rem 1.2rem;                /* ระยะห่างบนล่าง 0.4rem ซ้ายขวา 1.2rem */
+    border-radius: 20px;                   /* มุมโค้งมนมาก */
+    display: inline-block;                 /* ทำให้ขนาดเท่ากับเนื้อหา */
+    font-weight: 600;                      /* ตัวหนา */
+    margin-top: 1rem;                      /* เว้นข้างบน */
+    backdrop-filter: blur(6px);            /* เบลอพื้นหลัง */
   }
   
   /* ===============================
      Review Card
      =============================== */
   .review-card {
-    background: #fff;
-    border-radius: 14px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    background: var(--bg-card);            /* พื้นหลังตามธีม (ขาว/ดำ) */
+    border-radius: 14px;                   /* มุมโค้งมน */
+    margin-bottom: 1.5rem;                 /* เว้นข้างล่าง */
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08); /* เงาเบาๆ */
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    animation: fadeSlideUp 0.6s ease-out;
+    /* เพิ่ม effect เวลา hover */
+    animation: fadeSlideUp 0.6s ease-out;  /* เลื่อนขึ้นมาเบาๆ */
   }
+  
   .review-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
-    border-color: #3b82f6;
+    transform: translateY(-4px);           /* ยกการ์ดขึ้น */
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15); /* เงาชัดขึ้น */
+    border-color: var(--btn-primary-bg);   /* เปลี่ยนสี border ฟ้า */
   }
+  
   .card-body {
-    padding: 1.5rem;
+    padding: 1.5rem;                       /* เว้นขอบใน */
   }
+  
   .card-title {
-    color: #1e40af;
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    color: var(--repo-tab-text);           /* ชื่อ repo ใช้ตัวแปร (ฟ้าใน Light / ขาวใน Dark) */
+    font-weight: 700;                      /* หนา */
+    font-size: 1.25rem;                    /* ขนาดกลาง */
+    margin-bottom: 1rem;                   /* เว้นล่าง */
+    display: flex;                         /* ใช้ flex จัด layout */
+    align-items: center;                   /* จัดกลางแนวตั้ง */
+    gap: 0.5rem;                           /* เว้นระหว่างไอคอนกับชื่อ */
   }
+  
   .card-title i {
-    color: #3b82f6;
+    color: var(--repo-tab-text);           /* ไอคอนหน้าชื่อ ใช้สีเดียวกับ repo-tab */
   }
   
   /* Progress bar */
   .progress {
-    height: 22px;
-    background: #f3f4f6;
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    overflow: hidden;
+    height: 22px;                          /* ความสูงแถบ */
+    background: var(--progress-bg);        /* สีพื้นหลังแถบ */
+    border-radius: 12px;                   /* มุมโค้ง */
+    margin-bottom: 1rem;                   /* เว้นข้างล่าง */
+    overflow: hidden;                      /* ซ่อนส่วนเกิน */
   }
+  
   .progress-bar {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-    border-radius: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 0.85rem;
-    transition: width 0.4s ease;
+    background: linear-gradient(90deg, var(--btn-primary-bg), var(--btn-primary-bg-hover)); 
+    /* ไล่สีฟ้าอ่อน → ฟ้าเข้ม */
+    border-radius: 12px;                   /* มุมโค้ง */
+    font-weight: 600;                      /* หนา */
+    display: flex;                         /* ให้ text อยู่กลาง */
+    align-items: center;                   /* จัดกลางแนวตั้ง */
+    justify-content: center;               /* จัดกลางแนวนอน */
+    color: var(--btn-primary-text);        /* ตัวอักษรสีขาว */
+    font-size: 0.85rem;                    /* ขนาดเล็ก */
+    transition: width 0.4s ease;           /* effect เวลาโหลด */
   }
   
   /* Text */
   .card-text {
-    color: #374151;
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    color: var(--text-main);               /* สีข้อความหลัก (ดำ/ขาว) */
+    font-weight: 500;                      /* กึ่งหนา */
+    margin-bottom: 0.75rem;                /* เว้นล่าง */
+    display: flex;                         /* จัด flex */
+    align-items: center;                   /* ไอคอนตรงกลาง */
+    gap: 0.4rem;                           /* เว้นระหว่างไอคอนกับข้อความ */
   }
+  
   .card-text.status {
-    color: #6b7280;
-    font-size: 0.95rem;
+    color: var(--text-muted);              /* สีข้อความรอง (เทา) */
+    font-size: 0.95rem;                    /* เล็กลง */
   }
   
   /* ===============================
      Buttons
      =============================== */
   .btn-group {
-    display: flex;
-    gap: 0.8rem; /* เว้นช่องว่างปุ่มให้ดูสมูท */
-    flex-wrap: wrap;
-    margin-top: 1rem;
+    display: flex;                         /* จัดปุ่มแนวนอน */
+    gap: 0.8rem;                           /* ระยะห่างระหว่างปุ่ม */
+    flex-wrap: wrap;                       /* ถ้าจอแคบให้ตัดบรรทัด */
+    margin-top: 1rem;                      /* เว้นข้างบน */
   }
+  
   .btn-modern {
-    padding: 0.6rem 1.2rem;
-    border-radius: 10px;
-    font-weight: 600;
-    border: none;
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+    padding: 0.6rem 1.2rem;                /* ระยะขอบใน */
+    border-radius: 10px;                   /* มุมโค้ง */
+    font-weight: 600;                      /* หนา */
+    border: none;                          /* ไม่มีเส้นขอบ */
+    transition: all 0.25s ease;            /* effect เวลาชี้ */
+    display: flex;                         /* ใช้ flex */
+    align-items: center;                   /* ไอคอนกลาง */
+    gap: 0.5rem;                           /* เว้นระหว่างไอคอนกับข้อความ */
+    cursor: pointer;                       /* เปลี่ยนเมาส์เป็น pointer */
   }
+  
   .btn-pause {
-    background: #3b82f6;
-    color: #fff;
+    background: var(--btn-primary-bg);     /* สีฟ้า */
+    color: var(--btn-primary-text);        /* ตัวอักษรขาว */
   }
+  
   .btn-pause:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    background: var(--btn-primary-bg-hover); /* ฟ้าเข้มเวลา hover */
+    transform: translateY(-2px);             /* ยกขึ้น */
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); /* เงาฟ้า */
   }
+  
   .btn-stop {
-    background: #ef4444;
-    color: #fff;
+    background: var(--btn-logout-text);    /* สีแดง */
+    color: var(--btn-primary-text);        /* ขาว */
   }
+  
   .btn-stop:hover {
-    background: #dc2626;
+    background: #b91c1c;                   /* แดงเข้มเวลา hover */
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); /* เงาแดง */
   }
   
   /* ===============================
      Queue Section
      =============================== */
   .queue-section {
-    background: #fff;
-    border-radius: 14px;
-    padding: 1.5rem;
-    margin-top: 2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: fadeSlideLeft 0.6s ease-out;
+    background: var(--bg-card);            /* พื้นหลังการ์ด */
+    border-radius: 14px;                   /* มุมโค้ง */
+    padding: 1.5rem;                       /* ขอบใน */
+    margin-top: 2rem;                      /* เว้นบน */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); /* เงา */
+    display: flex;                         /* flex layout */
+    justify-content: space-between;        /* เว้นซ้ายขวาสุด */
+    align-items: center;                   /* จัดตรงกลางแนวตั้ง */
+    animation: fadeSlideLeft 0.6s ease-out; /* effect เลื่อนซ้าย */
   }
+  
   .queue-text {
-    color: #374151;
-    font-weight: 600;
+    color: var(--text-main);               /* สีตัวอักษรหลัก */
+    font-weight: 600;                      /* หนา */
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
+  
   .queue-text i {
-    color: #3b82f6;
+    color: var(--btn-primary-bg);          /* ไอคอนสีฟ้า */
   }
+  
   .btn-queue {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: #fff;
+    background: linear-gradient(135deg, var(--btn-primary-bg), var(--btn-primary-bg-hover));
+    /* ปุ่ม View Queue ไล่สีฟ้า */
+    color: var(--btn-primary-text);        /* ตัวอักษรขาว */
     padding: 0.6rem 1.2rem;
     border-radius: 10px;
     font-weight: 600;
@@ -182,8 +207,9 @@
     align-items: center;
     gap: 0.5rem;
   }
+  
   .btn-queue:hover {
-    background: #1e3a8a;
+    background: var(--btn-primary-bg-hover); /* ฟ้าเข้ม */
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
   }
@@ -192,18 +218,21 @@
      Modal
      =============================== */
   .modal-content {
-    border-radius: 14px;
-    border: none;
+    border-radius: 14px;                   /* มุมโค้ง */
+    border: none;                          /* ไม่มีขอบ */
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    animation: scaleIn 0.3s ease-out;
+    animation: scaleIn 0.3s ease-out;      /* effect zoom */
   }
+  
   .modal-header {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: #fff;
+    background: linear-gradient(135deg, var(--btn-primary-bg-hover), var(--btn-primary-bg));
+    /* พื้นหลังหัว modal ไล่สีฟ้า */
+    color: var(--btn-primary-text);        /* ตัวอักษรขาว */
     border-bottom: none;
     border-radius: 14px 14px 0 0;
     padding: 1.2rem;
   }
+  
   .modal-title {
     font-weight: 700;
     font-size: 1.2rem;
@@ -211,10 +240,11 @@
     align-items: center;
     gap: 0.5rem;
   }
+  
   .list-group-item {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    color: #374151;
+    background: var(--bg-panel);           /* ใช้พื้น panel */
+    border: 1px solid var(--card-border);  /* เส้นขอบ */
+    color: var(--text-main);               /* ตัวอักษรหลัก */
     border-radius: 8px;
     margin-bottom: 0.5rem;
     transition: all 0.25s ease;
@@ -222,16 +252,17 @@
     align-items: center;
     gap: 0.4rem;
   }
+  
   .list-group-item:hover {
-    background: #f1f5f9;
-    border-color: #3b82f6;
-    transform: translateX(3px);
+    background: var(--bg-main);            /* Hover → สีหลัก */
+    border-color: var(--btn-primary-bg);   /* เส้นขอบฟ้า */
+    transform: translateX(3px);            /* ขยับนิด */
   }
   
   /* Modal close button */
   .btn-close-modal {
-    background: #ef4444;
-    color: #fff;
+    background: var(--btn-logout-text);    /* แดง */
+    color: var(--btn-primary-text);        /* ขาว */
     padding: 0.6rem 1.2rem;
     border-radius: 10px;
     font-weight: 600;
@@ -242,8 +273,9 @@
     align-items: center;
     gap: 0.4rem;
   }
+  
   .btn-close-modal:hover {
-    background: #dc2626;
+    background: #b91c1c;                   /* แดงเข้ม */
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
   }
@@ -253,27 +285,68 @@
      =============================== */
   @keyframes fadeSlideDown {
     from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
+  
   @keyframes fadeSlideUp {
     from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
+  
   @keyframes fadeSlideLeft {
     from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
+    to   { opacity: 1; transform: translateX(0); }
   }
+  
   @keyframes scaleIn {
     from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1); }
   }
   
   /* ===============================
      Responsive
      =============================== */
   @media (max-width: 768px) {
-    .dashboard-header h2 { font-size: 1.6rem; }
-    .btn-group { flex-direction: column; gap: 0.6rem; }
+    .dashboard-header h2 { font-size: 1.6rem; } /* header เล็กลง */
+    .btn-group { flex-direction: column; gap: 0.6rem; } /* ปุ่มเรียงแนวตั้ง */
     .queue-section { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+  
+  /* Modal (เพิ่มสำหรับ Dark mode) */
+  .modal-content {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  }
+  
+  .modal-header {
+    background: linear-gradient(135deg, var(--btn-primary-bg-hover), var(--btn-primary-bg));
+    color: var(--btn-primary-text);
+    border-bottom: none;
+    border-radius: 14px 14px 0 0;
+  }
+  
+  .modal-title i {
+    color: var(--btn-primary-text);
+  }
+  
+  .modal-body {
+    background-color: var(--bg-panel);
+  }
+  
+  .list-group-item {
+    background: var(--bg-card);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+  }
+  
+  .list-group-item small {
+    color: var(--text-muted);
+  }
+  
+  .modal-footer {
+    background-color: var(--bg-panel);
   }
   

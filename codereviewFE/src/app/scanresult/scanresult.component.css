@@ -1,127 +1,117 @@
 /* ===============================
-   Container
+   Scan Results Container (โครงหลัก)
    =============================== */
    .scan-results-container {
-    background-color: #fff;
-    border-radius: 14px;
-    border: 1px solid #e5e7eb;
-    padding: 24px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    transition: box-shadow 0.3s ease;
+    background-color: #fff; /* พื้นหลังขาว (Light mode) */
+    border-radius: 14px; /* มุมโค้ง */
+    border: 1px solid #e5e7eb; /* เส้นขอบสีเทาอ่อน */
+    padding: 24px; /* ระยะห่างในกล่อง */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* เงาจางๆ */
+    transition: box-shadow 0.3s ease; /* เวลา hover จะ smooth */
   }
   .scan-results-container:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08); /* hover → เงาเข้มขึ้น */
   }
   
+  
   /* ===============================
-     Back Button
+     Back Button (ปุ่มย้อนกลับ)
      =============================== */
   .back-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 12px;
-    font-size: 1.4rem;
-    margin-bottom: 20px;
-    color: #2563eb;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background 0.25s ease, transform 0.25s ease;
+    display: inline-flex; /* ปุ่มแบบ flex */
+    align-items: center; /* จัดไอคอนตรงกลางแนวตั้ง */
+    justify-content: center; /* จัดไอคอนตรงกลางแนวนอน */
+    padding: 8px 12px; /* ระยะห่างในปุ่ม */
+    font-size: 1.4rem; /* ขนาดตัวอักษร */
+    margin-bottom: 20px; /* เว้นระยะด้านล่าง */
+    color: #2563eb; /* สีฟ้า */
+    text-decoration: none; /* เอาขีดเส้นใต้ลิงก์ออก */
+    border-radius: 8px; /* มุมโค้ง */
+    transition: background 0.25s ease, transform 0.25s ease; /* transition */
   }
   .back-btn:hover {
-    background: #e0edff;
-    transform: translateX(-3px);
+    background: #e0edff; /* hover → ฟ้าอ่อน */
+    transform: translateX(-3px); /* ขยับไปทางซ้ายเล็กน้อย */
   }
   .back-btn i {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* ไอคอนใหญ่ขึ้น */
   }
   
+  
   /* ===============================
-     Cards (Quality Gate / Metrics)
+     Cards (กล่องข้อมูลทั่วไป)
      =============================== */
   .card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: none; /* ไม่มีเส้นขอบ */
+    border-radius: 12px; /* มุมโค้ง */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* เงาอ่อน */
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
   .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    transform: translateY(-2px); /* hover → ยกขึ้น */
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08); /* เงาเข้ม */
   }
   .card-title {
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 600; /* หนา */
+    font-size: 1.1rem; /* ขนาดกลาง */
   }
   
-  /* Metric Card */
+  
+  /* ===============================
+     Metric Cards (การ์ดสรุป metrics)
+     =============================== */
   .metric-card {
-    border-radius: 12px;
+    border-radius: 12px; /* มุมโค้ง */
     transition: background-color 0.25s ease, transform 0.25s ease;
   }
   .metric-card h5 {
-    font-weight: 600;
+    font-weight: 600; /* หนา */
     margin-bottom: 8px;
   }
   .metric-card p {
     font-size: 0.95rem;
-    color: #374151;
+    color: #374151; /* สีเทาเข้ม (Light mode) */
   }
   
-  /* Metric Card Colors by Column */
-  .row .col-md-3:nth-child(1) .metric-card {
-    background-color: #fef2f2;        /* Bugs - แดงอ่อน */
-    border-left: 4px solid #ef4444;
+  /* Metric Card Colors (ตาม column) */
+  .row .col-md-3:nth-child(1) .metric-card { /* Bugs */
+    background-color: #fef2f2; /* พื้นแดงอ่อน */
+    border-left: 4px solid #ef4444; /* เส้นแดง */
   }
-  .row .col-md-3:nth-child(1) .metric-card h5 i {
-    color: #ef4444;
-  }
-  .row .col-md-3:nth-child(1) .metric-card:hover {
-    background-color: #fee2e2;
-  }
+  .row .col-md-3:nth-child(1) .metric-card h5 i { color: #ef4444; }
+  .row .col-md-3:nth-child(1) .metric-card:hover { background-color: #fee2e2; }
   
-  .row .col-md-3:nth-child(2) .metric-card {
-    background-color: #f0f9ff;        /* Vulns - ฟ้าอ่อน */
+  .row .col-md-3:nth-child(2) .metric-card { /* Vulns */
+    background-color: #f0f9ff; /* ฟ้าอ่อน */
     border-left: 4px solid #0ea5e9;
   }
-  .row .col-md-3:nth-child(2) .metric-card h5 i {
-    color: #0ea5e9;
-  }
-  .row .col-md-3:nth-child(2) .metric-card:hover {
-    background-color: #e0f2fe;
-  }
+  .row .col-md-3:nth-child(2) .metric-card h5 i { color: #0ea5e9; }
+  .row .col-md-3:nth-child(2) .metric-card:hover { background-color: #e0f2fe; }
   
-  .row .col-md-3:nth-child(3) .metric-card {
-    background-color: #fff7ed;        /* Smells - ส้มอ่อน */
+  .row .col-md-3:nth-child(3) .metric-card { /* Smells */
+    background-color: #fff7ed; /* ส้มอ่อน */
     border-left: 4px solid #f97316;
   }
-  .row .col-md-3:nth-child(3) .metric-card h5 i {
-    color: #f97316;
-  }
-  .row .col-md-3:nth-child(3) .metric-card:hover {
-    background-color: #ffedd5;
-  }
+  .row .col-md-3:nth-child(3) .metric-card h5 i { color: #f97316; }
+  .row .col-md-3:nth-child(3) .metric-card:hover { background-color: #ffedd5; }
   
-  .row .col-md-3:nth-child(4) .metric-card {
-    background-color: #ecfdf5;        /* Coverage - เขียวอ่อน */
+  .row .col-md-3:nth-child(4) .metric-card { /* Coverage */
+    background-color: #ecfdf5; /* เขียวอ่อน */
     border-left: 4px solid #10b981;
   }
-  .row .col-md-3:nth-child(4) .metric-card h5 i {
-    color: #10b981;
-  }
-  .row .col-md-3:nth-child(4) .metric-card:hover {
-    background-color: #d1fae5;
-  }
+  .row .col-md-3:nth-child(4) .metric-card h5 i { color: #10b981; }
+  .row .col-md-3:nth-child(4) .metric-card:hover { background-color: #d1fae5; }
+  
   
   /* ===============================
-     Tables
+     Tables (ตาราง)
      =============================== */
   .table {
     border-radius: 10px;
-    overflow: hidden;
+    overflow: hidden; /* ขอบโค้งทำงาน */
   }
   .table th {
-    background-color: #f9fafb;
+    background-color: #f9fafb; /* หัวตารางสีเทาอ่อน */
     font-weight: 600;
     color: #374151;
   }
@@ -131,23 +121,25 @@
     transition: background-color 0.25s ease;
   }
   .table tbody tr:hover {
-    background-color: #f3f4f6;
+    background-color: #f3f4f6; /* hover → เทาอ่อน */
   }
   
+  
   /* ===============================
-     Headings
+     Headings (หัวข้อ H2, H4)
      =============================== */
   h2, h4 {
     font-weight: 600;
-    color: #111827;
+    color: #111827; /* ดำเข้ม */
   }
   h2 i, h4 i {
     margin-right: 6px;
-    color: #2563eb;
+    color: #2563eb; /* ไอคอนสีฟ้า */
   }
   
+  
   /* ===============================
-     Buttons
+     Buttons (ปุ่มทั่วไป)
      =============================== */
   .btn {
     border-radius: 8px;
@@ -162,36 +154,41 @@
     transition: transform 0.25s ease;
   }
   .btn:hover i {
-    transform: translateX(2px);
+    transform: translateX(2px); /* hover → ไอคอนขยับ */
   }
   .btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* hover → ปุ่มยกขึ้น */
     box-shadow: 0 4px 10px rgba(0,0,0,0.12);
   }
   .btn:active {
-    transform: translateY(0);
+    transform: translateY(0); /* กดแล้วกลับลง */
     box-shadow: none;
   }
   
-  /* Specific Button Colors */
+  /* Button Colors */
   .btn-primary {
-    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    background: linear-gradient(90deg, #2563eb, #1d4ed8); /* ไล่สีฟ้า */
     border: none;
   }
   .btn-info {
-    background-color: #0dcaf0;
+    background-color: #0dcaf0; /* ฟ้าอ่อน */
     border: none;
     color: #fff !important;
   }
   .btn-warning {
-    background-color: #f59e0b;
+    background-color: #f59e0b; /* ส้ม */
     border: none;
     color: #fff !important;
   }
+  
+  
+  /* ===============================
+     Metric Card Animation (แอนิเมชัน)
+     =============================== */
   .metric-card {
     opacity: 0;
     transform: translateY(10px);
-    animation: fadeUp 0.6s ease forwards;
+    animation: fadeUp 0.6s ease forwards; /* แอนิเมชันขึ้นมา */
   }
   .metric-card:nth-child(1) { animation-delay: 0.1s; }
   .metric-card:nth-child(2) { animation-delay: 0.2s; }
@@ -204,17 +201,125 @@
       transform: translateY(0);
     }
   }
+  
+  /* Coverage Bar (เส้น progress ใน coverage) */
   .metric-card.coverage p::after {
     content: "";
     display: block;
     height: 6px;
     margin-top: 6px;
     border-radius: 4px;
-    background: #d1fae5;
+    background: #d1fae5; /* พื้นหลังเขียวอ่อน */
     position: relative;
   }
   .metric-card.coverage p::after {
-    width: 78.5%; /* ใส่ค่าครอบไว้ก่อน หรือใช้ inline style binding ได้ */
-    background: linear-gradient(90deg, #10b981, #059669);
+    width: 78.5%; /* ตัวอย่างค่าคงที่ */
+    background: linear-gradient(90deg, #10b981, #059669); /* ไล่สีเขียว */
   }
-      
+  
+  
+  /* ===============================
+     Dark Mode Overrides (โหมดมืด)
+     =============================== */
+  
+  /* Container */
+  :host-context(.dark-mode) .scan-results-container {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--card-border) !important;
+  }
+  
+  /* Back button */
+  :host-context(.dark-mode) .back-btn {
+    color: var(--btn-primary-bg) !important;
+  }
+  :host-context(.dark-mode) .back-btn:hover {
+    background: var(--table-header-bg2) !important;
+  }
+  
+  /* Cards */
+  :host-context(.dark-mode) .card {
+    background-color: var(--bg-panel) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border) !important;
+  }
+  :host-context(.dark-mode) .card-title {
+    color: var(--text-heading) !important;
+  }
+  
+  /* Metric Cards (โหมดมืด: ใช้สีเข้ม + ตัวหนังสือขาว) */
+  :host-context(.dark-mode) .row .col-md-3:nth-child(1) .metric-card {
+    background-color: #3f0d0d !important;
+    border-left: 4px solid #ef4444 !important;
+    color: #ffffff !important;
+  }
+  :host-context(.dark-mode) .row .col-md-3:nth-child(2) .metric-card {
+    background-color: #0c4a6e !important;
+    border-left: 4px solid #0ea5e9 !important;
+    color: #ffffff !important;
+  }
+  :host-context(.dark-mode) .row .col-md-3:nth-child(3) .metric-card {
+    background-color: #422006 !important;
+    border-left: 4px solid #f97316 !important;
+    color: #ffffff !important;
+  }
+  :host-context(.dark-mode) .row .col-md-3:nth-child(4) .metric-card {
+    background-color: #064e3b !important;
+    border-left: 4px solid #10b981 !important;
+    color: #ffffff !important;
+  }
+  /* ให้ h5 และ p เป็นสีขาว */
+  :host-context(.dark-mode) .metric-card p,
+  :host-context(.dark-mode) .metric-card h5 {
+    color: #ffffff !important;
+  }
+  
+  /* Tables */
+  :host-context(.dark-mode) .table th {
+    background-color: var(--table-header-bg) !important;
+    color: var(--table-header-text) !important;
+  }
+  :host-context(.dark-mode) .table td {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--card-border) !important;
+  }
+  :host-context(.dark-mode) .table tbody tr:hover {
+    background-color: var(--table-header-bg2) !important;
+  }
+  
+  /* Headings */
+  :host-context(.dark-mode) h2,
+  :host-context(.dark-mode) h4 {
+    color: var(--text-heading) !important;
+  }
+  :host-context(.dark-mode) h2 i,
+  :host-context(.dark-mode) h4 i {
+    color: var(--btn-primary-bg) !important;
+  }
+  
+  /* Buttons */
+  :host-context(.dark-mode) .btn-primary {
+    background: linear-gradient(90deg, #1d4ed8, #1e40af) !important;
+    color: #fff !important;
+  }
+  :host-context(.dark-mode) .btn-info {
+    background-color: #0284c7 !important;
+    color: #fff !important;
+  }
+  :host-context(.dark-mode) .btn-warning {
+    background-color: #d97706 !important;
+    color: #fff !important;
+  }
+  
+  /* Status Colors (Preserve สีเขียว/เหลือง/แดง) */
+  :host-context(.dark-mode) .table .text-success {
+    color: #22c55e !important;
+  }
+  :host-context(.dark-mode) .table .text-warning {
+    color: #facc15 !important;
+  }
+  :host-context(.dark-mode) .table .text-danger {
+    color: #ef4444 !important;
+  }
+  

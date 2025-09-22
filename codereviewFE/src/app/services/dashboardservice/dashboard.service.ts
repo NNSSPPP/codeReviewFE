@@ -40,4 +40,3 @@ export class DashboardService {
   getTrends(userId: string | number): Observable<Trends[]> {
     return this.http.get<Trends[]>(`${this.base}/${userId}/trends`);
   }
-}

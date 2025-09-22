@@ -1,40 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule ,ActivatedRoute } from '@angular/router';
-
-interface Bug {
-  title: string;
-  severity: string;
-  status: string;
-  assignedTo: string;
-}
-
-interface ScanHistory {
-  date: string;
-  status: string;
-  bugs: number;
-  vulnerabilities: number;
-  coverage: number;
-}
-
-interface Repository {
-  id: number;
-  name: string;
-  framework: string;
-  language: string;
-  branch: string;
-  repoUrl: string;
-  status: 'Active' | 'Scanning' | 'Paused';
-  lastScan?: string;
-  scanningProgress?: number;
-  qualityGate?: string;
-  previousGrade?: string;
-  bugs: number;
-  vulnerabilities: number;
-  coverage: number;
-  bugList: Bug[];
-  scanHistory: ScanHistory[];
-}
+import { Router,RouterModule ,ActivatedRoute } from '@angular/router';
+import { Repository, RepositoryService } from '../services/reposervice/repository.service';
+import { Scan} from '../services/scanservice/scan.service';
+import { Issue} from '../services/issueservice/issue.service';
 
 
 @Component({
@@ -44,85 +13,57 @@ interface Repository {
   templateUrl: './detailrepository.component.html',
   styleUrl: './detailrepository.component.css'
 })
-export class DetailrepositoryComponent {
+export class DetailrepositoryComponent implements OnInit {
 
-  constructor(private readonly route: ActivatedRoute) { }
+  repoId!: string;
+  repo!: Repository;
+  scans: Scan[] = [];
+  issues: Issue[] = [];
+  activeTab: 'overview' | 'bugs' | 'history' | 'metrics' = 'overview';
+  loading: boolean = true;
+
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly repoService: RepositoryService
+  ) {}
 
   ngOnInit(): void {
-    // ดึง id จาก URL
-    this.repoId = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadRepository(this.repoId);
-  }
+    this.repoId = this.route.snapshot.paramMap.get('project_id') ?? '';
 
-  repoId!: number;
-  repo!: Repository;
-
-  // ตัวอย่าง repository data
-  allRepos: Repository[] = [
-    {
-      id: 1,
-      name: 'E-Commerce Platform',
-      framework: 'Angular',
-      language: 'TypeScript',
-      branch: 'main',
-      repoUrl: 'https://github.com/pccth/ecommerce-frontend.git',
-      status: 'Active',
-      lastScan: '2025-08-27 14:00',
-      scanningProgress: 65,
-      qualityGate: 'Passed',
-      previousGrade: 'B',
-      bugs: 12,
-      vulnerabilities: 3,
-      coverage: 85,
-      bugList: [
-        { title: 'NullPointerException', severity: 'High', status: 'Open', assignedTo: 'John' },
-        { title: 'UI Bug', severity: 'Low', status: 'Open', assignedTo: 'Alice' }
-      ],
-      scanHistory: [
-        { date: '2025-08-25', status: 'Passed', bugs: 5, vulnerabilities: 1, coverage: 80 }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Payment API Service',
-      framework: 'Spring Boot',
-      language: 'Java',
-      branch: 'develop',
-      repoUrl: 'https://github.com/pccth/payment-service.git',
-      status: 'Scanning',
-      lastScan: '2025-08-26 10:00',
-      scanningProgress: 0,
-      qualityGate: 'Warning',
-      previousGrade: 'C',
-      bugs: 8,
-      vulnerabilities: 3,
-      coverage: 78,
-      bugList: [
-        { title: 'Memory Leak', severity: 'Medium', status: 'Closed', assignedTo: 'Bob' }
-      ],
-      scanHistory: [
-        { date: '2025-08-24', status: 'Warning', bugs: 7, vulnerabilities: 2, coverage: 78 }
-      ]
+    if (this.repoId) {
+      this.loadRepositoryFull(this.repoId);
     }
-  ];
-
-  activeTab: string = 'overview';
-
-  loadRepository(id: number) {
-    // ดึง repo ตาม id
-    this.repo = this.allRepos.find(r => r.id === id)!;
   }
 
-  switchTab(tab: string) {
+  loadRepositoryFull(repoId: string): void {
+    this.loading = true;
+    this.repoService.getFullRepository(repoId).subscribe(repo => {
+      if (repo) {
+        this.repo = repo;
+        this.scans = repo.scans ?? [];
+        this.issues = repo.issues ?? [];
+      }
+      this.loading = false;
+    });
+  }
+
+   
+
+  switchTab(tab: 'overview' | 'bugs' | 'history' | 'metrics') {
     this.activeTab = tab;
   }
 
-  getStatusClass(status: string) {
-    return {
-      'bg-success': status === 'Active',
-      'bg-info': status === 'Scanning',
-      'bg-warning': status === 'Paused'
-    };
+  editRepo(repo: Repository) {
+    this.router.navigate(['/settingrepo', repo.project_id]);
   }
 
+  getStatusClass(status?: string) {
+    switch (status) {
+      case 'Active': return 'badge bg-success';
+      case 'Scanning': return 'badge bg-primary';
+      case 'Paused': return 'badge bg-warning text-dark';
+      default: return '';
+    }
+  }
 }

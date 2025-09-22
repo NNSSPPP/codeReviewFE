@@ -198,3 +198,74 @@ button:hover {
     font-size: 1.8rem;
   }
 }
+/* =========================
+   DARK MODE OVERRIDES
+========================= */
+:host-context(.dark-mode) .login-container {
+  background: linear-gradient(135deg, #0f172a, #1e293b); /* ไล่ดำเข้ม */
+  color: #f9fafb; /* ฟอนต์สีอ่อน */
+}
+
+:host-context(.dark-mode) .login-wrapper {
+  background: #1f2937; /* กล่องเข้ม */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+:host-context(.dark-mode) .welcome-section {
+  background: #2563eb; /* น้ำเงินสด */
+  color: #fff; 
+}
+
+:host-context(.dark-mode) .login-box {
+  background: #111827; /* เทาดำ */
+  color: #f3f4f6;      /* ฟอนต์อ่อน */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+}
+
+:host-context(.dark-mode) .login-header h2 {
+  color: #3b82f6; /* ฟ้าอ่อน */
+}
+
+:host-context(.dark-mode) .back-btn {
+  color: #60a5fa; /* ฟ้า */
+}
+:host-context(.dark-mode) .back-btn:hover {
+  color: #93c5fd; /* ฟ้าอ่อน */
+}
+
+/* Inputs */
+:host-context(.dark-mode) .input-group label {
+  color: #e5e7eb;
+}
+:host-context(.dark-mode) .input-group input {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #f9fafb;
+}
+:host-context(.dark-mode) .input-group input::placeholder {
+  color: #9ca3af;
+}
+
+/* Error text */
+:host-context(.dark-mode) .error-message {
+  color: #f87171;
+}
+
+/* Buttons */
+:host-context(.dark-mode) button {
+  background-color: #2563eb;
+  color: #fff;
+}
+:host-context(.dark-mode) button:hover {
+  background-color: #1e40af;
+}
+
+/* Links */
+:host-context(.dark-mode) .extra-links a {
+  color: #60a5fa;
+}
+:host-context(.dark-mode) .extra-links a:hover {
+  text-decoration: underline;
+  color: #93c5fd;
+}
+

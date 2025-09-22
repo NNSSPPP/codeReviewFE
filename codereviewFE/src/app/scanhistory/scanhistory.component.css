@@ -2,134 +2,191 @@
    Container
    =============================== */
    .scan-history-container {
-    background-color: #fff;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    padding: 16px 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    background-color: var(--bg-card); /* พื้นหลัง container */
+    border-radius: 10px; /* มุมโค้ง */
+    border: 1px solid var(--card-border); /* เส้นขอบ */
+    padding: 16px 20px; /* ระยะห่างด้านใน */
+    box-shadow: var(--card-shadow); /* เงา */
+    transition: background-color 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease,
+                color 0.35s ease; /* effect เวลาเปลี่ยนธีม */
+  }
+  .scan-history-container:hover {
+    box-shadow: var(--shadow-primary-hover); /* hover = เงาชัดขึ้น */
   }
   
-  .scan-history-container:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
   
   /* ===============================
      Filter Input
      =============================== */
   .filter-row input {
-    max-width: 150px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    padding: 6px 10px;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    max-width: 150px; /* จำกัดความกว้าง */
+    border: 1px solid var(--card-border); /* เส้นขอบ */
+    border-radius: 6px; /* มุมโค้ง */
+    padding: 6px 10px; /* ระยะห่างด้านใน */
+    background-color: var(--bg-panel); /* พื้นหลังช่อง */
+    color: var(--text-main); /* สีตัวอักษร */
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.35s ease,
+                color 0.35s ease;
+  }
+  .filter-row input:focus {
+    outline: none; /* ไม่แสดงเส้นขอบค่า default */
+    border-color: var(--btn-primary-bg-hover); /* เปลี่ยนสีเส้นขอบ */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); /* เพิ่มเงารอบ */
   }
   
-  .filter-row input:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  
+  /* ===============================
+     Date Wrapper (Custom icon)
+     =============================== */
+  .date-wrapper {
+    position: relative; /* ให้ไอคอนอยู่ใน container */
+    display: inline-block;
   }
+  .date-wrapper input[type="date"] {
+    padding-right: 36px; /* เว้นด้านขวาให้ไอคอน */
+    position: relative;
+    z-index: 1;
+    background-color: var(--bg-panel);
+    color: var(--text-main);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+  }
+  /* ซ่อน icon เดิมแต่ยังให้กดได้ */
+  .date-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0; /* โปร่งใส */
+    position: absolute;
+    right: 10px;
+    width: 18px; height: 18px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  /* custom icon (ใช้ filter จากตัวแปร) */
+  .date-wrapper .calendar-icon {
+    position: absolute;
+    top: 50%; right: 10px;
+    width: 18px; height: 18px;
+    transform: translateY(-50%); /* จัดกึ่งกลางแนวตั้ง */
+    pointer-events: none; /* ไม่บังการคลิก */
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 3;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z'/></svg>");
+    filter: var(--calendar-icon-filter); /* ใช้สี filter จาก theme */
+  }
+  
   
   /* ===============================
      Table
      =============================== */
   .table th {
-    background-color: #f3f4f6;
+    background-color: var(--table-header-bg); /* พื้นหลังหัวตาราง */
     font-weight: 600;
-    color: #374151;
+    color: var(--table-header-text); /* สีข้อความหัว */
+    transition: background-color 0.35s ease, color 0.35s ease;
   }
-  
   .table td,
   .table th {
-    vertical-align: middle;
-    padding: 12px;
-    transition: background-color 0.25s ease;
+    vertical-align: middle; /* จัดกึ่งกลางแนวตั้ง */
+    padding: 12px; /* ระยะห่างด้านใน */
+    border-bottom: 1px solid var(--table-border); /* เส้นคั่น */
+    transition: background-color 0.35s ease,
+                color 0.35s ease,
+                border-color 0.35s ease;
+  }
+  .table tbody tr:hover {
+    background-color: var(--table-header-bg2); /* hover = แถวสว่างขึ้น */
   }
   
-  .table tbody tr:hover {
-    background-color: #f9fafb;
-  }
   
   /* ===============================
      Actions Buttons
      =============================== */
+     .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
   .actions .btn {
-    min-width: 150px;
-    border-radius: 6px; /* ปรับจาก 8px -> 6px ให้คุมโทนกับ input */
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+     min-width: 180px;   /* ปุ่มกว้าง */
+  min-height: 46px;   /* ปุ่มสูง */
+  font-size: 15px;    /* ข้อความใหญ่พออ่าน */
+  padding: 10px 16px; /* ระยะห่างด้านใน */
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* ระยะห่าง icon-text */
     cursor: pointer;
     transition: transform 0.25s ease,
                 box-shadow 0.25s ease,
-                background-color 0.25s ease;
+                background-color 0.35s ease,
+                color 0.35s ease;
   }
-  
   .actions .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px); /* ยกขึ้น */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* เงา */
   }
-  
   .actions .btn:active {
-    transform: translateY(0);
+    transform: translateY(0); /* กลับลงมา */
     box-shadow: none;
   }
-  
-  .actions .btn:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
-  }
-  
   /* Success */
   .actions .btn-success {
-    background-color: #198754;
+    background-color: var(--status-passed-text); /* เขียวเข้ม */
     border: none;
+    color: #fff;
   }
   .actions .btn-success:hover {
-    background-color: #157347;
+    background-color: #065f46; /* hover */
   }
-  
   /* Info */
   .actions .btn-info {
-    background-color: #0dcaf0;
+    background-color: var(--metric-code-smells); /* ฟ้า */
     border: none;
     color: #fff;
   }
   .actions .btn-info:hover {
-    background-color: #0aa2c0;
+    background-color: #0284c7;
+    
   }
-  
   /* Danger */
   .actions .btn-danger {
-    background-color: #dc3545;
+    background-color: var(--btn-stop); /* แดง */
     border: none;
+    color: #fff;
   }
   .actions .btn-danger:hover {
-    background-color: #bb2d3b;
+    background-color: var(--btn-stop-hover); /* hover แดงเข้ม */
   }
+  
   
   /* ===============================
-     Log Button (แทน outline-secondary เดิม)
+     Log Button
      =============================== */
   .btn-log {
-    background-color: #f3f4f6;
-    border: 1px solid #d1d5db;
-    color: #374151;
-    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    background-color: var(--table-header-bg); /* พื้นหลัง */
+    border: 1px solid var(--card-border); /* กรอบ */
+    color: var(--text-main); /* ตัวอักษร */
+    transition: background-color 0.35s ease,
+                border-color 0.35s ease,
+                color 0.35s ease,
+                box-shadow 0.25s ease,
+                transform 0.25s ease;
   }
-  
   .btn-log:hover {
-    background-color: #e5e7eb;
+    background-color: var(--table-header-bg2); /* hover */
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* เงา */
   }
   
-  .btn-log:active {
-    transform: translateY(0);
-    box-shadow: none;
-  }
   
   /* ===============================
      Status (Badge style)
@@ -139,35 +196,31 @@
   .status-failed {
     font-weight: 600;
     padding: 4px 10px;
-    border-radius: 999px;
+    border-radius: 999px; /* pill shape */
     font-size: 13px;
     display: inline-block;
-    transition: transform 0.25s ease, background-color 0.25s ease;
+    transition: background-color 0.35s ease,
+                color 0.35s ease,
+                transform 0.25s ease;
   }
-  
   .status-success {
-    color: #10b981;
-    background-color: rgba(16, 185, 129, 0.12);
+    color: var(--status-passed-text);
+    background-color: var(--status-passed-bg);
   }
-  .status-success:hover {
-    background-color: rgba(16, 185, 129, 0.2);
-  }
-  
   .status-warning {
-    color: #f59e0b;
-    background-color: rgba(245, 158, 11, 0.12);
+    color: var(--status-warning-text);
+    background-color: var(--status-warning-bg);
   }
-  .status-warning:hover {
-    background-color: rgba(245, 158, 11, 0.2);
+  .status-failed {
+    color: var(--status-failed-text);
+    background-color: var(--status-failed-bg);
+  }
+  .status-success:hover,
+  .status-warning:hover,
+  .status-failed:hover {
+    transform: scale(1.03); /* ขยายเล็กน้อย */
   }
   
-  .status-failed {
-    color: #ef4444;
-    background-color: rgba(239, 68, 68, 0.12);
-  }
-  .status-failed:hover {
-    background-color: rgba(239, 68, 68, 0.2);
-  }
   
   /* ===============================
      Table Row Fade-in Animation
@@ -175,9 +228,8 @@
   .table tbody tr {
     opacity: 0;
     transform: translateY(4px);
-    animation: fadeInRow 0.4s ease forwards;
+    animation: fadeInRow 0.4s ease forwards; /* แอนิเมชันแถว */
   }
-  
   .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
   .table tbody tr:nth-child(2) { animation-delay: 0.10s; }
   .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
@@ -194,13 +246,236 @@
       transform: translateY(0);
     }
   }
-  .btn-log {
-    background-color: #e0f2fe;   /* ฟ้าอ่อน */
-    border: 1px solid #7dd3fc;
-    color: #0369a1;              /* ฟ้าเข้ม */
+
+  /* ===============================
+   Pagination
+   =============================== */
+.pagination {
+  margin: 0;
+  gap: 6px; /* ระยะห่างระหว่างปุ่ม */
+  flex-wrap: wrap; /* เวลา mobile จะแบ่งบรรทัดได้ */
+}
+
+.page-item .page-link {
+  min-width: 42px;   /* ขนาดขั้นต่ำ (กว้าง) */
+  min-height: 42px;  /* ขนาดขั้นต่ำ (สูง) */
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  background-color: var(--bg-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              transform 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.page-item .page-link:hover {
+  background-color: var(--table-header-bg2);
+  color: var(--btn-primary-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.page-item.active .page-link {
+  background-color: var(--btn-primary-bg-hover);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.page-item.disabled .page-link {
+  color: var(--text-muted);
+  pointer-events: none;
+  opacity: 0.6;
+  background-color: var(--bg-panel);
+}
+
+/* Responsive ปรับปุ่มให้เต็มบรรทัดบน mobile */
+@media (max-width: 576px) {
+  .actions .btn {
+    flex: 1 1 100%;
+    min-width: unset;
   }
-  .btn-log:hover {
-    background-color: #bae6fd;
-    border-color: #0284c7;
+}
+
+/* ===============================
+   Modal Backdrop & Container
+   =============================== */
+   .modal-backdrop-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 1050;
+    backdrop-filter: blur(3px); /* ทำให้พื้นหลังเบลอ */
   }
+  
+  .modal-content-custom {
+    background: var(--bg-card);
+    border-radius: 12px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    border: 1px solid var(--card-border);
+    padding: 1rem 1.5rem;
+    animation: modalFadeIn 0.35s ease forwards;
+  }
+  
+  /* ===============================
+     Modal Animation
+     =============================== */
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* ===============================
+     Modal Header
+     =============================== */
+  .modal-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+  }
+  
+  .modal-header-custom h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  
+  .modal-header-custom button {
+    background: var(--btn-secondary-bg, #6c757d);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  
+  .modal-header-custom button:hover {
+    background: var(--btn-secondary-bg-hover, #5a6268);
+    transform: translateY(-1px);
+  }
+  
+  /* ===============================
+     Modal Body & Table
+     =============================== */
+  .modal-body-custom {
+    padding: 0.5rem 0;
+    overflow-x: auto;
+  }
+  
+  .modal-body-custom table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 500px; /* scroll horizontal บน mobile */
+    font-size: 0.9rem;
+  }
+  
+  .modal-body-custom thead th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-text);
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+    border-bottom: 2px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .modal-body-custom tbody td {
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid var(--table-border);
+    vertical-align: middle;
+  }
+  
+  .modal-body-custom tbody tr:nth-child(even) {
+    background-color: var(--table-row-alt-bg, #f9f9f9);
+  }
+  
+  .modal-body-custom tbody tr:hover {
+    background-color: var(--table-row-hover-bg, #e1f0ff);
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+  }
+  
+  /* ===============================
+     Modal Footer
+     =============================== */
+  .modal-footer-custom {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--card-border);
+    gap: 0.5rem;
+  }
+  
+  .modal-footer-custom button {
+    background-color: var(--btn-secondary-bg, #6c757d);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+  
+  .modal-footer-custom button:hover {
+    background-color: var(--btn-secondary-bg-hover, #5a6268);
+    transform: translateY(-1px);
+  }
+  
+  /* ===============================
+     Responsive
+     =============================== */
+  @media (max-width: 576px) {
+    .modal-content-custom {
+      max-width: 95%;
+      padding: 0.75rem 1rem;
+    }
+  
+    .modal-body-custom table {
+      font-size: 0.8rem;
+    }
+  
+    .modal-header-custom h5 {
+      font-size: 1rem;
+    }
+  
+    .modal-footer-custom button {
+      flex: 1 1 100%;
+    }
+  }
+  
+
   

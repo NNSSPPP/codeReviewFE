@@ -174,4 +174,79 @@
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
   }
+  /* ===============================
+   DARK MODE OVERRIDE (Assignments)
+   =============================== */
+
+/* Table wrapper */
+:host-context(.dark-mode) .assignment-wrapper .assignment-table {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* Header */
+:host-context(.dark-mode) .assignment-wrapper .assignment-table thead th {
+  background-color: var(--table-header-bg) !important;
+  color: var(--table-header-text) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* Body rows */
+:host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+}
+
+:host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:nth-child(even) {
+  background-color: var(--bg-panel) !important;
+}
+
+:host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:hover {
+  background-color: var(--table-header-bg2) !important;
+}
+
+/* Badge colors (fixed, keep same) */
+:host-context(.dark-mode) .assignment-wrapper .badge.bg-low {
+  background-color: #10b981 !important;
+  color: #fff !important;
+}
+:host-context(.dark-mode) .assignment-wrapper .badge.bg-medium {
+  background-color: #fbbf24 !important;
+  color: #1f2937 !important;
+}
+:host-context(.dark-mode) .assignment-wrapper .badge.bg-high {
+  background-color: #ef4444 !important;
+  color: #fff !important;
+}
+:host-context(.dark-mode) .assignment-wrapper .badge.bg-critical {
+  background-color: #111827 !important;
+  color: #fff !important;
+}
+/* Dark mode - Assign Issue button solid style */
+:host-context(.dark-mode) .btn-outline-primary {
+  background-color: #2563eb !important;  /* น้ำเงินเข้มแบบ Clear */
+  color: #ffffff !important;             /* ตัวหนังสือขาว */
+  border: 1px solid #2563eb !important;  /* กรอบน้ำเงินเข้ม */
+  font-weight: 500;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Hover effect */
+:host-context(.dark-mode) .btn-outline-primary:hover {
+  background-color: #1e40af !important;  /* น้ำเงินเข้มขึ้น */
+  border-color: #1e40af !important;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+  color: #fff !important;
+}
+
+/* Icon fix */
+:host-context(.dark-mode) .btn-outline-primary i.bi {
+  color: inherit !important;   /* ให้ icon ตามสีตัวอักษร */
+  font-size: 1.05rem;
+  transition: color 0.25s ease;
+}
+
+
+
   
