@@ -59,7 +59,7 @@ export class RepositoriesComponent implements OnInit {
       // 1. filter ตาม tab (framework)
       (this.activeFilter === 'all' || repo.project_type?.toLowerCase().includes(this.activeFilter.toLowerCase())) &&
       // 2. filter ตาม status
-      // (this.selectedStatus === 'all' || repo.status === this.selectedStatus) &&
+      (this.selectedStatus === 'all' || repo.status === this.selectedStatus) &&
       // 3. filter ตาม search text
       (this.searchText === '' ||
         repo.name.toLowerCase().includes(this.searchText) ||
@@ -81,7 +81,8 @@ export class RepositoriesComponent implements OnInit {
       { label: 'Total Repositories', count: this.filteredRepositories.length, icon: 'bi bi-database', bg: 'bg-primary' },
       { label: 'Active', count: this.filteredRepositories.filter(r => r.status === 'Active').length, icon: 'bi bi-check-circle-fill', bg: 'bg-success' },
       { label: 'Scanning', count: this.filteredRepositories.filter(r => r.status === 'Scanning').length, icon: 'bi bi-arrow-repeat', bg: 'bg-info' },
-      { label: 'Paused', count: this.filteredRepositories.filter(r => r.status === 'Paused').length, icon: 'bi bi-pause-circle-fill', bg: 'bg-warning' }
+      { label: 'Error', count: this.filteredRepositories.filter(r => r.status === 'Error').length, icon: 'bi bi-exclamation-circle-fill', bg: 'bg-danger' }
+      
     ];
   }
 
@@ -91,16 +92,14 @@ export class RepositoriesComponent implements OnInit {
     // เรียก service API เพื่อเริ่ม scan
   }
 
-  stopScan(repo: Repository) {
-    console.log('Stop scan for', repo.name);
-    repo.status = 'Paused';
-    // เรียก service API เพื่อหยุด scan
-  }
-
   resumeScan(repo: Repository) {
     console.log('Resume scan for', repo.name);
     repo.status = 'Scanning';
     // เรียก service API เพื่อเริ่ม scan ต่อ
+  }
+
+  goToActiveScan() {
+    this.router.navigate(['/activescan']);
   }
 
   editRepo(repo: Repository) {

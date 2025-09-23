@@ -43,11 +43,5 @@ export class ActivescanComponent {
   openQueueModal() { this.showQueueModal = true; }
   closeQueueModal() { this.showQueueModal = false; }
 
-  pauseReview(index: number) {
-    console.log('Pause review:', this.activeReviews[index].name);
-  }
-
-  stopReview(index: number) {
-    console.log('Stop review:', this.activeReviews[index].name);
-  }
+  
 }
