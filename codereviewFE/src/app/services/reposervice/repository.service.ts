@@ -16,7 +16,7 @@ export interface Repository {
   updated_at: Date;
 
   scans?: Scan[]
-  status?: 'Active' | 'Scanning' | 'Paused' | 'Error'| 'Cancelled';
+  status?: 'Active' | 'Scanning' | 'Error' | 'Cancelled';
   lastScan?: string;
   scanningProgress?: number;
   qualityGate?: string;
