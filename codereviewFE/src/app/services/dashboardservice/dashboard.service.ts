@@ -3,7 +3,9 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Dashboard {
+export interface Dashboard 
+{
+
   id: string;
   name: string;
   metrics: string;
@@ -40,3 +42,4 @@ export class DashboardService {
   getTrends(userId: string | number): Observable<Trends[]> {
     return this.http.get<Trends[]>(`${this.base}/${userId}/trends`);
   }
+}
