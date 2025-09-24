@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+// src/app/repositoryservice/repository.service.ts
+>>>>>>> Stashed changes
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, switchMap, map, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -15,6 +19,10 @@ export interface Repository {
   created_at: string;   // <-- ใช้ string (ISO)
   updated_at: string;   // <-- ใช้ string (ISO)
 
+<<<<<<< Updated upstream
+=======
+  // enriched fields (เสริมจากบริการอื่น)
+>>>>>>> Stashed changes
   scans?: Scan[];
   status?: 'Active' | 'Scanning' | 'Error' | 'Cancelled';
   lastScan?: string;
