@@ -1,22 +1,23 @@
 import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { Router, RouterLink } from '@angular/router';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface ScanCategory {
   name: string;
   status: 'Pass' | 'Warning' | 'Fail';
-  score: number;
+  grade : string;
   details: string;
 }
 
 interface Scan {
-  id: string;
+  scan_id: string;
   project: string;
   date: string;
   time: string;
   status: 'PASSED' | 'FAILED';
   grade: string;
-  score: number;
   categories: ScanCategory[];
   metrics: {
     bugs: { total: number; low: number; medium: number; high: number };
@@ -38,26 +39,25 @@ interface Scan {
   styleUrl: './scanresult.component.css'
 })
 export class ScanresultComponent {
-  constructor(private router: Router) {}
+
+  constructor(private readonly router: Router) {}
+
   scanInfo: Scan = {
-    id: '1',
+    scan_id: '1',
     project: 'Angular-App',
     date: '2024-01-15 10:30 AM',
     time: '10:30 AM',
     status: 'PASSED',
     grade: 'A',
-    score: 92,
     duration: '5 min 32 sec',
     scanner: 'npm sonar',
     technicalDebt: '2 days 4 hours',
     estimatedCost: 45000,
     categories: [
-      { name: 'Code Style', status: 'Pass', score: 95, details: 'Well formatted' },
-      { name: 'TypeScript Rules', status: 'Pass', score: 88, details: 'Minor issues' },
-      { name: 'Security', status: 'Warning', score: 75, details: '3 vulnerabilities' },
-      { name: 'Performance', status: 'Pass', score: 90, details: 'Good' },
-      { name: 'Accessibility', status: 'Pass', score: 85, details: 'WCAG AA compliant' },
-      { name: 'Bundle Size', status: 'Pass', score: 92, details: '1.2 MB' }
+      { name: 'Security', status: 'Pass', grade: 'A', details: 'No vulnerabilities' },
+      { name: 'Reliability', status: 'Warning', grade: 'B', details: 'Minor stability issues' },
+      { name: 'Maintainability', status: 'Pass', grade: 'A', details: 'Codebase easy to maintain' },
+      { name: 'Security Hosts', status: 'Fail', grade: 'C', details: 'Host configuration issues' }
     ],
     metrics: {
       bugs: { total: 3, low: 2, medium: 1, high: 1 },
@@ -67,4 +67,89 @@ export class ScanresultComponent {
     }
   };
 
+  private generatePDF(): jsPDF {
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(18);
+    doc.text(`Scan Report: ${this.scanInfo.project}`, 14, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Quality Gate: ${this.scanInfo.status}`, 14, 30);
+    doc.text(`Overall Grade: ${this.scanInfo.grade}`, 14, 37);
+    doc.text(`Date: ${this.scanInfo.date}`, 14, 47);
+    doc.text(`Duration: ${this.scanInfo.duration}`, 14, 54);
+    doc.text(`Scanner: ${this.scanInfo.scanner}`, 14, 61);
+
+    // Over All Code
+    autoTable(doc, {
+      startY: 70,
+      head: [['Topic', 'Status', 'Grade', 'Details']],
+      body: this.scanInfo.categories.map(cat => [
+        cat.name,
+        cat.status,
+        cat.grade,
+        cat.details
+      ])
+    });
+
+    // Metrics Overview
+    const finalY1 = (doc as any).lastAutoTable?.finalY || 70;
+    doc.text('Metrics Overview', 14, finalY1 + 15);
+    autoTable(doc, {
+      startY: finalY1 + 20,
+      head: [['Metric', 'Value']],
+      body: [
+        [
+          'Bugs',
+          `${this.scanInfo.metrics.bugs.total} (Low: ${this.scanInfo.metrics.bugs.low}, Medium: ${this.scanInfo.metrics.bugs.medium}, High: ${this.scanInfo.metrics.bugs.high})`
+        ],
+        ['Vulns', this.scanInfo.metrics.vulns.toString()],
+        [
+          'Smells',
+          `${this.scanInfo.metrics.smells.total} (Minor: ${this.scanInfo.metrics.smells.minor}, Major: ${this.scanInfo.metrics.smells.major})`
+        ],
+        ['Coverage', `${this.scanInfo.metrics.coverage}%`]
+      ]
+    });
+
+    // Technical Debt & Cost
+    const finalY2 = (doc as any).lastAutoTable?.finalY || finalY1 + 40;
+    doc.text('Technical Debt & Cost', 14, finalY2 + 15);
+    autoTable(doc, {
+      startY: finalY2 + 20,
+      head: [['Technical Debt', 'Estimated Cost']],
+      body: [[this.scanInfo.technicalDebt, `฿${this.scanInfo.estimatedCost.toLocaleString()}`]]
+    });
+
+    return doc;
+  }
+
+ 
+  downloadReport() {
+    const doc = this.generatePDF();
+
+    const projectName = this.scanInfo.project.replace(/\s+/g, '_');
+    const scanDate = new Date(this.scanInfo.date);
+    const formattedDate = `${scanDate.getFullYear()}${(scanDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}${scanDate.getDate().toString().padStart(2, '0')}`;
+  
+    const fileName = `scan_report_${projectName}_${formattedDate}.pdf`;
+    doc.save(fileName);
+  }
+  
+
+  emailReport() {
+    const doc = this.generatePDF();
+    const pdfBlob = doc.output('blob');
+
+    // TODO: ส่ง pdfBlob ไป backend เพื่อส่งอีเมลจริง
+    console.log('PDF ready to send by email', pdfBlob);
+    alert('Report prepared for email (demo only)');
+  }
+
+  viewIssues() {
+    this.router.navigate(['/issues', this.scanInfo.scan_id]);
+  }
 }

@@ -21,13 +21,10 @@
 
   <!-- Actions -->
   <div class="mb-4 d-flex gap-2 flex-wrap">
-    <button class="btn btn-primary" *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'">
+    <button class="btn btn-primary" *ngIf="repo.status !== 'Scanning' && repo.status !== 'Error'">
       <i class="bi bi-play-circle me-1"></i> Run Scan
     </button>
-    <button class="btn btn-danger" *ngIf="repo.status === 'Scanning'">
-      <i class="bi bi-stop-fill me-1"></i> Stop Scan
-    </button>
-    <button class="btn btn-success" *ngIf="repo.status === 'Paused'">
+    <button class="btn btn-success" *ngIf="repo.status === 'Error'">
       <i class="bi bi-play-fill me-1"></i> Resume Scan
     </button>
     <button class="btn btn-secondary" (click)="editRepo(repo)">

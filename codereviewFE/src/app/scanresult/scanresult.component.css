@@ -217,6 +217,77 @@
     background: linear-gradient(90deg, #10b981, #059669); /* ไล่สีเขียว */
   }
   
+   /* ===============================
+   Actions Buttons
+   =============================== */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* กึ่งกลาง */
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.actions .btn {
+  min-width: 180px;   /* ความกว้าง */
+  min-height: 46px;   /* ความสูง */
+  font-size: 15px;    /* ข้อความใหญ่พออ่าน */
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;           /* ระยะห่าง icon-text */
+  cursor: pointer;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease,
+              background-color 0.35s ease,
+              color 0.35s ease;
+}
+
+.actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.actions .btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Success */
+.actions .btn-success {
+  background-color: var(--status-passed-text); /* เขียวเข้ม */
+  border: none;
+  color: #fff;
+}
+
+.actions .btn-success:hover {
+  background-color: #065f46;
+}
+
+/* Info */
+.actions .btn-info {
+  background-color: var(--metric-code-smells); /* ฟ้า */
+  border: none;
+  color: #fff;
+}
+
+.actions .btn-info:hover {
+  background-color: #0284c7;
+}
+
+/* Warning */
+.actions .btn-warning {
+  background-color: #f59e0b; /* ส้ม */
+  border: none;
+  color: #fff;
+}
+
+.actions .btn-warning:hover {
+  background-color: #b45309; /* hover เข้มขึ้น */
+}
   
   /* ===============================
      Dark Mode Overrides (โหมดมืด)
