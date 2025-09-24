@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Scan {
   scans_id: string; // UUID
@@ -12,13 +13,26 @@ export interface Scan {
   security_gate?: 'Y' | 'N';
   maintainability_gate?: 'Y' | 'N';
   security_review_gate?: 'Y' | 'N';
-  metrics?: any;
+  metrics?: Record<string, number>;
   log_file_path?: string;
   
   //ไม่มีในdiagram
   log_file_name?: string;
   log_content?: string;
 }
+
+export interface ScanRequest {
+  repoUrl: string;
+  projectKey: string;
+  branchName: string;
+  token: string;
+}
+
+export interface ScanLogModel {
+  scan_id: string;           
+  line: Array<string>;
+}
+
 
 @Injectable({
   providedIn: 'root'
