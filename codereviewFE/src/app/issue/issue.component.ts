@@ -13,6 +13,7 @@ interface Issue {
   assignee: string;
   status: string;
   selected?: boolean;
+  //scanId: string | null ;
 }
 
 @Component({
@@ -25,18 +26,21 @@ interface Issue {
 export class IssueComponent {
   issueId: string | null = null;
 
-  
-constructor(private readonly route: ActivatedRoute) {}
+  constructor(private readonly route: ActivatedRoute) {}
 
   ngOnInit(): void {
-   // this.issueId = this.route.snapshot.paramMap.get('id');
-    // To be continue : ดึงข้อมูลจาก service ตาม issueId
-
     this.route.queryParams.subscribe(params => {
       this.filterType = params['type'] || 'All Types';
+      this.filterProject = params['project'] || 'All Projects';
+      this.filterSeverity = params['severity'] || 'All Severity';
+      this.filterStatus = params['status'] || 'All Status';
+      this.searchText = params['search'] || '';
+
+      this.currentPage = 1;
     });
   }
 
+  // Filters
   filterType = 'All Types';
   filterSeverity = 'All Severity';
   filterStatus = 'All Status';
@@ -44,9 +48,11 @@ constructor(private readonly route: ActivatedRoute) {}
   searchText = '';
   selectAllCheckbox = false;
 
+  // Pagination
   currentPage = 1;
   pageSize = 5;
 
+  // Issues
   issues: Issue[] = [
     {id_issue: '1', type: 'bug', severity: 'high', title: 'Null Pointer Exception', details: 'Line 245 in UserService.java', project: 'API-Service', assignee: '@john.dev', status: 'in-progress' },
     {id_issue: '2', type: 'security', severity: 'critical', title: 'SQL Injection Risk', details: 'Line 89 in database.service.ts', project: 'Angular-App', assignee: '@jane.dev', status: 'open' },
@@ -56,26 +62,24 @@ constructor(private readonly route: ActivatedRoute) {}
     {id_issue: '6', type: 'code-smell', severity: 'low', title: 'Missing null check', details: 'Line 67 in helper.java', project: 'Auth-Service', assignee: '@mike.dev', status: 'resolved' },
   ];
 
-  get filteredIssues() {
-    return this.issues
-      .filter(i =>
-        (this.filterType === 'All Types' || i.type === this.filterType) &&
-        (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
-        (this.filterStatus === 'All Status' || i.status === this.filterStatus) &&
-        (this.filterProject === 'All Projects' || i.project === this.filterProject) &&
-        (this.searchText === '' || i.title.toLowerCase().includes(this.searchText.toLowerCase()))
-      );
+  // Filtered & Paginated
+  filterIssues() {
+    return this.issues.filter(i =>
+      (this.filterType === 'All Types' || i.type === this.filterType) &&
+      (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
+      (this.filterStatus === 'All Status' || i.status === this.filterStatus) &&
+      (this.filterProject === 'All Projects' || i.project === this.filterProject) &&
+      (this.searchText === '' || i.title.toLowerCase().includes(this.searchText.toLowerCase()))
+    );
   }
-  
+
+  get filteredIssues() {
+    return this.filterIssues();
+  }
+
   get paginatedIssues() {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredIssues.slice(start, start + this.pageSize);
-  }
-
-
-  selectAll(event: any) {
-    this.selectAllCheckbox = event.target.checked;
-    this.paginatedIssues.forEach(i => i.selected = event.target.checked);
   }
 
   nextPage() {
@@ -90,68 +94,65 @@ constructor(private readonly route: ActivatedRoute) {}
     }
   }
 
+  selectAll(event: any) {
+    this.selectAllCheckbox = event.target.checked;
+    this.paginatedIssues.forEach(i => i.selected = event.target.checked);
+  }
+
   selectedCount() {
     return this.issues.filter(i => i.selected).length;
   }
 
-// Assign Developer
-assignDeveloper() {
-  const selectedIssues = this.issues.filter(i => i.selected);
-  if (selectedIssues.length === 0) {
-    alert("กรุณาเลือก Issue ก่อน");
-    return;
-  }
-
-  // ให้ user เลือก developer จาก list
-  //to be continue
-  const developers = ["Developer A", "Developer B", "Developer C"];
-  const dev = prompt("เลือก Developer: " + developers.join(", "));
-
-  if (!dev || !developers.includes(dev)) {
-    alert("Developer ไม่ถูกต้อง");
-    return;
-  }
-
-  selectedIssues.forEach(issue => issue.assignee = dev);
-  alert(`Assigned ${selectedIssues.length} issue(s) to ${dev}`);
-}
-
-// Change Status
-changeStatus() {
-  const selectedIssues = this.issues.filter(i => i.selected);
-  if (selectedIssues.length === 0) {
-    alert("กรุณาเลือก Issue ก่อน");
-    return;
-  }
-
-  // วนสถานะตามลำดับ
-  const statusSteps = ["open", "in-progress", "resolved"];
-
-  selectedIssues.forEach(issue => {
-    const currentIndex = statusSteps.indexOf(issue.status);
-    // ถ้าอยู่ขั้นสุดท้าย (Resolved) ไม่เปลี่ยน
-    if (currentIndex < statusSteps.length - 1) {
-      issue.status = statusSteps[currentIndex + 1];
+  // Assign Developer
+  assignDeveloper() {
+    const selectedIssues = this.issues.filter(i => i.selected);
+    if (!selectedIssues.length) {
+      alert("กรุณาเลือก Issue ก่อน");
+      return;
     }
-  });
 
-  alert(`Changed status for ${selectedIssues.length} issue(s)`);
-}
+    const developers = ["Developer A", "Developer B", "Developer C"];
+    const dev = prompt("เลือก Developer: " + developers.join(", "));
 
+    if (!dev || !developers.includes(dev)) {
+      alert("Developer ไม่ถูกต้อง");
+      return;
+    }
 
-  // ปุ่ม Export csv
+    selectedIssues.forEach(issue => issue.assignee = dev);
+    alert(`Assigned ${selectedIssues.length} issue(s) to ${dev}`);
+  }
+
+  // Change Status
+  changeStatus() {
+    const selectedIssues = this.issues.filter(i => i.selected);
+    if (!selectedIssues.length) {
+      alert("กรุณาเลือก Issue ก่อน");
+      return;
+    }
+
+    const statusSteps = ["open", "in-progress", "resolved"];
+    selectedIssues.forEach(issue => {
+      const idx = statusSteps.indexOf(issue.status);
+      if (idx < statusSteps.length - 1) {
+        issue.status = statusSteps[idx + 1];
+      }
+    });
+
+    alert(`Changed status for ${selectedIssues.length} issue(s)`);
+  }
+
+  // Export CSV
   exportData() {
     const selectedIssues = this.issues.filter(i => i.selected);
-    if (selectedIssues.length === 0) {
+    if (!selectedIssues.length) {
       alert("กรุณาเลือก Issue ก่อน");
       return;
     }
 
     const csvContent = [
-      ["", "Title", "Severity", "Status", "Assignee"].join(","),
-      ...selectedIssues.map(i =>
-        [i.id_issue, i.title, i.severity, i.status, i.assignee || "-"].join(",")
-      )
+      ["ID", "Title", "Severity", "Status", "Assignee"].join(","),
+      ...selectedIssues.map(i => [i.id_issue, i.title, i.severity, i.status, i.assignee || "-"].join(","))
     ].join("\n");
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -170,13 +171,11 @@ changeStatus() {
     this.filterProject = 'All Projects';
     this.searchText = '';
     this.currentPage = 1;
-
-    this.selectAllCheckbox = false; 
+    this.selectAllCheckbox = false;
     this.issues.forEach(i => i.selected = false);
   }
-  
 
-  // Helper function for icons
+  // Helper for icons & styles
   typeIcon(type: string) {
     switch(type.toLowerCase()) {
       case 'bug': return 'bi-bug';
