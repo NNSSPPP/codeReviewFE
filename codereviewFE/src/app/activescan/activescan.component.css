@@ -123,49 +123,6 @@
     font-size: 0.95rem;                    /* เล็กลง */
   }
   
-  /* ===============================
-     Buttons
-     =============================== */
-  .btn-group {
-    display: flex;                         /* จัดปุ่มแนวนอน */
-    gap: 0.8rem;                           /* ระยะห่างระหว่างปุ่ม */
-    flex-wrap: wrap;                       /* ถ้าจอแคบให้ตัดบรรทัด */
-    margin-top: 1rem;                      /* เว้นข้างบน */
-  }
-  
-  .btn-modern {
-    padding: 0.6rem 1.2rem;                /* ระยะขอบใน */
-    border-radius: 10px;                   /* มุมโค้ง */
-    font-weight: 600;                      /* หนา */
-    border: none;                          /* ไม่มีเส้นขอบ */
-    transition: all 0.25s ease;            /* effect เวลาชี้ */
-    display: flex;                         /* ใช้ flex */
-    align-items: center;                   /* ไอคอนกลาง */
-    gap: 0.5rem;                           /* เว้นระหว่างไอคอนกับข้อความ */
-    cursor: pointer;                       /* เปลี่ยนเมาส์เป็น pointer */
-  }
-  
-  .btn-pause {
-    background: var(--btn-primary-bg);     /* สีฟ้า */
-    color: var(--btn-primary-text);        /* ตัวอักษรขาว */
-  }
-  
-  .btn-pause:hover {
-    background: var(--btn-primary-bg-hover); /* ฟ้าเข้มเวลา hover */
-    transform: translateY(-2px);             /* ยกขึ้น */
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); /* เงาฟ้า */
-  }
-  
-  .btn-stop {
-    background: var(--btn-logout-text);    /* สีแดง */
-    color: var(--btn-primary-text);        /* ขาว */
-  }
-  
-  .btn-stop:hover {
-    background: #b91c1c;                   /* แดงเข้มเวลา hover */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); /* เงาแดง */
-  }
   
   /* ===============================
      Queue Section

@@ -1,4 +1,3 @@
-// src/app/repositoryservice/repository.service.ts
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, switchMap, map, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -16,7 +15,6 @@ export interface Repository {
   created_at: string;   // <-- ใช้ string (ISO)
   updated_at: string;   // <-- ใช้ string (ISO)
 
-  // enriched fields (เสริมจากบริการอื่น)
   scans?: Scan[];
   status?: 'Active' | 'Scanning' | 'Error' | 'Cancelled';
   lastScan?: string;

@@ -6,7 +6,7 @@ export interface Scan {
   scans_id: string; // UUID
   project_id: string; // UUID
   quality_gate?: string;
-  status: 'Active' | 'Scanning' | 'Paused' |'Error' | 'Cancelled';
+  status: 'Active' | 'Scanning' |'Error' | 'Cancelled';
   started_at?: Date;
   completed_at?: Date;
   reliability_gate?: 'Y' | 'N';
@@ -75,7 +75,7 @@ export class ScanService {
       scans_id: '3',
       project_id: '333',
       quality_gate: 'C',
-      status: 'Paused',
+      status: 'Error',
       started_at: new Date(Date.now() - 7200 * 1000),
       completed_at: new Date(Date.now() - 3600 * 1000),
       reliability_gate: 'N',
@@ -107,7 +107,7 @@ export class ScanService {
       scans_id: '5',
       project_id: '555',
       quality_gate: 'B',
-      status: 'Active',
+      status: 'Cancelled',
       reliability_gate: 'Y',
       security_gate: 'Y',
       maintainability_gate: 'Y',
