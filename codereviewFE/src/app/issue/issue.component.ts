@@ -94,10 +94,15 @@ export class IssueComponent {
     }
   }
 
-  selectAll(event: any) {
-    this.selectAllCheckbox = event.target.checked;
-    this.paginatedIssues.forEach(i => i.selected = event.target.checked);
-  }
+  // ตรวจว่าในหน้าปัจจุบันเลือกครบทุกอันหรือยัง
+isPageAllSelected(): boolean {
+  return this.paginatedIssues.length > 0 && this.paginatedIssues.every(i => i.selected);
+}
+
+selectAll(event: any) {
+  const checked = event.target.checked;
+  this.paginatedIssues.forEach(i => i.selected = checked);
+}
 
   selectedCount() {
     return this.issues.filter(i => i.selected).length;
@@ -145,21 +150,31 @@ export class IssueComponent {
   // Export CSV
   exportData() {
     const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) {
-      alert("กรุณาเลือก Issue ก่อน");
-      return;
-    }
+    const exportIssues = selectedIssues.length ? selectedIssues : this.issues;
+  
+    // ✅ กำหนดชื่อไฟล์
+    const datenow = new Date();
+    const dateStr = datenow.toISOString().split("T")[0].replaceAll("-", "");
+    const fileType = selectedIssues.length ? "selected" : "all";
+    const fileName = `issues_${fileType}_${dateStr}.csv`;
 
     const csvContent = [
-      ["ID", "Title", "Severity", "Status", "Assignee"].join(","),
-      ...selectedIssues.map(i => [i.id_issue, i.title, i.severity, i.status, i.assignee || "-"].join(","))
+      ["No.", "Title", "Severity", "Status", "Assignee"].join(","), // header
+      ...exportIssues.map((i, idx) => [
+        idx + 1,                        // ID = ลำดับแทน id_issue
+        `"${i.title}"`,                 // ครอบ "" กัน comma หลุด
+        i.severity,
+        i.status,
+        i.assignee || "-"
+      ].join(","))
     ].join("\n");
-
+  
+    // ✅ สร้างไฟล์
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "issues.csv";
+    a.download = fileName;
     a.click();
     window.URL.revokeObjectURL(url);
   }
