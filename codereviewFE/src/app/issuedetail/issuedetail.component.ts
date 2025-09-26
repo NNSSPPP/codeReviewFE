@@ -44,12 +44,10 @@ interface Issue {
 })
 export class IssuedetailComponent {
 
-  //to be continue จะต้องเปลี่ยนตามคนที่login
-  currentUser = '@currentUser';
-
-   // ตัวเลือก Priority และ Status
    priorityLevels: Array<'Low' | 'Medium' | 'High' | 'Critical'> = ['Low', 'Medium', 'High', 'Critical'];
 
+   developers: string[] = ['Developer A', 'Developer B', 'Developer C'];
+   
   issue: Issue = {
     id: 'SEC-2024-0145',
     type: 'Security',
@@ -80,7 +78,8 @@ export class IssuedetailComponent {
    goBack(): void {
     window.history.back();
   }
-
+  
+  currentUser = '@currentUser';
   newComment = {
     mention: '',  // @username
     comment: ''
@@ -102,10 +101,34 @@ export class IssuedetailComponent {
     // Reset input
     this.newComment = { mention: '', comment: '' };
   }
-  
-  
 
-  
+  // version user follow user login
+  // currentUser: string = '';
+  // newComment = { mention: '', comment: '' };
+
+  // constructor(private authService: AuthService) {}
+
+  // ngOnInit() {
+  //   // ดึง username ของ user ที่ login จาก AuthService
+  //   this.currentUser = this.authService.getCurrentUser(); 
+  // }
+
+  // postComment() {
+  //   const commentText = this.newComment.comment.trim();
+  //   if (!commentText) return;
+
+  //   this.issue.comments.push({
+  //     issueId: this.issue.id,
+  //     userId: this.currentUser,   // ใช้ username ของ user ที่ login
+  //     comment: commentText,
+  //     timestamp: new Date(),
+  //     attachments: [],
+  //     mentions: this.newComment.mention ? [this.newComment.mention] : []
+  //   });
+
+  //   // Reset input
+  //   this.newComment = { mention: '', comment: '' };
+  // }
 
   updateStatus() {
     switch (this.issue.status) {
@@ -121,14 +144,29 @@ export class IssuedetailComponent {
     }
   }
 
-  changeAssignee(newAssignee: string) {
-  if (!this.issue.assignedTo.includes(newAssignee)) {
-    this.issue.assignedTo.push(newAssignee);
-  } else {
-    this.issue.assignedTo = this.issue.assignedTo.filter(a => a !== newAssignee);
+  changeAssignee() {
+    // ให้ user เลือก developer
+    const dev = prompt('เลือก Developer: ' + this.developers.join(', '));
+  
+    // ถ้าไม่เลือกหรือพิมพ์ผิด
+    if (!dev || !this.developers.includes(dev)) {
+      alert('Developer ไม่ถูกต้อง');
+      return;
+    }
+  
+    // toggle assign/unassign
+    if (!this.issue.assignedTo.includes(dev)) {
+      this.issue.assignedTo.push(dev);
+      console.log(`Assigned to: ${dev}`);
+    } else {
+      this.issue.assignedTo = this.issue.assignedTo.filter(a => a !== dev);
+      console.log(`Unassigned: ${dev}`);
+    }
+  
+    console.log('Updated assignees:', this.issue.assignedTo);
   }
-  console.log('Updated assignees:', this.issue.assignedTo);
-}
+
+  
 
 
   // set priority ผ่าน prompt
@@ -143,7 +181,13 @@ export class IssuedetailComponent {
 
 
   closeIssue() {
-    this.issue.status = 'closed';
+    if (this.issue.status === 'resolved') {
+      this.issue.status = 'closed';
+      console.log(`Issue ${this.issue.id} has been closed.`);
+    } else {
+      alert('You must resolve the issue before closing it.');
+    }
   }
+  
 
 }
