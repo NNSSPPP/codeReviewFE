@@ -12,8 +12,8 @@ export interface Issue {
   message: string;
   assignedTo?: string; // user_id
   status: 'Open' | 'In Progress' | 'Resolved' | 'Closed';
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 export interface AddCommentPayload {
   text: string;    // alias ของ "comment"

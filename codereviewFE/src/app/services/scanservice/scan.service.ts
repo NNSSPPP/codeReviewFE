@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable , of } from 'rxjs';
 
 export interface Scan {
   scans_id: string; // UUID

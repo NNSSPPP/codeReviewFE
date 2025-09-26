@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-=======
-// src/app/repositoryservice/repository.service.ts
->>>>>>> Stashed changes
 import { Injectable, inject } from '@angular/core';
 import { Observable, forkJoin, switchMap, map, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -16,13 +12,9 @@ export interface Repository {
   project_type?: 'Angular' | 'Spring Boot';
   branch: string;
   sonar_project_key?: string;
-  created_at: string;   // <-- ใช้ string (ISO)
-  updated_at: string;   // <-- ใช้ string (ISO)
+  created_at: Date;   // <-- ใช้ string (ISO)
+  updated_at: Date;   // <-- ใช้ string (ISO)
 
-<<<<<<< Updated upstream
-=======
-  // enriched fields (เสริมจากบริการอื่น)
->>>>>>> Stashed changes
   scans?: Scan[];
   status?: 'Active' | 'Scanning' | 'Error' | 'Cancelled';
   lastScan?: string;
@@ -45,28 +37,29 @@ export class RepositoryService {
   private base = 'http://localhost:8080/api/repositories';
 
 
+
   /** POST /api/repositories */
-  create(repo: Partial<Repository>): Observable<Repository> {
+  addRepo(repo: Partial<Repository>): Observable<Repository> {
     return this.http.post<Repository>(this.base, repo);
   }
 
   /** GET /api/repositories */
-  getAll(): Observable<Repository[]> {
+  getAllRepo(): Observable<Repository[]> {
     return this.http.get<Repository[]>(this.base);
   }
 
   /** GET /api/repositories/{id} */
-  getById(id: string): Observable<Repository> {
+  getByIdRepo(id: string): Observable<Repository> {
     return this.http.get<Repository>(`${this.base}/${id}`);
   }
 
   /** PUT /api/repositories/{id} */
-  update(id: string, repo: Partial<Repository>): Observable<Repository> {
+  updateRepo(id: string, repo: Partial<Repository>): Observable<Repository> {
     return this.http.put<Repository>(`${this.base}/${id}`, repo);
   }
 
   /** DELETE /api/repositories/{id} */
-  delete(id: string): Observable<void> {
+  deleteRepo(id: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
 
@@ -83,7 +76,7 @@ export class RepositoryService {
 
   /** ดึง repo ทั้งหมด + เติมสรุป scan ล่าสุด */
   getRepositoriesWithScans(): Observable<Repository[]> {
-    return this.getAll().pipe(
+    return this.getAllRepo().pipe(
       switchMap((repos) => {
         if (!repos.length) return of<Repository[]>([]);
         return forkJoin(
@@ -111,7 +104,7 @@ export class RepositoryService {
 
   /** ดึง repo + scans + issues (ทุก scan) */
   getFullRepository(project_id: string): Observable<Repository | undefined> {
-    return this.getById(project_id).pipe(
+    return this.getByIdRepo(project_id).pipe(
       switchMap((repo) => {
         if (!repo) return of<Repository | undefined>(undefined);
 

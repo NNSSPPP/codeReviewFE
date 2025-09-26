@@ -51,11 +51,20 @@ export class AddrepositoryComponent implements OnInit {
     }
   }
 
+  // loadRepository(project_id: string) {
+  //   const repo = this.repositoryService.getByIdRepo(project_id);
+  //   if (repo) {
+  //     this.gitRepository = { ...repo };
+  //   }
+  // }
+  
   loadRepository(project_id: string) {
-    const repo = this.repositoryService.getByIdRepo(project_id);
-    if (repo) {
-      this.gitRepository = { ...repo };
-    }
+    this.repositoryService.getByIdRepo(project_id).subscribe({
+      next: (repo) => {
+        this.gitRepository = { ...repo };
+      },
+      error: (err) => console.error('Failed to load repository', err)
+    });
   }
 
   onSubmit(form: NgForm) {
