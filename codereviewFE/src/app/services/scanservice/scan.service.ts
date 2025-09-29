@@ -13,7 +13,12 @@ export interface Scan {
   security_gate?: 'Y' | 'N';
   maintainability_gate?: 'Y' | 'N';
   security_review_gate?: 'Y' | 'N';
-  metrics?: Record<string, number>;
+  // metrics?: Record<string, number>;
+  metrics?: {
+    coverage?: number;
+    bugs?: number;
+    vulnerabilities?: number;
+  };
   log_file_path?: string;
   
   //ไม่มีในdiagram

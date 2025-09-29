@@ -62,8 +62,9 @@ export class DetailrepositoryComponent implements OnInit {
     switch (status) {
       case 'Active': return 'badge bg-success';
       case 'Scanning': return 'badge bg-primary';
-      case 'Paused': return 'badge bg-warning text-dark';
-      default: return '';
+      case 'Error': return 'badge bg-danger';
+      case 'Cancelled': return 'badge bg-secondary';
+      default: return 'badge bg-light text-dark';
     }
   }
 }

@@ -61,11 +61,32 @@ export class AddrepositoryComponent implements OnInit {
   loadRepository(project_id: string) {
     this.repositoryService.getByIdRepo(project_id).subscribe({
       next: (repo) => {
-        this.gitRepository = { ...repo };
+        if (!repo) {
+          console.error('Repository not found');
+          // ถ้า repo ไม่มีค่า ให้ reset form หรือ handle ตามต้องการ
+          this.clearForm();
+          return;
+        }
+  
+        // แปลง object ให้ตรงกับ interface Repository
+        this.gitRepository = {
+          project_id: repo.project_id || '',   // ให้ default ''
+          user_id: repo.user_id || '',
+          name: repo.name || '',
+          repository_url: repo.repository_url || '',
+          project_type: repo.project_type,
+          branch: repo.branch || 'main',
+          created_at: repo.created_at ? new Date(repo.created_at) : new Date(),
+          updated_at: repo.updated_at ? new Date(repo.updated_at) : new Date(),
+          scans: repo.scans,
+          issues: repo.issues
+        };
       },
       error: (err) => console.error('Failed to load repository', err)
     });
   }
+  
+  
 
   onSubmit(form: NgForm) {
     if (form.valid) {
