@@ -17,7 +17,7 @@ export class AddrepositoryComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly repositoryService: RepositoryService
-  ) {}
+  ) { }
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
   isEditMode: boolean = false;
 
@@ -28,8 +28,8 @@ export class AddrepositoryComponent implements OnInit {
     project_type: undefined,
     repository_url: '',
     branch: 'main',
-    created_at: new Date(),
-    updated_at: new Date()
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   };
 
   sonarConfig = {
@@ -52,20 +52,24 @@ export class AddrepositoryComponent implements OnInit {
   }
 
   loadRepository(project_id: string) {
-    const repo = this.repositoryService.getByIdRepo(project_id);
-    if (repo) {
-      this.gitRepository = { ...repo };
-    }
+    this.repositoryService.getById(project_id).subscribe(repo => {
+      if (repo) {
+        this.gitRepository = { ...repo };
+      }
+    });
   }
 
   onSubmit(form: NgForm) {
     if (form.valid) {
       if (this.isEditMode) {
-        this.repositoryService.updateRepo(this.gitRepository.project_id, this.gitRepository);
+        this.repositoryService.update(this.gitRepository.project_id, this.gitRepository).subscribe(() => {
+          alert("Repository updated successfully!");
+        });
         alert("Repository updated successfully!");
       } else {
-        this.repositoryService.addRepo(this.gitRepository);
-        alert("Repository added successfully!");
+        this.repositoryService.create(this.gitRepository).subscribe(() => {
+          alert("Repository added successfully!");
+        });
       }
       this.router.navigate(['/repositories']);
     } else {
@@ -84,9 +88,11 @@ export class AddrepositoryComponent implements OnInit {
 
   onDelete() {
     if (confirm('Are you sure to delete this repository?')) {
-      this.repositoryService.deleteRepo(this.gitRepository.project_id);
-      alert('Deleted successfully!');
-      this.router.navigate(['/repositories']);
+      this.repositoryService.delete(this.gitRepository.project_id).subscribe(() => {
+        alert('Deleted successfully!');
+        this.router.navigate(['/repositories']);
+      });
+      
     }
   }
 
@@ -98,8 +104,9 @@ export class AddrepositoryComponent implements OnInit {
       project_type: undefined,
       repository_url: '',
       branch: 'main',
-      created_at: new Date(),
-      updated_at: new Date()
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+
     };
 
     this.sonarConfig = {

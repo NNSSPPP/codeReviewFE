@@ -13,7 +13,7 @@ interface Scan {
   status: string;
   statusText: string;
   grade: string;
-  issues: { bugs: number; locks: number; warnings: number };
+  issues?: { bugs?: number; locks?: number; warnings?: number };
 }
 
 @Component({
@@ -21,7 +21,7 @@ interface Scan {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './scanhistory.component.html',
-  styleUrl: './scanhistory.component.css'
+  styleUrls: ['./scanhistory.component.css']  
 })
 export class ScanhistoryComponent {
 
@@ -111,9 +111,9 @@ export class ScanhistoryComponent {
       Status: scan.status,
       StatusText: scan.statusText,
       Grade: scan.grade,
-      Bugs: scan.issues.bugs,
-      Locks: scan.issues.locks,
-      Warnings: scan.issues.warnings
+      Bugs: scan.issues?.bugs ?? 0,
+      Locks: scan.issues?.locks ?? 0,
+      Warnings: scan.issues?.warnings ?? 0
     }));
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(flatData);

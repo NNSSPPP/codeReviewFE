@@ -36,13 +36,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let scan of pagedScans"
-        [class.table-active]="isSelected(scan)"
-        (click)="toggleScanSelection(scan)"
-        (keydown.enter)="toggleScanSelection(scan)"
-        (keydown.space)="toggleScanSelection(scan)"
-        tabindex="0"
-        role="button">
+        <tr *ngFor="let scan of pagedScans" [class.table-active]="isSelected(scan)" (click)="toggleScanSelection(scan)"
+          (keydown.enter)="toggleScanSelection(scan)" (keydown.space)="toggleScanSelection(scan)" tabindex="0"
+          role="button">
           <td>
             {{scan.date | date:'yyyy-MM-dd'}} <br /> {{scan.time}}
           </td>
@@ -54,17 +50,18 @@
           </td>
           <td>{{scan.grade}}</td>
           <td>
-            <span *ngIf="scan.issues.bugs"><i class="bi bi-bug"></i> {{scan.issues.bugs}}</span>
-            <span *ngIf="scan.issues.locks"><i class="bi bi-lock"></i> {{scan.issues.locks}}</span>
-            <span *ngIf="scan.issues.warnings"><i class="bi bi-exclamation-triangle"></i> {{scan.issues.warnings}}</span>
+            <span *ngIf="scan.issues?.bugs"><i class="bi bi-bug"></i> {{scan.issues?.bugs}}</span>
+            <span *ngIf="scan.issues?.locks"><i class="bi bi-lock"></i> {{scan.issues?.locks}}</span>
+            <span *ngIf="scan.issues?.warnings"><i class="bi bi-exclamation-triangle"></i>
+              {{scan.issues?.warnings}}</span>
           </td>
           <td>
-            <button class="btn btn-log btn-sm" (click)="viewLog(scan)">
+            <button class="btn btn-log btn-sm" (click)="$event.stopPropagation(); viewLog(scan)">
               <i class="bi bi-file-text"></i> View Log
             </button>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" (click)="viewResult(scan)">
+            <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); viewResult(scan)">
               <i class="bi bi-search"></i> View Result
             </button>
           </td>
@@ -128,15 +125,15 @@
           </tr>
           <tr>
             <td>Bugs</td>
-            <td *ngFor="let scan of selectedScans">{{scan.issues.bugs ?? 0}}</td>
+            <td *ngFor="let scan of selectedScans">{{ scan.issues?.bugs ?? 0 }}</td>
           </tr>
           <tr>
             <td>Locks</td>
-            <td *ngFor="let scan of selectedScans">{{scan.issues.locks ?? 0}}</td>
+            <td *ngFor="let scan of selectedScans">{{ scan.issues?.locks ?? 0 }}</td>
           </tr>
           <tr>
             <td>Warnings</td>
-            <td *ngFor="let scan of selectedScans">{{scan.issues.warnings ?? 0}}</td>
+            <td *ngFor="let scan of selectedScans">{{ scan.issues?.warnings ?? 0 }}</td>
           </tr>
         </tbody>
       </table>
