@@ -133,16 +133,35 @@
     </div>
   
     <!-- Actions -->
-    <div class="d-flex gap-2">
+    <div class="d-flex justify-content-center gap-2">
       <button class="btn btn-primary" (click)="generateDebtReport()">
-        <i class="bi bi-file-earmark-text"></i> Generate Report
+        <i class="bi bi-file-earmark-text"></i> Generate Debt Report
       </button>
       <button class="btn btn-outline-success" (click)="exportToExcel()">
         <i class="bi bi-file-earmark-excel"></i> Export to Excel
       </button>
-      <button class="btn btn-warning" (click)="createActionPlan()">
-        <i class="bi bi-list-check"></i> Create Action Plan
+      <button class="btn btn-warning" (click)="openModal()">
+        <i class="bi bi-list-check"></i> Generate Action Plan
       </button>
     </div>
   </div>
+
+ <!-- Modal -->
+<div class="custom-modal-backdrop" *ngIf="isModalOpen">
+  <div class="custom-modal">
+    <div class="modal-header">
+      <h5 class="modal-title">Action Plan (Draft)</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
+    </div>
+
+    <div class="modal-body">
+      <pre>{{ actionPlanText }}</pre>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+      <button type="button" class="btn btn-success">Save Plan</button>
+    </div>
+  </div>
+</div>
   
