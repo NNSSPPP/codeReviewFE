@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { ActivatedRoute } from '@angular/router';
 interface Project {
   name: string;
   selected: boolean;
@@ -48,6 +48,15 @@ export class GeneratereportComponent {
   dateTo?: string;
   outputFormat: string = '';
   email: string = '';
+  constructor(private readonly route: ActivatedRoute) {} // ✅ inject route ที่นี่
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['type']) {
+        this.reportType = params['type']; // แก้ให้ตรงกับ property
+      }
+    });
+  }
 
   hasSelectedProjects(): boolean {
     return this.projects.some(p => p.selected);
