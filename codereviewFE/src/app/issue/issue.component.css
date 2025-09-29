@@ -1,3 +1,26 @@
+.issues-header {
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background-color: var(--bg-panel);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.issues-header h2 {
+  margin: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dashboard-title-color);
+}
+
+
+
 /* ===============================
    Custom Button
    =============================== */
@@ -251,5 +274,51 @@
 :host-context(body.dark-mode) .issues-container .table td .text-muted {
   color: #9ca3af !important; /* เทาอ่อน */
 }
+/* ===============================
+   Tablet Responsive (768px–1024px)
+   =============================== */
+   @media (max-width: 1024px) and (min-width: 768px) {
+    /* Container */
+    :host ::ng-deep .issues-container {
+      padding: 12px 14px;
+    }
+  
+    /* Table cells */
+    :host ::ng-deep .issues-container .table th,
+    :host ::ng-deep .issues-container .table td {
+      padding: 8px;
+      font-size: 14px;
+    }
+  
+    /* Filter row: input + select */
+    :host ::ng-deep .issues-container .filters select,
+    :host ::ng-deep .issues-container .filters input,
+    :host ::ng-deep .issues-container .form-select,
+    :host ::ng-deep .issues-container .form-control {
+      min-width: 120px;
+      font-size: 14px;
+      padding: 5px 8px;
+    }
+  
+    /* Custom Button */
+    :host ::ng-deep .issues-container .custom-btn {
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+  
+    /* Normal buttons */
+    :host ::ng-deep .issues-container .btn {
+      font-size: 13px;
+      padding: 6px 10px;
+      gap: 4px;
+    }
+  
+    /* Pagination (ถ้ามี) */
+    :host ::ng-deep .issues-container .pagination .page-link {
+      padding: 4px 8px;
+      font-size: 13px;
+    }
+  }
+  
 
     

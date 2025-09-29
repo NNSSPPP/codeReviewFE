@@ -1,28 +1,80 @@
 /* ===============================
    Container
    =============================== */
-   .report-container {
-    max-width: 900px;                  
-    margin: 30px auto;                 
-    padding: 24px 28px;                
-    border: 1px solid #e5e7eb;         
-    border-radius: 16px;               
-    background: #ffffff;               
-    font-family: "Inter", Arial, sans-serif;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    animation: fadeIn 0.5s ease;       
-  }
-  
-  /* Title */
-  .report-container h2 {
-    color: #2563eb;                    
-    margin-bottom: 20px;               
-    font-size: 1.4rem;                 
-    font-weight: 600;                  
-    display: flex;                     
-    align-items: center;               
-    gap: 8px;                          
-  }
+   /* Wrapper – ไม่มีพื้นหลัง ไม่มีกรอบ */
+.report-wrapper {
+  max-width: 900px;
+  margin: 30px auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Title Box */
+.report-title {
+  border: 1px solid var(--card-border, #cbd5e1);
+  border-radius: 12px;
+  background-color: var(--bg-panel, #f9fafb);
+  padding: 14px 18px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+/* Form Box */
+.report-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* Dark Mode Support */
+:host-context(.dark-mode) .report-title {
+  border: 1px solid #374151;
+  background-color: #1e293b;
+  color: #60a5fa;
+}
+
+:host-context(.dark-mode) .report-box {
+  background: #1e1e1e;
+  border: 1px solid #374151;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+  /* ===============================
+   Report Title Frame
+   =============================== */
+.report-container h2 {
+  border: 1px solid var(--card-border, #cbd5e1); /* กรอบ */
+  border-radius: 12px;                           /* มุมโค้ง */
+  background-color: var(--bg-panel, #f9fafb);    /* พื้นหลังจางๆ */
+  padding: 14px 18px;                            /* ระยะห่างใน */
+  font-size: 1.6rem;                             /* ขยายตัวอักษร */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.report-title {
+  border: 1px solid var(--card-border, #cbd5e1);
+  border-radius: 12px;
+  background-color: var(--bg-panel, #f9fafb);
+  padding: 14px 18px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2563eb; /* ฟ้า */
+}
+
   
   /* ===============================
      Sections

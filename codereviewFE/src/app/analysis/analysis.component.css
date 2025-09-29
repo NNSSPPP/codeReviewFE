@@ -1,3 +1,50 @@
+/* ตัด container นอกออก ไม่ให้มีกรอบ/พื้นหลัง */
+.analytics-container {
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+/* กรอบหัวข้ออย่างเดียว */
+.analytics-header {
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background-color: var(--bg-panel);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ตัวอักษรหัวข้อ */
+.analytics-header h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+:host {
+  display: block;
+  background: transparent !important; /* ทั้ง light/dark โปร่งใส */
+  color: #212529;
+  font-family: "Inter", "Prompt", sans-serif;
+}
+
+:host-context(body.dark-mode) {
+  background: transparent !important; /* dark mode ก็โปร่งใส */
+  color: #f9fafb;
+}
+
+
+
+
+
 /* =========================
    GLOBAL STYLE (Component Scope)
    ========================= */
@@ -129,4 +176,16 @@
   :host-context(body.dark-mode) .badge.yellow {
     color: #000; /* ให้ badge เหลืองยังอ่านออก */
   }
+  /* =========================
+   ANALYTICS HEADER DARK MODE
+   ========================= */
+:host-context(body.dark-mode) .analytics-header {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+:host-context(body.dark-mode) .analytics-header h3 {
+  color: var(--dashboard-title-color) !important;
+}
+  
   

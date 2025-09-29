@@ -4,7 +4,7 @@
    :root {
     --bg-color: #ffffff; /* สีพื้นหลังหลัก (ขาว) */
     --text-color: #000000; /* สีข้อความหลัก (ดำ) */
-  
+    --dashboard-title-color: #2563eb;
     /* ===== พื้นหลัง / ตัวอักษร ===== */
     --bg-main: #ffffff; /* พื้นหลังหลัก */
     --bg-card: #ffffff; /* พื้นหลังการ์ด */
@@ -105,7 +105,7 @@
     --navbar-active-border: #ffa500; /* ขอบ active */
   
     --detail-bg: #2c2c2c; /* detail */
-  
+    --dashboard-title-color: #ffffff;
     --bg-main: #121212; /* พื้นหลังหลัก */
     --bg-card: #1e1e1e; /* การ์ด */
     --bg-panel: #2c2c2c; /* panel */
