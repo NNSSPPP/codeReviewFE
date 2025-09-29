@@ -306,7 +306,7 @@ export class RepositoryService {
                   ...repo,
                   scans,
                   issues,
-                  status: latest?.status === 'Scanning' ? 'Scanning' : 'Active',
+                  status: latest ? latest.status : 'Active',
                   lastScan: latest?.completed_at
                     ? new Date(latest.completed_at).toLocaleString()
                     : '-',
