@@ -1,21 +1,44 @@
 /* ===============================
    Container
    =============================== */
-   .scan-history-container {
-    background-color: var(--bg-card); /* พื้นหลัง container */
-    border-radius: 10px; /* มุมโค้ง */
-    border: 1px solid var(--card-border); /* เส้นขอบ */
-    padding: 16px 20px; /* ระยะห่างด้านใน */
-    box-shadow: var(--card-shadow); /* เงา */
-    transition: background-color 0.35s ease,
-                border-color 0.35s ease,
-                box-shadow 0.35s ease,
-                color 0.35s ease; /* effect เวลาเปลี่ยนธีม */
-  }
-  .scan-history-container:hover {
-    box-shadow: var(--shadow-primary-hover); /* hover = เงาชัดขึ้น */
-  }
-  
+.scan-history-container {
+  background-color: transparent;  
+  border: none;                   
+  border-radius: 0;               
+  box-shadow: none;               
+  padding: 16px 20px;
+  transition: background-color 0.35s ease,
+              border-color 0.35s ease,
+              box-shadow 0.35s ease,
+              color 0.35s ease;
+}
+
+.scan-history-container:hover {
+  box-shadow: none; 
+}
+
+.scan-history-container h2 {
+  border: 1px solid var(--card-border);  
+  padding: 12px 16px;                    
+  border-radius: 10px;                   
+  background-color: var(--bg-panel);     
+  display: block;                        
+  width: 100%;                           
+  font-weight: 600; 
+  color: var(--dashboard-title-color);   
+}
+
+
+/* Table – เอากรอบรอบนอกออก เหลือเส้นคั่นด้านล่าง */
+.table-bordered {
+  border: none !important; 
+}
+
+.table-bordered > :not(caption) > * > * {
+  border-width: 0 0 1px 0;
+}
+
+
   
   /* ===============================
      Filter Input
@@ -233,4 +256,73 @@
       transform: translateY(0);
     }
   }
+  /* ===============================
+   Tablet Responsive (เฉพาะ 768px–1024px)
+   =============================== */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .scan-history-container {
+    padding: 12px 14px; /* ลด padding ของ container */
+  }
+
+  .filter-row input {
+    max-width: 120px; /* ช่อง date + search ไม่กินพื้นที่เยอะ */
+    padding: 5px 8px;
+    font-size: 14px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;  /* ลดระยะห่างใน cell */
+    font-size: 14px; /* ตัวอักษรเล็กลงนิดนึง */
+  }
+
+  .actions .btn {
+    min-width: 120px; /* ปุ่มไม่กว้างเกิน */
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .btn-log,
+  .btn-primary,
+  .btn-success,
+  .btn-danger,
+  .btn-info {
+    font-size: 13px; /* ปุ่มเล็กลงเล็กน้อย */
+    padding: 5px 8px;
+  }
+
+  /* ปรับ pagination ให้อยู่กลางและไม่เบียด */
+  .pagination .page-link {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+}
+/* ===============================
+   Mobile Responsive (Table Only)
+   =============================== */
+   @media (max-width: 576px) {
+    .scan-history-container .table {
+      display: block;
+      overflow-x: auto;   /* เลื่อนแนวนอนได้ */
+      white-space: nowrap; /* กันตัดบรรทัด */
+      font-size: 13px;     /* ย่อขนาดฟอนต์ */
+    }
+  
+    .scan-history-container .table th,
+    .scan-history-container .table td {
+      padding: 6px 8px;  /* ลด padding */
+      font-size: 13px;
+    }
+  
+    /* Badge ให้เล็กลง */
+    .status-success,
+    .status-warning,
+    .status-failed {
+      font-size: 12px;
+      padding: 3px 8px;
+    }
+  }
+  
+
+  
   
