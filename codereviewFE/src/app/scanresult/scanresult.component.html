@@ -2,29 +2,29 @@
   <a routerLink="/scanhistory" class="back-btn" title="Back to Scan History Page">
     <i class="bi bi-arrow-left"></i>
   </a>
-    <!-- Title -->
+  <!-- Title -->
   <h2 class="mb-4"><i class="bi bi-bar-chart"></i> Scan Results: {{ scanInfo.project }}</h2>
 
   <!-- Quality Gate & Scan Info -->
-  <div class="row mb-4">
+  <div class="row mb-4 g-3">
     <div class="col-md-6 mb-3">
-      <div class="card text-center">
+      <div class="card text-center h-100">
         <div class="card-body">
           <h5 class="card-title">
             Quality Gate: {{ scanInfo.status }}
-            <i class="bi"
-               [ngClass]="{
+            <i class="bi" [ngClass]="{
                  'bi-check-circle-fill text-success': scanInfo.status === 'PASSED',
                  'bi-x-circle-fill text-danger': scanInfo.status === 'FAILED'
                }"></i>
           </h5>
           <p>Overall Grade: <strong>{{ scanInfo.grade }}</strong></p>
-          <p>Score: <strong>{{ scanInfo.score }}/100</strong></p>
         </div>
       </div>
     </div>
+
+
     <div class="col-md-6 mb-3">
-      <div class="card text-center">
+      <div class="card text-center h-100">
         <div class="card-body">
           <h5 class="card-title">Scan Info <i class="bi bi-info-circle-fill"></i></h5>
           <p>Date: {{ scanInfo.date }}</p>
@@ -35,47 +35,50 @@
     </div>
   </div>
 
-  <!-- Review Checklist -->
-  <h4 class="mb-3">Review Checklist</h4>
+
+  <!-- Over all Code -->
+  <h4 class="mb-3 mt-4">Over All Code</h4>
   <table class="table table-bordered table-striped">
     <thead class="table-light">
       <tr>
-        <th>Category</th>
+        <th>Topic</th>
         <th>Status</th>
-        <th>Score</th>
+        <th>Grade</th>
         <th>Details</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let cat of scanInfo.categories">
+
         <td>{{ cat.name }}</td>
         <td [ngClass]="{
-            'text-success': cat.status === 'Pass',
-            'text-warning': cat.status === 'Warning',
-            'text-danger': cat.status === 'Fail'
-          }">
-          <i class="bi"
-             [ngClass]="{
-               'bi-check-circle-fill': cat.status === 'Pass',
-               'bi-exclamation-triangle-fill': cat.status === 'Warning',
-               'bi-x-circle-fill': cat.status === 'Fail'
-             }"></i>
+          'text-success': cat.status === 'Pass',
+          'text-warning': cat.status === 'Warning',
+          'text-danger': cat.status === 'Fail'
+        }">
+          <i class="bi" [ngClass]="{
+             'bi-check-circle-fill': cat.status === 'Pass',
+             'bi-exclamation-triangle-fill': cat.status === 'Warning',
+             'bi-x-circle-fill': cat.status === 'Fail'
+           }"></i>
           {{ cat.status }}
         </td>
-        <td>{{ cat.score }}/100</td>
+        <td><strong>{{ cat.grade }}</strong></td>
         <td>{{ cat.details }}</td>
       </tr>
     </tbody>
   </table>
 
+
   <!-- Metrics Overview -->
   <h4 class="mb-3 mt-4">Metrics Overview</h4>
-  <div class="row text-center">
+  <div class="row text-center g-3">
     <div class="col-md-3 mb-3">
       <div class="card metric-card">
-        <div class="card-body">
+        <div class="card-body h-100">
           <h5><i class="bi bi-bug"></i> Bugs</h5>
-          <p>{{ scanInfo.metrics.bugs.total }} (Low: {{ scanInfo.metrics.bugs.low }}, Medium: {{ scanInfo.metrics.bugs.medium }}, High: {{ scanInfo.metrics.bugs.high }})</p>
+          <p>{{ scanInfo.metrics.bugs.total }} (Low: {{ scanInfo.metrics.bugs.low }}, Medium: {{
+            scanInfo.metrics.bugs.medium }}, High: {{ scanInfo.metrics.bugs.high }})</p>
         </div>
       </div>
     </div>
@@ -91,7 +94,8 @@
       <div class="card metric-card">
         <div class="card-body">
           <h5><i class="bi bi-droplet"></i> Smells</h5>
-          <p>{{ scanInfo.metrics.smells.total }} (Minor: {{ scanInfo.metrics.smells.minor }}, Major: {{ scanInfo.metrics.smells.major }})</p>
+          <p>{{ scanInfo.metrics.smells.total }} (Minor: {{ scanInfo.metrics.smells.minor }}, Major: {{
+            scanInfo.metrics.smells.major }})</p>
         </div>
       </div>
     </div>
@@ -106,20 +110,36 @@
   </div>
 
   <!-- Technical Debt & Estimated Cost -->
-  <div class="row mt-4">
+  <div class="row mb-4 g-3">
     <div class="col-md-6">
-      <p><strong>Technical Debt:</strong> {{ scanInfo.technicalDebt }}</p>
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <h6 class="card-title fw-bold"><i class="bi bi-clock-history"></i> Technical Debt</h6>
+          <p class="fs-4">{{ scanInfo.technicalDebt }}</p>
+        </div>
+      </div>
     </div>
     <div class="col-md-6">
-      <p><strong>Estimated Cost:</strong> ฿{{ scanInfo.estimatedCost | number }}</p>
+      <div class="card text-center h-100">
+        <div class="card-body">
+          <h6 class="card-title fw-bold"><i class="bi bi-currency-dollar"></i> Estimated Cost</h6>
+          <p class="fs-4">฿{{ scanInfo.estimatedCost | number }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Action Buttons -->
-  <div class="mt-4 d-flex gap-2">
-    <button class="btn btn-primary"><i class="bi bi-download"></i> Download Report</button>
-    <button class="btn btn-info text-white"><i class="bi bi-envelope"></i> Email Report</button>
-    <button class="btn btn-warning"><i class="bi bi-search"></i> View Issues</button>
+  <div class="actions mt-4">
+    <button class="btn btn-success" (click)="downloadReport()">
+      <i class="bi bi-download"></i> Download Report
+    </button>
+    <button class="btn btn-info" (click)="emailReport()">
+      <i class="bi bi-envelope"></i> Email Report
+    </button>
+    <button class="btn btn-warning" [routerLink]="['/issue']" 
+    [queryParams]="{ project: scanInfo.project, scanId: scanInfo.scan_id }">
+      <i class="bi bi-search"></i> View Issues
+    </button>
   </div>
 </div>
-  

@@ -72,9 +72,9 @@
   
   
   /* ===============================
-     Severity Badge
+     Priority Badge
      =============================== */
-  .severity {
+  .priority {
     font-weight: 600;
     padding: 6px 14px;
     border-radius: 20px;
@@ -83,10 +83,10 @@
     letter-spacing: 0.5px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
-  .severity.critical { color: #fff; background: linear-gradient(135deg,#e63946,#d90429); }
-  .severity.high     { color: #fff; background: linear-gradient(135deg,#fd7e14,#f3722c); }
-  .severity.medium   { color: #000; background: linear-gradient(135deg,#ffd54f,#ffb703); }
-  .severity.low      { color: #000; background: linear-gradient(135deg,#8bc34a,#43a047); }
+  .priority.critical { color: #fff; background: linear-gradient(135deg,#e63946,#d90429); }
+  .priority.high     { color: #fff; background: linear-gradient(135deg,#fd7e14,#f3722c); }
+  .priority.medium   { color: #000; background: linear-gradient(135deg,#ffd54f,#ffb703); }
+  .priority.low      { color: #000; background: linear-gradient(135deg,#8bc34a,#43a047); }
   
   
   /* ===============================
@@ -100,9 +100,44 @@
     font-size: 0.95rem;
     color: #444;
   }
+
+  .issue-info .info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
   .issue-info div strong {
     color: #111;
+    min-width: 70px;
   }
+
+  /* Badge Style */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+/* Severity Colors */
+.badge.severity.critical { background: #e63946; }
+.badge.severity.high     { background: #fd7e14; }
+.badge.severity.medium   { background: #ffb703; color:#000; }
+.badge.severity.low      { background: #43a047; }
+
+/* Status Colors */
+.badge.status.open         { background: #f59e0b; }   /* สีส้ม -> ยังเปิดอยู่ */
+.badge.status.in-progress  { background: #2563eb; }   /* สีฟ้า -> กำลังดำเนินการ */
+.badge.status.resolved     { background: #10b981; }   /* สีเขียวอ่อน -> แก้ไขเรียบร้อย */
+.badge.status.closed       { background: #6b7280; }   /* สีเทา -> ปิดแล้ว */
+
+
   
   
   /* ===============================

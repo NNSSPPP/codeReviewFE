@@ -58,8 +58,8 @@
         <option value="all">All Status</option>
         <option value="Active">Active</option>
         <option value="Scanning">Scanning</option>
-        <option value="Paused">Paused</option>
         <option value="Error">Error</option>
+        <option value="Cancelled">Cancelled</option>
       </select>
 
     </div>
@@ -104,8 +104,7 @@
                     'grade-d': repo.qualityGate === 'D',
                     'grade-e': repo.qualityGate === 'E'
                   }">
-                  <i class="bi me-1"
-                     [ngClass]="{
+                  <i class="bi me-1" [ngClass]="{
                        'bi-check-circle': repo.qualityGate === 'A' || repo.qualityGate === 'B',
                        'bi-exclamation-triangle': repo.qualityGate === 'C' || repo.qualityGate === 'D',
                        'bi-x-circle': repo.qualityGate === 'E'
@@ -113,7 +112,7 @@
                   {{ repo.status === 'Scanning' ? 'Previous: ' : 'Quality Gate: ' }}{{ repo.qualityGate }}
                 </span>
               </div>
-              
+
             </div>
 
 
@@ -122,7 +121,8 @@
           <span class="status-badge" [ngClass]="{
             'bg-success': repo.status === 'Active',
             'bg-info': repo.status === 'Scanning',
-            'bg-warning': repo.status === 'Paused'
+            'bg-danger': repo.status === 'Error',
+            'bg-secondary': repo.status === 'Cancelled'
           }">
             {{ repo.status }}
           </span>
@@ -151,26 +151,30 @@
 
             <!-- Run -->
             <button class="btn btn-sm btn-outline-primary" title="RunScan"
-              *ngIf="repo.status !== 'Scanning' && repo.status !== 'Paused'" (click)="runScan(repo)">
+              *ngIf="repo.status == 'Active'" (click)="runScan(repo)">
               <i class="bi bi-play-circle"></i>
             </button>
 
-            <!-- Stop (เฉพาะตอน Scanning) -->
-            <button class="btn btn-sm btn-outline-danger" title="StopScan" *ngIf="repo.status === 'Scanning'"
-              (click)="stopScan(repo)">
-              <i class="bi bi-stop-fill"></i>
+            <!-- Go to Active Scan -->
+            <button class="btn btn-sm btn-outline-primary" title="Go to ActiveScan" *ngIf="repo.status === 'Scanning'"
+              (click)="goToActiveScan()">
+              <i class="bi bi-arrow-right-circle"></i>
             </button>
 
-            <!-- Resume (เฉพาะตอน Paused) -->
-            <button class="btn btn-sm btn-outline-success" title="ResumeScan" *ngIf="repo.status === 'Paused'"
+
+            <!-- Resume (เฉพาะตอน Paused และ Scanning ไม่สำเร็จ) -->
+
+            <!-- <button class="btn btn-sm btn-outline-success" title="ResumeScan" *ngIf="repo.status === 'Paused'"|| repo.status === 'Failed'" -->
+
+            <button class="btn btn-sm btn-outline-success" title="ResumeScan" *ngIf="repo.status === 'Error' || repo.status === 'Cancelled'"
               (click)="resumeScan(repo)">
-              <i class="bi bi-play-fill"></i>
+              <i class="bi bi-arrow-clockwise"></i>
             </button>
 
 
             <!-- Settings -->
             <button class="btn btn-sm btn-outline-secondary" title="Settings" (click)="editRepo(repo)">
-              <i class="bi bi-gear"></i>
+              <i class="bi bi-sliders"></i>
             </button>
 
             <!-- View -->
