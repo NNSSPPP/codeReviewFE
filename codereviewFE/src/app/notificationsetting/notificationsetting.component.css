@@ -3,14 +3,15 @@
   margin: 2rem auto;                  /* จัดให้อยู่กลางหน้าด้วย margin */
   padding: 1rem;                      /* ระยะห่างด้านใน */
   font-family: 'Inter', system-ui, sans-serif; /* ฟอนต์หลัก */
-  animation: fadeInUp 0.5s ease;      /* โหลดเข้ามาพร้อมแอนิเมชัน */
+  animation: fadeInUp 0.5s ease; 
+  border-radius: 12px !important;     /* โหลดเข้ามาพร้อมแอนิเมชัน */
 }
 
 h2 {                                  /* หัวข้อหลัก */
   padding: 1rem;                      /* เว้นรอบตัวอักษร */
   font-size: 1.4rem;                  /* ขนาดฟอนต์ */
   font-weight: 600;                   /* หนากำลังดี */
-  color: #1e293b;                     /* สีเทาเข้ม */
+  color: #2563eb;                       /* สีเทาเข้ม */
   display: flex;                      /* ใช้ flex จัด layout */
   align-items: center;                /* จัดกึ่งกลางแนวตั้ง */
   gap: .5rem;                         /* เว้นช่องระหว่างไอคอนกับข้อความ */
