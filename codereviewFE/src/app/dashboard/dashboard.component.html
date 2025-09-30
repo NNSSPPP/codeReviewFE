@@ -3,13 +3,12 @@
   <div class="dashboard-header shadow-sm">
 
     <div class="dashboard-title">
-      <i class="bi bi-speedometer2"></i> 
+      <i class="bi bi-speedometer2"></i>
       <strong>Dashboard Overview</strong>
     </div>
 
     <div class="dashboard-actions">
 
-      <!-- <button class="btn btn-link refresh-btn" (click)="onRefresh()">Refresh</button> -->
       <span class="admin-name">Admin</span>
       <!-- ปุ่ม Export -->
       <button class="export-btn" (click)="onExport()" title="Export">
@@ -19,18 +18,21 @@
 
 
       <!-- ปุ่ม Notification -->
-      <div class="notification-wrapper" (click)="toggleNotifications()" role="button" tabindex="0" title="Notification">
+      <div class="notification-wrapper">
 
-        <!-- ไอคอนกระดิ่ง -->
-        <i class="bi bi-bell-fill notification-icon"></i>
+        <button class="notification-wrapper" (click)="toggleNotifications()" title="Notification">
+          <!-- ไอคอนกระดิ่ง -->
+          <i class="bi bi-bell-fill notification-icon"></i>
 
-        <!-- Badge แสดงจำนวนแจ้งเตือน -->
-        <span *ngIf="notifications.length > 0" class="notification-badge">
-          {{ notifications.length }}
-        </span>
+          <!-- Badge แสดงจำนวนแจ้งเตือน -->
+          <span *ngIf="unreadCount > 0" class="notification-badge">
+            {{ unreadCount }}
+          </span>
+        </button>
 
         <!-- Panel แสดง Notifications -->
-        <div class="notifications-panel" *ngIf="showNotifications" (click)="$event.stopPropagation()">
+        <div class="notifications-panel" *ngIf="showNotifications" (mousedown)="$event.stopPropagation()">
+
 
           <!-- Header -->
           <div class="notifications-header">
@@ -49,13 +51,16 @@
           </div>
 
           <!-- รายการ Notifications -->
-          <div class="notification-item" *ngFor="let n of filteredNotifications">
+          <div class="notification-item" *ngFor="let n of filteredNotifications" [class.read]="n.read"
+            (click)="viewNotification(n)">
             <div class="item-header">
               <span>{{ n.icon }} {{ n.title }}</span>
               <span class="item-time">{{ getTimeAgo(n.timestamp) }}</span>
             </div>
             <div class="item-message">{{ n.message }}</div>
-            <button class="view-link">View →</button>
+
+
+
           </div>
 
           <!-- ปุ่ม Load More -->
@@ -97,10 +102,6 @@
             <i class="bi bi-check-circle-fill"></i> Passed
             <span>{{ mockData.passedCount }}</span>
           </div>
-          <div class="status-item warning">
-            <i class="bi bi-exclamation-triangle-fill"></i> Warning
-            <span>{{ mockData.warningCount }}</span>
-          </div>
           <div class="status-item failed">
             <i class="bi bi-x-circle-fill"></i> Failed
             <span>{{ mockData.failedCount }}</span>
@@ -129,7 +130,6 @@
             <td>{{ scan.project }}</td>
             <td [ngClass]="{
               'status-cell status--passed':  scan.status === 'Passed',
-              'status-cell status--warning': scan.status === 'Warning',
               'status-cell status--failed':  scan.status === 'Failed'
             }">{{ scan.status }}</td>
             <td [ngClass]="{
@@ -139,14 +139,14 @@
               'grade-cell grade--d': scan.grade === 'D',
               'grade-cell grade--e': scan.grade === 'E'
             }">{{ scan.grade }}</td>
-            <td>{{ scan.time }}</td>
+            <td>{{ scan.time | date:'dd/MM/yyyy, hh:mm a'}}</td>
             <td>
-              <button *ngIf="scan.status === 'Passed' || scan.status === 'Warning'"
-                class="btn btn-primary btn-sm text-white">
+              <button *ngIf="scan.status === 'Passed'"
+                class="btn btn-primary btn-sm text-white" title="view scan">
                 <i class="bi bi-eye"></i>
               </button>
 
-              <button *ngIf="scan.status === 'Failed'" class="btn btn-warning btn-sm text-white">
+              <button *ngIf="scan.status === 'Failed'" class="btn btn-warning btn-sm text-white" title="retry scan">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
             </td>
@@ -205,6 +205,7 @@
   </div>
 
   <!-- Top Issues & Project Distribution -->
+
   <!-- Top Issues -->
   <div class="row mt-4">
     <div class="col">
@@ -214,7 +215,9 @@
           {{ i.type }} - {{ i.message }}
         </li>
       </ul>
-      <button class="btn btn-sm btn-primary">Manage Issues →</button>
+      <a [routerLink]="['/issue']" class="view-all-link">
+        Manage Issues<i class="bi bi-arrow-right"></i>
+      </a>
     </div>
 
     <!-- Project Distribution -->
