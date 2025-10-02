@@ -231,4 +231,12 @@
   color: #ffffff !important; /* ขาว */
 }
 
+
+
+@media (max-width: 767px) {
+  .config-container h5 {
+    font-size: 1.2rem;
+  }
+}
+
   

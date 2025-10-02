@@ -167,4 +167,64 @@
   :host-context(.dark-mode) .header-row h2 {
     color: var(--dashboard-title-color) !important; /* ✅ ฟ้าหรือขาว */
   }
-  
+
+ /* ===============================
+   Mobile Responsive Table (320px - 768px)
+   =============================== */
+@media (max-width: 768px) {
+  .report-history-container {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  /* Header row จัดเรียงเป็นแนวตั้ง */
+  .header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .header-row h2 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  /* ห่อ table ด้วย scroll */
+  .report-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* ลดขนาด font & padding */
+  .report-table th,
+  .report-table td {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  /* ปรับปุ่มเล็กลง */
+  .download-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+
+  /* Pagination ปรับไม่ให้ชนกัน */
+  .pagination {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pagination button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+}
