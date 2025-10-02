@@ -8,13 +8,15 @@
     padding: 8px 12px;
     font-size: 1.3rem;
     margin-bottom: 15px;
-    color: #2563eb;
+    color: #2563eb;            /* ฟ้า */
     text-decoration: none;
-    border-radius: 10px;
+    background: transparent;   /* พื้นหลังใส */
+    border: none;              /* ไม่มีกรอบ */
+    border-radius: 12px;       /* มุมโค้ง */
     transition: background 0.25s ease, transform 0.25s ease;
   }
   .back-btn:hover {
-    background: #f0f6ff;
+    background: #e5f0ff;       /* ฟ้าอ่อนเมื่อ hover */
     transform: translateX(-4px);
   }
   .back-btn i {
@@ -22,7 +24,7 @@
   }
   
   /* ===============================
-     🌑 Modal Backdrop (พื้นหลังมืด)
+     🌑 Modal Backdrop
      =============================== */
   .modal-backdrop-custom {
     background: rgba(0, 0, 0, 0.5);
@@ -31,7 +33,7 @@
   }
   
   /* ===============================
-     🎬 Modal Show / Hide Animation
+     🎬 Modal Animation
      =============================== */
   .modal-show {
     display: block;
@@ -105,7 +107,7 @@
   }
   
   /* ===============================
-     📊 Table Styling (My Assignments)
+     📊 Table Styling
      =============================== */
   .table {
     background: #fff;
@@ -177,7 +179,7 @@
   }
   
   /* ===============================
-     🌙 Dark Mode Overrides
+     🌙 Dark Mode
      =============================== */
   :host-context(.dark-mode) .assignment-wrapper .assignment-table {
     background-color: var(--bg-card) !important;
@@ -291,7 +293,7 @@
       padding: 3px 4px;
     }
   
-    /* Header (My Assignments + Assign Issue) */
+    /* Header */
     .assignment-header {
       display: flex;
       flex-direction: row;
@@ -332,4 +334,44 @@
       gap: 4px;
     }
   }
-  
+  /* ===============================
+   🔙 ปุ่ม Back
+   =============================== */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #2563eb;            /* ฟ้า */
+  text-decoration: none;
+  background: transparent;   /* พื้นหลังใส */
+  border: none;              /* ไม่มีกรอบ */
+  border-radius: 12px;       /* มุมโค้ง */
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.back-btn:hover {
+  background: #e5f0ff;       /* ฟ้าอ่อนเมื่อ hover */
+  transform: translateX(-4px);
+}
+.back-btn i {
+  font-size: 1.5rem;
+}
+
+/* ===============================
+   🌙 Dark Mode Back Button (แก้ใหม่)
+   =============================== */
+:host-context(.dark-mode) .back-btn {
+  background: transparent !important;   /* โปร่งใส */
+  color: #3b82f6 !important;            /* ลูกศรฟ้า */
+  box-shadow: none !important;
+}
+:host-context(.dark-mode) .back-btn:hover {
+  background: rgba(255,255,255,0.08) !important; /* เทาโปร่งบาง */
+  transform: translateX(-4px);
+}
+:host-context(.dark-mode) .back-btn:active {
+  background: rgba(255,255,255,0.15) !important; /* เทาเข้มกว่า */
+  transform: scale(0.95);
+}

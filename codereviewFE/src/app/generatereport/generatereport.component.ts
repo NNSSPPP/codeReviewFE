@@ -88,6 +88,21 @@ export class GeneratereportComponent {
     if (this.email && form.controls['email']?.invalid) return false;
     return true;
   }
+  cancel(form?: any) {
+    if (form) {
+      form.resetForm();  // เคลียร์ค่าฟอร์ม
+    }
+    this.reportType = '';
+    this.projects.forEach(p => p.selected = false);
+    this.sections.forEach(s => s.selected = true); // หรือ false ตาม default
+    this.dateFrom = '';
+    this.dateTo = '';
+    this.outputFormat = '';
+    this.email = '';
+    
+    console.log('Form cancelled and cleared.');
+  }
+  
 
   previewReport() {
     console.log('Previewing report...');
@@ -97,9 +112,7 @@ export class GeneratereportComponent {
     console.log('Generating report...');
   }
 
-  cancel() {
-    console.log('Cancelled.');
-  }
+ 
 
  
 
