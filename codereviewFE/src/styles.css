@@ -1,3 +1,5 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 /* ===============================
    Light mode (default)
    =============================== */
@@ -343,3 +345,75 @@ body.dark-mode .modal-footer .btn-primary:hover {
   background-color: var(--btn-primary-bg-hover) !important;
 }
 
+
+
+
+
+/* Base container (ห้ามใช้ชื่อ .toast กันชนกับ Bootstrap/Tailwind) */
+.mat-mdc-snack-bar-container.app-snack {
+  --bg: #2563eb;          /* Blue 600 (light default) */
+  --fg: #ffffff;          /* White text */
+  --accent: #93c5fd;      /* Blue 300 border highlight */
+  --radius: 12px;
+  --pad-y: 12px;
+  --pad-x: 16px;
+  --shadow: 0 10px 24px rgba(0,0,0,.20);
+
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+  border-radius: var(--radius) !important;
+  padding: var(--pad-y) var(--pad-x) !important;
+  box-shadow: var(--shadow) !important;
+  border-left: 4px solid var(--accent);
+}
+
+/* ข้อความ + ปุ่ม */
+.mat-mdc-snack-bar-container.app-snack .mdc-snackbar__label {
+  font-size: .95rem;
+  line-height: 1.35rem;
+}
+.mat-mdc-snack-bar-container.app-snack .mdc-button__label {
+  color: #fff !important;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+/* เวอร์ชันฟ้า-ขาว (light/dark อัตโนมัติ) */
+.mat-mdc-snack-bar-container.app-snack-blue { /* ค่าพื้นฐานสำหรับ Light */
+  --bg: #2563eb;      /* Blue 600 */
+  --fg: #ffffff;
+  --accent: #93c5fd;  /* Blue 300 */
+}
+
+/* ปรับเฉดสำหรับ Dark Mode ให้อ่านง่ายขึ้น */
+@media (prefers-color-scheme: dark) {
+  .mat-mdc-snack-bar-container.app-snack-blue {
+    --bg: #1e3a8a;    /* Blue 800 */
+    --fg: #ffffff;
+    --accent: #60a5fa;/* Blue 400 */
+    --shadow: 0 8px 18px rgba(0,0,0,.45);
+  }
+}
+
+/* ระยะห่างจากขอบ */
+.mdc-snackbar { margin: 12px; }
+
+/* กันถูก layer อื่นบัง (ถ้าจอมี overlay เยอะ) */
+.cdk-overlay-container { z-index: 2000; }
+
+/* ตัวเลือก: สไตล์ขาว-ฟ้า */
+.mat-mdc-snack-bar-container.app-snack-outline {
+  --bg: #ffffff;
+  --fg: #1e3a8a;    /* Blue 800 */
+  --accent: #2563eb;
+  color: var(--fg) !important;
+  background: var(--bg) !important;
+  border-left-color: var(--accent) !important;
+}
+@media (prefers-color-scheme: dark) {
+  .mat-mdc-snack-bar-container.app-snack-outline {
+    --bg: #0b122b;  /* ดำอมฟ้า */
+    --fg: #e5efff;  /* ฟ้าอ่อน */
+    --accent: #60a5fa;
+  }
+}
