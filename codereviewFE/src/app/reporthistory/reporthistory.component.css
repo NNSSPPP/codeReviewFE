@@ -132,7 +132,8 @@
   .pagination button {
     padding: 6px 14px;
     border: 1px solid var(--card-border, #ddd);
-    background: var(--bg-card, #fff);
+    background: #3c72e9;
+    color: #fff;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.9rem;
@@ -140,9 +141,9 @@
   }
   
   .pagination button:hover:not(:disabled) {
-    background: var(--btn-primary-bg, #2563eb);
-    color: var(--btn-primary-text, #fff);
-    border-color: var(--btn-primary-bg-hover, #1e40af);
+    background: #2563eb;
+    color: #fff;
+    border-color: #1e40af;
   }
   
   .pagination button:disabled {
@@ -165,8 +166,33 @@
   }
   
   :host-context(.dark-mode) .header-row h2 {
-    color: var(--dashboard-title-color) !important; /* ✅ ฟ้าหรือขาว */
+    color: var(--dashboard-title-color) !important; 
   }
+/* ===============================
+   Dark Mode Pagination
+   =============================== */
+   :host-context(.dark-mode) .pagination button {
+    background: #2563eb !important;   /* กล่องฟ้า */
+    color: #fff !important;           /* ตัวหนังสือขาว */
+    border: 1px solid #2563eb !important;
+  }
+  
+  :host-context(.dark-mode) .pagination button:hover:not(:disabled) {
+    background: #1e40af !important;   /* ฟ้าเข้มตอน hover */
+    border-color: #1e40af !important;
+    color: #fff !important;
+  }
+  
+  :host-context(.dark-mode) .pagination button:disabled {
+    background: #374151 !important;   /* เทาเข้มตอน disabled */
+    color: #9ca3af !important;        /* เทาอ่อน */
+    border-color: #4b5563 !important;
+  }
+  
+
+
+
+
 
  /* ===============================
    Mobile Responsive Table (320px - 768px)
