@@ -319,6 +319,70 @@
       font-size: 13px;
     }
   }
+  /* ===============================
+   Mobile Responsive (320px–768px)
+   =============================== */
+@media (max-width: 768px) {
+  /* Container */
+  :host ::ng-deep .issues-container {
+    flex-wrap: nowrap;
+  }
+
+  /* Header (หัวข้อ + ปุ่ม) */
+  .issues-header {
+    flex-wrap: wrap;              /* ถ้าแคบ ให้ขึ้นบรรทัดใหม่ */
+    gap: 8px;
+  }
+  .issues-header h2 {
+    font-size: 16px;
+  }
+
+  /* ปุ่ม My Assignment */
+  :host ::ng-deep .issues-container .custom-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+    margin-left: auto; 
+  }
+
+  /* Filter */
+  :host ::ng-deep .issues-container .filters {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  :host ::ng-deep .issues-container .filters select,
+  :host ::ng-deep .issues-container .filters input {
+    min-width: 100px;
+    font-size: 13px;
+    padding: 5px 8px;
+  }
+
+  /* Table */
+  :host ::ng-deep .issues-container .table th,
+  :host ::ng-deep .issues-container .table td {
+    padding: 6px;
+    font-size: 13px;
+  }
+  :host ::ng-deep .issues-container .table {
+    font-size: 13px;
+  }
+}
+/* ปรับ container ของ filters ไม่ให้บีบ dropdown */
+:host ::ng-deep .issues-container .filters {
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow: visible;     
+  position: relative;    
+  z-index: 1;
+}
+
+/* สำหรับ select เอง */
+:host ::ng-deep .issues-container .filters select {
+  min-width: 120px;      
+  max-width: 100%;       
+}
+
+
   
 
     

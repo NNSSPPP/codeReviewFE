@@ -423,4 +423,154 @@
   transform: translateX(-4px);
 }
 
-  
+
+
+/* Tablet Only (601px–1024px) */
+@media (max-width: 1024px) and (min-width: 601px) {
+  .issue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Title ซ้าย + Badge ขวา */
+    gap: 8px;
+  }
+
+  .issue-header h2 {
+    font-size: 1.2rem;      /* ลดขนาดฟอนต์ */
+    line-height: 1.2;     /* ลดความสูงบรรทัด */
+    margin: 0;
+    flex: 1;              /* กินพื้นที่กลาง */
+    white-space: nowrap;  /* ไม่ให้ตัดบรรทัด */
+    overflow: hidden;
+    text-overflow: ellipsis; /* ถ้ายาวเกิน → … */
+  }
+
+  .issue-header .priority {
+    position: static;     /* ไม่ลอย */
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    flex-shrink: 0;       /* กันโดนบีบ */
+  }
+}
+
+
+
+/* 📱 Mobile Responsive (≤600px) */
+@media (max-width: 600px) {
+  .issue-container {
+    padding: 12px;              /* ลด padding */
+    border-radius: 10px;
+  }
+
+  /* Header */
+  .issue-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;                   /* ลดช่องว่าง */
+  }
+
+  .issue-header-top {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .back-btn {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .back-btn i {
+    font-size: 1rem;
+  }
+
+  .issue-header h2 {
+    font-size: 1rem;          /* ย่อขนาด */
+    line-height: 1.2;
+    margin: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: normal;
+  }
+  .issue-header h2 i {
+    font-size: 1 rem;
+  }
+
+  /* Priority → แถวสอง ชิดขวา */
+  .issue-header .priority {
+    align-self: flex-end;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+
+  /* Info */
+  .issue-info {
+    gap: 8px;                   /* ลดระยะห่าง */
+    font-size: 0.8rem;
+  }
+  .issue-info div strong {
+    min-width: 55px;
+  }
+
+  /* Description */
+  .issue-description h3 {
+    font-size: 0.9rem;
+  }
+  .issue-description pre {
+    font-size: 0.75rem;
+    padding: 8px;
+  }
+
+  /* Comments */
+  .issue-comments h3 {
+    font-size: 0.9rem;
+  }
+  .issue-comments .comment {
+    padding: 8px 0;
+  }
+  .issue-comments .comment p {
+    font-size: 0.8rem;
+  }
+
+  /* Add Comment */
+  .add-comment input {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  .add-comment button {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  /* Action Buttons */
+  .action-icons {
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .action-icons button {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+  }
+}
+@media (max-width: 600px) {
+  .issue-header {
+    position: relative; /* เพื่อให้ .priority อ้างอิงตำแหน่งใน header ได้ */
+  }
+
+  /* Priority badge → มุมขวาบน */
+  .issue-header .priority {
+    position: absolute;
+    top: 0; 
+    right: 0;
+    margin: 8px;               /* เว้นระยะขอบ */
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+  }
+}
