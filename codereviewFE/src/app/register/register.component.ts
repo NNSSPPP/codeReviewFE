@@ -64,7 +64,7 @@ export class RegisterComponent {
 
 
   onSubmit(form: NgForm) {
-    this.snack.open('✅ Registered', 'OK', {
+    this.snack.open('Successfully registered!', '', {
   duration: 2500,
   horizontalPosition: 'right',
   verticalPosition: 'top',
