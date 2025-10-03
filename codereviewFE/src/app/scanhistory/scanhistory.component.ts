@@ -13,7 +13,7 @@ interface Scan {
   status: string;
   statusText: string;
   grade: string;
-  issues: { bugs: number; locks: number; warnings: number };
+  issues?: { bugs?: number; locks?: number; warnings?: number };
 }
 
 @Component({
@@ -21,7 +21,7 @@ interface Scan {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './scanhistory.component.html',
-  styleUrl: './scanhistory.component.css'
+  styleUrls: ['./scanhistory.component.css']  
 })
 export class ScanhistoryComponent {
 
@@ -103,6 +103,37 @@ export class ScanhistoryComponent {
 
   // Export CSV
   exportHistory(): void {
+    const flatData = this.filteredScans.map((scan, index) => ({
+      No : index + 1,                   
+      Date: this.formatDate(scan.date),   
+      Time: scan.time,
+      Project: scan.project,
+      Status: scan.status,
+      StatusText: scan.statusText,
+      Grade: scan.grade,
+      Bugs: scan.issues?.bugs ?? 0,
+      Locks: scan.issues?.locks ?? 0,
+      Warnings: scan.issues?.warnings ?? 0
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(flatData);
+    const csv = XLSX.utils.sheet_to_csv(ws);
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const now = new Date();
+    
+    const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}`;
+    const fileName = `history_scan_${dateStr}.csv`;
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
    const flatData = this.filteredScans.map((scan, index) => ({
     No : index + 1,
     Date: this.formatDate(scan.date),
@@ -133,6 +164,7 @@ export class ScanhistoryComponent {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+ praew
   }
   
 

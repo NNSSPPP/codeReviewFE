@@ -18,7 +18,8 @@
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" [(ngModel)]="email" required email
-          pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$" #emailRef="ngModel" />
+          pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$" #emailRef="ngModel"
+          placeholder="Enter your email" title="Please enter your email address" />
           <div *ngIf="emailRef.touched || emailRef.dirty || submitted">
             <small *ngIf="emailRef.errors?.['required']" class="error-message">
                 Email is required
@@ -28,13 +29,14 @@
             </small>
             <small *ngIf="emailRef.errors?.['pattern']" class="error-message">
                 Email must have at least 2 characters after "."
-            </small>  
+            </small>
           </div>
         </div>
 
         <div class="input-group">
           <label for="password">Password</label>
-          <input type="password"  name="password" [(ngModel)]="password" required #pwdRef="ngModel" />
+          <input type="password" name="password" [(ngModel)]="password" required #pwdRef="ngModel"
+            placeholder="Enter your password" title="Please enter your password" />
           <div *ngIf="pwdRef.touched || pwdRef.dirty || submitted">
             <small *ngIf="pwdRef.errors?.['required']" class="error-message">
               Password is required

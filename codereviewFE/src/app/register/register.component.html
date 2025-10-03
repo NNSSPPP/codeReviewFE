@@ -24,12 +24,14 @@
         <!-- Username -->
         <div class="input-group">
           <label for="username">Username</label>
-          <input type="text" name="username" [(ngModel)]="username" required minlength="8" #usernameRef="ngModel" />
+          <input type="text" name="username" [(ngModel)]="username" required minlength="8" #usernameRef="ngModel" 
+          [class.is-invalid]="(usernameRef.invalid && (usernameRef.touched || submitted)) || usernameRef.errors?.['duplicate']"
+          />
           <div *ngIf="usernameRef.touched || usernameRef.dirty || submitted">
             <small *ngIf="usernameRef.errors?.['required']" class="error-message">Username is required</small>
             <small *ngIf="usernameRef.errors?.['minlength']" class="error-message">Username must be at least 8
               characters</small>
-            <small *ngIf="checkUsername()" class="error-message">Username already exists</small>
+            <small *ngIf="checkUsername(usernameRef)" class="error-message">Username already exists</small>
           </div>
         </div>
 
@@ -37,7 +39,9 @@
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" name="email" [(ngModel)]="email" required email pattern="^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$"
-            #emailRef="ngModel" />
+            #emailRef="ngModel" 
+            [class.is-invalid]="(emailRef.invalid && (emailRef.touched || submitted)) || emailRef.errors?.['duplicate']"
+            />
 
           <div *ngIf="emailRef.touched || emailRef.dirty || submitted">
             <small *ngIf="emailRef.errors?.['required']" class="error-message">
@@ -49,23 +53,28 @@
             <small *ngIf="emailRef.errors?.['pattern']" class="error-message">
               Email must have at least 2 characters after "."
             </small>
-            <small *ngIf="checkEmail()" class="error-message">
+            <small *ngIf="checkEmail(emailRef)" class="error-message">
               This email is already taken
             </small>
           </div>
         </div>
 
-        <!-- Telephone -->
+        <!-- phoneNumber -->
         <div class="input-group">
-          <label for="telephone">Phone Number</label>
-          <input type="tel" name="telephone" [(ngModel)]="telephone" required pattern="^0\d{9}$" maxlength="10"
-            #telRef="ngModel" />
+          <label for="phoneNumber">Phone Number</label>
+          <input type="tel" name="phoneNumber" [(ngModel)]="phoneNumber" required pattern="^0\d{9}$" maxlength="10"
+            #telRef="ngModel" 
+            [class.is-invalid]="(telRef.invalid && (telRef.touched || submitted)) || telRef.errors?.['duplicate']"
+          />
           <div *ngIf="telRef.touched || telRef.dirty || submitted">
             <small *ngIf="telRef.errors?.['required']" class="error-message">
               Phone Number is required
             </small>
             <small *ngIf="telRef.errors?.['pattern']" class="error-message">
               Phone Number must start with 0 and be 10 digits
+            </small>
+            <small *ngIf="checkPhoneNumber(telRef)" class="error-message">
+              This phone number is already taken
             </small>
           </div>
         </div>
