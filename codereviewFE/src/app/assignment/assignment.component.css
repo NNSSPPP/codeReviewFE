@@ -1,3 +1,25 @@
+/* ปุ่ม Back */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #2563eb;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.back-btn:hover {
+  background: #f0f6ff;
+  transform: translateX(-4px);
+}
+.back-btn i {
+  font-size: 1.5rem;
+}
+
+
 /* ===============================
    Backdrop (พื้นหลังมืดของ Modal)
    =============================== */

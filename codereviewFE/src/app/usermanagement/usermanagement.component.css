@@ -315,4 +315,58 @@ span.inactive {
     background: #374151;
     color: #f9fafb;
   }
+  /* ===============================
+   Tablet Responsive (768px–1024px)
+   =============================== */
+@media (max-width: 1024px) and (min-width: 768px) {
+  /* Container */
+  .user-management-container {
+    padding: 16px;
+  }
+
+  /* Header */
+  .user-management-container h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Toolbar: ให้ search bar กว้างขึ้น, ปุ่มอยู่ข้างล่าง */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 100%;
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  /* Table cells */
+  .user-table th,
+  .user-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  /* Actions column: ปรับให้ปุ่มไม่เบียดกัน */
+  .actions-col {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .actions-col .btn {
+    font-size: 13px;
+    padding: 5px 8px;
+    margin: 2px;
+  }
+
+  /* Modal */
+  .modal-content {
+    width: 90%;        /* ไม่ fix ที่ 420px */
+    max-width: 500px;  /* จำกัดไม่ให้กว้างเกิน */
+  }
+}
+
   

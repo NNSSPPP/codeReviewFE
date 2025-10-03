@@ -87,7 +87,10 @@ export class AssignmentComponent {
     }
   ];
 
-
+// ปุ่มย้อนกลับ
+goBack(): void {
+  window.history.back();
+}
 
   showAssignModal = false;
 

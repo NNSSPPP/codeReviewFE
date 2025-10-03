@@ -7,7 +7,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import {AddrepositoryComponent} from './addrepository/addrepository.component';
 import {DetailrepositoryComponent} from './detailrepository/detailrepository.component';
-import { ActivescanComponent } from './activescan/activescan.component';
 import { ScanhistoryComponent } from './scanhistory/scanhistory.component';
 import { ScanresultComponent } from './scanresult/scanresult.component';
 import { LogviewerComponent } from './logviewer/logviewer.component';
@@ -39,7 +38,6 @@ export const routes: Routes = [
       { path: 'addrepository', component: AddrepositoryComponent },
       { path: 'settingrepo/:project_id', component: AddrepositoryComponent },
       { path: 'detailrepo/:project_id', component: DetailrepositoryComponent },
-      { path: 'activescan', component: ActivescanComponent },
       { path: 'scanhistory', component: ScanhistoryComponent },
       { path: 'scanresult/:scan_id', component: ScanresultComponent },
       { path: 'logviewer/:scan_id', component: LogviewerComponent },

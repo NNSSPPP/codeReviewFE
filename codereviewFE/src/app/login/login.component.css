@@ -268,4 +268,41 @@ button:hover {
   text-decoration: underline;
   color: #93c5fd;
 }
+/* ===============================
+   Tablet Responsive (768px–1024px)
+   =============================== */
+   @media (min-width: 768px) and (max-width: 1024px) {
+    .login-wrapper {
+      max-width: 700px;   /* ลดความกว้างทั้งกรอบ */
+      border-radius: 20px;
+    }
+  
+    .welcome-section {
+      padding: 2rem;      /* ลด padding ฝั่ง welcome */
+    }
+  
+    .welcome-section h1 {
+      font-size: 1.8rem;  /* ลดหัวข้อ Welcome */
+    }
+  
+    .login-box {
+      padding: 2rem;      /* ลด padding form */
+      min-height: auto;
+    }
+  
+    .login-header h2 {
+      font-size: 1.5rem;  /* หัวข้อ Login เล็กลง */
+    }
+  
+    .input-group input {
+      padding: 0.7rem;
+      font-size: 0.95rem;
+    }
+  
+    button {
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+  }
+  
 

@@ -24,7 +24,7 @@
 
   <!-- Table -->
   <div class="table-responsive">
-    <table class="table table-striped table-bordered align-middle">
+    <table class="table table-striped  align-middle">
       <thead class="table-light">
         <tr>
           <th>Date/Time</th>
@@ -40,7 +40,7 @@
           (keydown.enter)="toggleScanSelection(scan)" (keydown.space)="toggleScanSelection(scan)" tabindex="0"
           role="button">
           <td>
-            {{scan.date | date:'yyyy-MM-dd'}} <br /> {{scan.time}}
+            {{scan.date | date:'dd/MM/yyyy'}} <br /> {{scan.time}}
           </td>
           <td>
             {{scan.project}} <br />
