@@ -87,10 +87,19 @@ export class LogviewerComponent {
     const blob = new Blob([content], { type: 'text/markdown' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = this.log.filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    const appName = this.log.applicationName?.replace(/\s+/g, '_') ?? 'scan';
+  const date = new Date(this.log.timestamp);
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+
+  const filename = `Log_${appName}_${y}${m}${d}.md`;
+
+  a.href = url;
+  a.download = filename;
+  a.click();
+
+  window.URL.revokeObjectURL(url);
   }
 
   // ปุ่มส่งอีเมล (mailto)
@@ -134,6 +143,6 @@ ${c.warnings?.join('\n') ?? 'None'}
 ${c.errors?.join('\n') ?? 'None'}
 `;
   }
-  
+
 
 }
