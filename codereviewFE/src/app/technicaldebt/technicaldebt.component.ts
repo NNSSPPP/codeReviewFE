@@ -128,8 +128,8 @@ export class TechnicaldebtComponent {
   
     // Actions
     generateDebtReport(): void {
-      this.router.navigate(['/generate-report'], {
-        queryParams: { type: 'technical-debt' }
+      this.router.navigate(['/generatereport'], {
+        queryParams: { reportType: 'technical-debt-analysis' }
       });
     }
     
