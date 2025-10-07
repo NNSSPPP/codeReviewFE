@@ -1,37 +1,39 @@
-/* ปุ่ม Back */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: #2563eb;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: background 0.25s ease, transform 0.25s ease;
-}
-.back-btn:hover {
-  background: #f0f6ff;
-  transform: translateX(-4px);
-}
-.back-btn i {
-  font-size: 1.5rem;
-}
-
-
 /* ===============================
-   Backdrop (พื้นหลังมืดของ Modal)
+   🔙 ปุ่ม Back
    =============================== */
-   .modal-backdrop-custom {
+   .back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #2563eb;            /* ฟ้า */
+    text-decoration: none;
+    background: transparent;   /* พื้นหลังใส */
+    border: none;              /* ไม่มีกรอบ */
+    border-radius: 12px;       /* มุมโค้ง */
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .back-btn:hover {
+    background: #e5f0ff;       /* ฟ้าอ่อนเมื่อ hover */
+    transform: translateX(-4px);
+  }
+  .back-btn i {
+    font-size: 1.5rem;
+  }
+  
+  /* ===============================
+     🌑 Modal Backdrop
+     =============================== */
+  .modal-backdrop-custom {
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px); /* ทำให้พื้นหลังฟุ้งเบลอ */
+    backdrop-filter: blur(3px);
     transition: opacity 0.3s ease;
   }
   
-  
   /* ===============================
-     Modal Show / Hide (การแสดงผล)
+     🎬 Modal Animation
      =============================== */
   .modal-show {
     display: block;
@@ -43,8 +45,6 @@
     opacity: 0;
     animation: fadeOut 0.3s ease forwards;
   }
-  
-  /* Keyframes สำหรับ Fade Animation */
   @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95) translateY(10px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
@@ -54,15 +54,13 @@
     to   { opacity: 0; transform: scale(0.95) translateY(10px); }
   }
   
-  
   /* ===============================
-     Modal Dialog & Content
+     📦 Modal Dialog & Content
      =============================== */
   .modal-dialog-custom {
     max-width: 800px;
     margin: 1.75rem auto;
   }
-  
   .modal-content {
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.12);
@@ -71,16 +69,13 @@
     overflow: hidden;
     animation: slideUp 0.4s ease;
   }
-  
-  /* Keyframes สำหรับ Slide-Up ตอน modal โผล่ขึ้นมา */
   @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
     to   { transform: translateY(0); opacity: 1; }
   }
   
-  
   /* ===============================
-     Modal Header
+     📝 Modal Header
      =============================== */
   .modal-header {
     border-bottom: 1px solid #f1f1f1;
@@ -93,7 +88,6 @@
     align-items: center;
     gap: 6px;
   }
-  
   /* ปุ่ม Close */
   .btn-close {
     transition: transform 0.25s ease;
@@ -103,21 +97,17 @@
     transform: rotate(90deg) scale(1.1);
   }
   
-  
   /* ===============================
-     Modal Body & Footer
+     📄 Modal Body & Footer
      =============================== */
-  .modal-body {
-    padding: 20px;
-  }
+  .modal-body { padding: 20px; }
   .modal-footer {
     border-top: 1px solid #f1f1f1;
     padding: 14px 20px;
   }
   
-  
   /* ===============================
-     Table Styling (ตาราง My Assignments)
+     📊 Table Styling
      =============================== */
   .table {
     background: #fff;
@@ -130,8 +120,7 @@
     font-weight: 600;
     border-bottom: 2px solid #e5e7eb;
   }
-  
-  /* Animation เวลา row โผล่มาทีละแถว */
+  /* Row animation */
   .table tbody tr {
     opacity: 0;
     transform: translateY(6px);
@@ -141,22 +130,17 @@
   .table tbody tr:hover {
     background: #f8faff;
   }
-  
-  /* Delay ให้แต่ละแถวขึ้นทีละนิด */
   .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
   .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
   .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
   .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
   .table tbody tr:nth-child(5) { animation-delay: 0.25s; }
-  
-  /* Keyframes สำหรับ Row Fade-In */
   @keyframes rowFadeIn {
     to { opacity: 1; transform: translateY(0); }
   }
   
-  
   /* ===============================
-     Buttons
+     🔘 Buttons
      =============================== */
   .btn {
     border-radius: 8px;
@@ -170,9 +154,7 @@
     background: #2563eb;
     border: none;
   }
-  .btn-primary:hover {
-    background: #1e40af;
-  }
+  .btn-primary:hover { background: #1e40af; }
   .btn-outline-primary {
     border: 1px solid #2563eb;
     color: #2563eb;
@@ -182,9 +164,8 @@
     color: #fff;
   }
   
-  
   /* ===============================
-     Form Inputs
+     ✍️ Form Inputs
      =============================== */
   .form-select,
   .form-control {
@@ -196,79 +177,201 @@
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
   }
-  /* ===============================
-   DARK MODE OVERRIDE (Assignments)
-   =============================== */
-
-/* Table wrapper */
-:host-context(.dark-mode) .assignment-wrapper .assignment-table {
-  background-color: var(--bg-card) !important;
-  color: var(--text-main) !important;
-  border-color: var(--card-border) !important;
-}
-
-/* Header */
-:host-context(.dark-mode) .assignment-wrapper .assignment-table thead th {
-  background-color: var(--table-header-bg) !important;
-  color: var(--table-header-text) !important;
-  border-color: var(--card-border) !important;
-}
-
-/* Body rows */
-:host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr {
-  background-color: var(--bg-card) !important;
-  color: var(--text-main) !important;
-}
-
-:host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:nth-child(even) {
-  background-color: var(--bg-panel) !important;
-}
-
-:host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:hover {
-  background-color: var(--table-header-bg2) !important;
-}
-
-/* Badge colors (fixed, keep same) */
-:host-context(.dark-mode) .assignment-wrapper .badge.bg-low {
-  background-color: #10b981 !important;
-  color: #fff !important;
-}
-:host-context(.dark-mode) .assignment-wrapper .badge.bg-medium {
-  background-color: #fbbf24 !important;
-  color: #1f2937 !important;
-}
-:host-context(.dark-mode) .assignment-wrapper .badge.bg-high {
-  background-color: #ef4444 !important;
-  color: #fff !important;
-}
-:host-context(.dark-mode) .assignment-wrapper .badge.bg-critical {
-  background-color: #111827 !important;
-  color: #fff !important;
-}
-/* Dark mode - Assign Issue button solid style */
-:host-context(.dark-mode) .btn-outline-primary {
-  background-color: #2563eb !important;  /* น้ำเงินเข้มแบบ Clear */
-  color: #ffffff !important;             /* ตัวหนังสือขาว */
-  border: 1px solid #2563eb !important;  /* กรอบน้ำเงินเข้ม */
-  font-weight: 500;
-  transition: background-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-/* Hover effect */
-:host-context(.dark-mode) .btn-outline-primary:hover {
-  background-color: #1e40af !important;  /* น้ำเงินเข้มขึ้น */
-  border-color: #1e40af !important;
-  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
-  color: #fff !important;
-}
-
-/* Icon fix */
-:host-context(.dark-mode) .btn-outline-primary i.bi {
-  color: inherit !important;   /* ให้ icon ตามสีตัวอักษร */
-  font-size: 1.05rem;
-  transition: color 0.25s ease;
-}
-
-
-
   
+  /* ===============================
+     🌙 Dark Mode
+     =============================== */
+  :host-context(.dark-mode) .assignment-wrapper .assignment-table {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--card-border) !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .assignment-table thead th {
+    background-color: var(--table-header-bg) !important;
+    color: var(--table-header-text) !important;
+    border-color: var(--card-border) !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:nth-child(even) {
+    background-color: var(--bg-panel) !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:hover {
+    background-color: var(--table-header-bg2) !important;
+  }
+  /* Badges */
+  :host-context(.dark-mode) .assignment-wrapper .badge.bg-low {
+    background-color: #10b981 !important;
+    color: #fff !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .badge.bg-medium {
+    background-color: #fbbf24 !important;
+    color: #1f2937 !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .badge.bg-high {
+    background-color: #ef4444 !important;
+    color: #fff !important;
+  }
+  :host-context(.dark-mode) .assignment-wrapper .badge.bg-critical {
+    background-color: #111827 !important;
+    color: #fff !important;
+  }
+  /* Dark mode button */
+  :host-context(.dark-mode) .btn-outline-primary {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    border: 1px solid #2563eb !important;
+    font-weight: 500;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  :host-context(.dark-mode) .btn-outline-primary:hover {
+    background-color: #1e40af !important;
+    border-color: #1e40af !important;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+  }
+  :host-context(.dark-mode) .btn-outline-primary i.bi {
+    color: inherit !important;
+    font-size: 1.05rem;
+    transition: color 0.25s ease;
+  }
+  
+  /* ===============================
+     📱 Mobile Responsive (≤768px)
+     =============================== */
+  @media (max-width: 768px) {
+    /* Back button */
+    .back-btn {
+      font-size: 0.8rem;
+      padding: 3px 6px;
+      margin-bottom: 6px;
+    }
+    .back-btn i { font-size: 0.9rem; }
+  
+    /* Modal */
+    .modal-dialog-custom {
+      max-width: 95% !important;
+      margin: 0.5rem auto;
+    }
+    .modal-header,
+    .modal-body,
+    .modal-footer { padding: 8px 10px; }
+    .modal-title { font-size: 0.85rem; }
+  
+    /* Table */
+    .table {
+      font-size: 0.7rem;
+      border-radius: 4px;
+      min-width: 100%;
+    }
+    .table thead th {
+      font-size: 0.7rem;
+      padding: 3px 4px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .table tbody td {
+      font-size: 0.75rem;
+      padding: 3px 4px;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    /* Buttons */
+    .btn {
+      font-size: 0.75rem;
+      padding: 3px 6px;
+    }
+  
+    /* Form */
+    .form-select,
+    .form-control {
+      font-size: 0.75rem;
+      padding: 3px 4px;
+    }
+  
+    /* Header */
+    .assignment-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .assignment-header h1,
+    .assignment-header .modal-title {
+      font-size: 0.85rem !important;
+      line-height: 1.1;
+      font-weight: 600;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .assignment-header .btn-outline-primary {
+      font-size: 0.7rem !important;
+      padding: 2px 6px !important;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .assignment-header .btn-outline-primary i {
+      font-size: 0.75rem;
+      margin-right: 2px;
+    }
+  
+    /* Title "My Assignments" */
+    .assignment-wrapper h3 {
+      font-size: 0.85rem !important;
+      font-weight: 600;
+      margin: 0;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+  /* ===============================
+   🔙 ปุ่ม Back
+   =============================== */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #2563eb;            /* ฟ้า */
+  text-decoration: none;
+  background: transparent;   /* พื้นหลังใส */
+  border: none;              /* ไม่มีกรอบ */
+  border-radius: 12px;       /* มุมโค้ง */
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.back-btn:hover {
+  background: #e5f0ff;       /* ฟ้าอ่อนเมื่อ hover */
+  transform: translateX(-4px);
+}
+.back-btn i {
+  font-size: 1.5rem;
+}
+
+/* ===============================
+   🌙 Dark Mode Back Button (แก้ใหม่)
+   =============================== */
+:host-context(.dark-mode) .back-btn {
+  background: transparent !important;   /* โปร่งใส */
+  color: #3b82f6 !important;            /* ลูกศรฟ้า */
+  box-shadow: none !important;
+}
+:host-context(.dark-mode) .back-btn:hover {
+  background: rgba(255,255,255,0.08) !important; /* เทาโปร่งบาง */
+  transform: translateX(-4px);
+}
+:host-context(.dark-mode) .back-btn:active {
+  background: rgba(255,255,255,0.15) !important; /* เทาเข้มกว่า */
+  transform: scale(0.95);
+}

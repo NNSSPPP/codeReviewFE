@@ -393,4 +393,74 @@
   :host-context(.dark-mode) .table .text-danger {
     color: #ef4444 !important;
   }
+  /* ===============================
+   📱 Mobile Compact Table (Scan Results)
+   =============================== */
+@media (max-width: 768px) {
+  /* Container */
+  .scan-results-container {
+    padding: 14px;   /* ลด padding */
+    border-radius: 10px;
+  }
+
+  /* Headings */
+  h2, h4 {
+    font-size: 1rem;   /* ย่อหัวข้อ */
+    line-height: 1.3;
+  }
+
+  /* Table */
+  .table {
+    width: 100% !important;   /* บังคับเต็มจอ */
+    table-layout: fixed;      /* คอลัมน์ไม่บวม */
+    font-size: 0.7rem;        /* ย่อขนาดฟอนต์ */
+    border-radius: 6px;
+  }
+  .table th,
+  .table td {
+    padding: 5px 6px;         /* ลด padding */
+    white-space: nowrap;      /* กันตารางหักบรรทัด */
+    overflow: hidden;         /* ซ่อนข้อความเกิน */
+    text-overflow: ellipsis;  /* ถ้ายาวเกิน → … */
+    text-align: center;       /* จัดกลางให้สวย */
+  }
+
+  /* Scroll wrapper ป้องกัน overflow */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Metric cards */
+  .metric-card p {
+    font-size: 0.8rem;
+  }
+  .metric-card h5 {
+    font-size: 0.9rem;
+  }
+
+  /* ปุ่ม Action */
+  .actions .btn {
+    min-width: 140px;
+    min-height: 40px;
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+}
+/* ===============================
+   Headings (หัวข้อหลัก)
+   =============================== */
+   .scan-results-container h2 {
+    font-size: 1.2rem;   /* ขยายฟอนต์ */
+    font-weight: 700;    /* หนาขึ้น */
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .scan-results-container h2 i {
+    font-size: 1.2rem;   /* ขยาย icon ด้วย */
+    color: #2563eb;
+  }
   

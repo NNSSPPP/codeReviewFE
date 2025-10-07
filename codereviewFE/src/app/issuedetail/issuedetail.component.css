@@ -10,26 +10,15 @@
     box-shadow: 0 8px 20px rgba(0,0,0,0.06);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
-    /* เปิดหน้ามี animation fade + slide-up */
-    animation: fadeSlideUp 0.6s ease forwards;
+    animation: fadeSlideUp 0.6s ease forwards; /* fade + slide-up */
   }
   .issue-container:hover {
     box-shadow: 0 12px 28px rgba(0,0,0,0.08);
   }
-  
-  /* Animation keyframes */
   @keyframes fadeSlideUp {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  
   
   /* ===============================
      Header
@@ -41,7 +30,6 @@
     align-items: center;
     margin-bottom: 18px;
   }
-  
   /* ปุ่ม Back */
   .back-btn {
     display: inline-flex;
@@ -52,16 +40,16 @@
     margin-bottom: 15px;
     color: #2563eb;
     text-decoration: none;
-    border-radius: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 12px;
     transition: background 0.25s ease, transform 0.25s ease;
   }
   .back-btn:hover {
-    background: #f0f6ff;
+    background: #e5f0ff;
     transform: translateX(-4px);
   }
-  .back-btn i {
-    font-size: 1.5rem;
-  }
+  .back-btn i { font-size: 1.5rem; }
   
   /* ไอคอนใน Title */
   .issue-header h2 i {
@@ -69,7 +57,6 @@
     margin-right: 8px;
     color: #dc3545;
   }
-  
   
   /* ===============================
      Priority Badge
@@ -88,7 +75,6 @@
   .priority.medium   { color: #000; background: linear-gradient(135deg,#ffd54f,#ffb703); }
   .priority.low      { color: #000; background: linear-gradient(135deg,#8bc34a,#43a047); }
   
-  
   /* ===============================
      Issue Info
      =============================== */
@@ -100,45 +86,38 @@
     font-size: 0.95rem;
     color: #444;
   }
-
   .issue-info .info-row {
     display: flex;
     justify-content: space-between;
     gap: 20px;
     flex-wrap: wrap;
   }
-
   .issue-info div strong {
     color: #111;
     min-width: 70px;
   }
-
-  /* Badge Style */
-.badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #fff;
-}
-
-/* Severity Colors */
-.badge.severity.critical { background: #e63946; }
-.badge.severity.high     { background: #fd7e14; }
-.badge.severity.medium   { background: #ffb703; color:#000; }
-.badge.severity.low      { background: #43a047; }
-
-/* Status Colors */
-.badge.status.open         { background: #f59e0b; }   /* สีส้ม -> ยังเปิดอยู่ */
-.badge.status.in-progress  { background: #2563eb; }   /* สีฟ้า -> กำลังดำเนินการ */
-.badge.status.resolved     { background: #10b981; }   /* สีเขียวอ่อน -> แก้ไขเรียบร้อย */
-.badge.status.closed       { background: #6b7280; }   /* สีเทา -> ปิดแล้ว */
-
-
   
+  /* Badge Style */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+  }
+  /* Severity */
+  .badge.severity.critical { background: #e63946; }
+  .badge.severity.high     { background: #fd7e14; }
+  .badge.severity.medium   { background: #ffb703; color:#000; }
+  .badge.severity.low      { background: #43a047; }
+  /* Status */
+  .badge.status.open        { background: #f59e0b; }
+  .badge.status.in-progress { background: #2563eb; }
+  .badge.status.resolved    { background: #10b981; }
+  .badge.status.closed      { background: #6b7280; }
   
   /* ===============================
      Description
@@ -157,37 +136,27 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
     transition: background 0.3s;
   }
-  .issue-description pre:hover {
-    background: #f1f5f9;
-  }
-  
+  .issue-description pre:hover { background: #f1f5f9; }
   
   /* ===============================
-     Comments Section
+     Comments
      =============================== */
-  .issue-comments {
-    margin-top: 20px;
-  }
+  .issue-comments { margin-top: 20px; }
   .issue-comments h3 {
     font-size: 1.15rem;
     margin-bottom: 10px;
   }
-  
-  /* คอมเมนต์แต่ละอัน */
   .issue-comments .comment {
     border-top: 1px solid #eee;
     padding: 14px 0;
     transition: background 0.3s ease;
   }
-  .issue-comments .comment:hover {
-    background: #fafafa;
-  }
+  .issue-comments .comment:hover { background: #fafafa; }
   .issue-comments .comment p {
     margin: 4px 0;
     color: #333;
   }
-  
-  /* ลิงก์ไฟล์แนบในคอมเมนต์ */
+  /* ลิงก์ในคอมเมนต์ */
   .issue-comments .comment a {
     position: relative;
     color: #2563eb;
@@ -206,16 +175,11 @@
     transform-origin: left;
     transition: transform 0.25s ease;
   }
-  .issue-comments .comment a:hover {
-    color: #1e40af;
-  }
-  .issue-comments .comment a:hover::after {
-    transform: scaleX(1);
-  }
-  
+  .issue-comments .comment a:hover { color: #1e40af; }
+  .issue-comments .comment a:hover::after { transform: scaleX(1); }
   
   /* ===============================
-     Add Comment Form
+     Add Comment
      =============================== */
   .add-comment {
     display: flex;
@@ -253,9 +217,8 @@
     transform: scale(1.1);
   }
   
-  
   /* ===============================
-     Action Buttons (Assignee, Status, Priority, Close)
+     Action Buttons
      =============================== */
   .action-icons {
     display: flex;
@@ -277,12 +240,10 @@
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   }
-  .action-icons button:nth-child(1) { background: #17a2b8; } /* Change Assignee */
-  .action-icons button:nth-child(2) { background: #ffc107; color:#000; } /* Update Status */
-  .action-icons button:nth-child(3) { background: #fd7e14; } /* Set Priority */
-  .action-icons button:nth-child(4) { background: #28a745; } /* Close Issue */
-  
-  /* Hover effect + floating glow */
+  .action-icons button:nth-child(1) { background: #17a2b8; }
+  .action-icons button:nth-child(2) { background: #ffc107; color:#000; }
+  .action-icons button:nth-child(3) { background: #fd7e14; }
+  .action-icons button:nth-child(4) { background: #28a745; }
   .action-icons button:hover {
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 14px rgba(0,0,0,0.18);
@@ -302,125 +263,132 @@
     transform: scale(1.2);
   }
   
-  
   /* ===============================
      Responsive
      =============================== */
   @media (max-width: 600px) {
-    .issue-info { flex-direction: column; }
-    .action-icons { flex-wrap: wrap; }
+    .issue-container { padding: 12px; border-radius: 10px; }
+    .issue-header { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .issue-header-top { display: flex; align-items: center; gap: 4px; width: 100%; }
+    .back-btn { padding: 4px 8px; font-size: 0.9rem; flex-shrink: 0; }
+    .back-btn i { font-size: 1rem; }
+    .issue-header h2 {
+      font-size: 1rem;
+      line-height: 1.2;
+      margin: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: normal;
+    }
+    .issue-header .priority {
+      position: absolute;
+      top: 0; right: 0;
+      margin: 8px;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+    .issue-info { gap: 8px; font-size: 0.8rem; }
+    .issue-info div strong { min-width: 55px; }
+    .issue-description h3 { font-size: 0.9rem; }
+    .issue-description pre { font-size: 0.75rem; padding: 8px; }
+    .issue-comments h3 { font-size: 0.9rem; }
+    .issue-comments .comment { padding: 8px 0; }
+    .issue-comments .comment p { font-size: 0.8rem; }
+    .add-comment input { padding: 6px 8px; font-size: 0.8rem; }
+    .add-comment button { width: 32px; height: 32px; font-size: 14px; }
+    .action-icons { gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .action-icons button { width: 38px; height: 38px; font-size: 15px; }
   }
+  
+  /* Tablet (601px–1024px) */
+  @media (max-width: 1024px) and (min-width: 601px) {
+    .issue-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .issue-header h2 {
+      font-size: 1.2rem;
+      line-height: 1.2;
+      margin: 0;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .issue-header .priority { font-size: 0.8rem; padding: 4px 10px; flex-shrink: 0; }
+  }
+  
   /* ===============================
-   Dark Mode (Issue Detail Page)
+   Dark Mode
    =============================== */
 :host-context(.dark-mode) .issue-container {
   background: var(--bg-card) !important;
   color: var(--text-main) !important;
   box-shadow: 0 8px 20px rgba(0,0,0,0.4) !important;
 }
-
-/* Header */
-:host-context(.dark-mode) .issue-header h2 {
-  color: var(--text-main) !important;
+:host-context(.dark-mode) .issue-header h2 { 
+  color: var(--text-main) !important; 
 }
-:host-context(.dark-mode) .issue-header h2 i {
-  color: #ef4444 !important; /* Danger icon */
+:host-context(.dark-mode) .issue-header h2 i { 
+  color: #ef4444 !important; 
 }
 
-/* Back Button */
+/* ✅ Back Button (แก้ใหม่) */
 :host-context(.dark-mode) .back-btn {
-  color: #3b82f6 !important;
+  background: transparent !important;   /* โปร่งใส */
+  color: #3b82f6 !important;            /* ลูกศรฟ้า */
+  box-shadow: none !important;
 }
 :host-context(.dark-mode) .back-btn:hover {
-  background: rgba(59,130,246,0.15) !important;
+  background: rgba(255,255,255,0.08) !important; /* เทาโปร่งบาง */
+  transform: translateX(-3px);
+}
+:host-context(.dark-mode) .back-btn:active {
+  background: rgba(255,255,255,0.15) !important; /* เทาเข้มกว่า */
+  transform: scale(0.95);
 }
 
-/* Info */
-:host-context(.dark-mode) .issue-info {
-  color: #d1d5db !important;
+:host-context(.dark-mode) .issue-info { 
+  color: #d1d5db !important; 
 }
-:host-context(.dark-mode) .issue-info strong {
-  color: #f9fafb !important;
+:host-context(.dark-mode) .issue-info strong { 
+  color: #f9fafb !important; 
 }
-
-/* Description */
-:host-context(.dark-mode) .issue-description h3 {
-  color: var(--text-main) !important;
+:host-context(.dark-mode) .issue-description h3 { 
+  color: var(--text-main) !important; 
 }
 :host-context(.dark-mode) .issue-description pre {
   background: var(--bg-panel) !important;
   border-left: 4px solid #3b82f6 !important;
   color: var(--text-main) !important;
 }
-:host-context(.dark-mode) .issue-description pre:hover {
-  background: rgba(59,130,246,0.1) !important;
+:host-context(.dark-mode) .issue-comments .comment { 
+  border-color: var(--card-border) !important; 
 }
-
-/* Comments */
-:host-context(.dark-mode) .issue-comments h3 {
-  color: var(--text-main) !important;
+:host-context(.dark-mode) .issue-comments .comment p { 
+  color: #e5e7eb !important; 
 }
-:host-context(.dark-mode) .issue-comments .comment {
-  border-color: var(--card-border) !important;
+:host-context(.dark-mode) .issue-comments .comment:hover { 
+  background: rgba(255,255,255,0.05) !important; 
 }
-:host-context(.dark-mode) .issue-comments .comment p {
-  color: #e5e7eb !important;
+:host-context(.dark-mode) .issue-comments .comment a { 
+  color: #3b82f6 !important; 
 }
-:host-context(.dark-mode) .issue-comments .comment:hover {
-  background: rgba(255,255,255,0.05) !important;
-}
-:host-context(.dark-mode) .issue-comments .comment a {
-  color: #3b82f6 !important;
-}
-:host-context(.dark-mode) .issue-comments .comment a::after {
-  background: #3b82f6 !important;
-}
-
-/* Add Comment */
 :host-context(.dark-mode) .add-comment input {
   background: var(--bg-panel) !important;
   border: 1px solid var(--card-border) !important;
-  color: var(--text-main) !important;
-}
-:host-context(.dark-mode) .add-comment input:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.3) !important;
-}
-:host-context(.dark-mode) .add-comment button {
-  background-color: #2563eb !important;
   color: #fff !important;
 }
-:host-context(.dark-mode) .add-comment button:hover {
-  background-color: #1e40af !important;
+:host-context(.dark-mode) .add-comment input::placeholder { 
+  color: #fff !important; 
+  opacity: 1 !important; 
 }
-
-/* Action Icons (สีเดิมไว้เหมือน Light Mode) */
-:host-context(.dark-mode) .action-icons button {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6) !important;
+:host-context(.dark-mode) .add-comment button { 
+  background-color: #2563eb !important; 
 }
-/* Dark mode - comment input */
-:host-context(.dark-mode) .add-comment input {
-  background: var(--bg-panel) !important;
-  border: 1px solid var(--card-border) !important;
-  color: #ffffff !important;   /* ตัวหนังสือขาว */
+:host-context(.dark-mode) .add-comment button:hover { 
+  background-color: #1e40af !important; 
 }
-
-/* Placeholder ให้เห็นชัด */
-:host-context(.dark-mode) .add-comment input::placeholder {
-  color: #ffffff !important;  /* เทาอ่อน อ่านง่าย */
-  opacity: 1 !important;
+:host-context(.dark-mode) .action-icons button { 
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6) !important; 
 }
-/* Dark mode - Back button */
-:host-context(.dark-mode) .back-btn {
-  background-color: #2563eb !important;  /* พื้นหลังน้ำเงิน */
-  color: #ffffff !important;             /* ไอคอน/ตัวหนังสือขาว */
-  border: none !important;
-}
-
-/* Hover effect */
-:host-context(.dark-mode) .back-btn:hover {
-  background-color: #1d4ed8 !important;  /* น้ำเงินเข้มขึ้นตอน hover */
-  transform: translateX(-4px);
-}
-
-  

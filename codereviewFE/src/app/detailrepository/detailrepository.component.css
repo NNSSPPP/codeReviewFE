@@ -348,3 +348,91 @@
 :host-context(.dark-mode) .card table tbody td:nth-child(3) {
   font-weight: 600;
 }
+/* ===============================
+   📱 Mobile Ultra Ultra Compact (320px - 768px)
+   =============================== */
+   @media (max-width: 768px) {
+    .repo-detail {
+      padding: 6px;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+  
+    /* Back button */
+    .back-btn {
+      font-size: 1.7rem;
+      padding: 2px 4px;
+      margin-bottom: 4px;
+    }
+    .back-btn i {
+      font-size: 1.1rem;
+    }
+  
+    /* Title */
+    .repo-detail h3 {
+      font-size: 1.4rem !important;
+      font-weight: 600;
+      line-height: 1.1;
+      margin: 0 0 2px 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+    .repo-detail h3 i {
+      font-size: 1.2rem;
+      padding: 2px;
+      border-radius: 4px;
+    }
+  
+    /* Status badge */
+    .status-badge {
+      font-size: 0.6rem;
+      padding: 1px 5px;
+      border-radius: 999px;
+      margin-left: 4px;
+      margin-top: 32px; 
+    }
+  
+    /* Buttons */
+    .repo-detail .btn {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+  
+    /* Tabs */
+    .nav-tabs .nav-link {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+    }
+  
+    /* Table */
+    .card table,
+    .assignment-table,
+    .table {
+      font-size: 0.6rem;      /* ย่อมาก */
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .card table th,
+    .assignment-table th,
+    .table th,
+    .card table td,
+    .assignment-table td,
+    .table td {
+      padding: 2px 3px;
+      text-align: center;     /* ให้ตัวเลข/Status อยู่ตรงกลาง */
+      word-wrap: break-word;
+      white-space: normal;
+    }
+  }
+/* Repo link */
+.repo-link {
+  font-size: 0.65rem !important;   /* ย่อฟอนต์ลง */
+  word-break: break-all;           /* ให้ตัดคำอัตโนมัติ */
+  display: inline-block;
+  max-width: 100%;
+}
+  
