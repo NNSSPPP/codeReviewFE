@@ -16,20 +16,24 @@ export interface RegisterRequest {
 }
 export interface AuthResponse { 
   token: string; 
-  user?: { id?: string; email: string; name?: string; }; 
-  message?: string; 
+  user?: { id?: string; email: string;}; 
 }
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly base = environment.apiUrl;
 
   get token(): string | null { return localStorage.getItem('token'); }
+  get userId(): string | null { return localStorage.getItem('userId'); }
   get isLoggedIn(): boolean { return !!this.token; }
 
   login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.base}/auth/login`, payload).pipe(
-      tap(res => { if (res?.token) localStorage.setItem('token', res.token); })
+      tap(res => { 
+        if (res?.token) localStorage.setItem('token', res.token);
+        if (res?.user?.id) localStorage.setItem('userId', res.user.id);
+       })
     );
   }
 
@@ -40,5 +44,8 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.base}/auth/register`, payload);
   }
 
-  logout(): void { localStorage.removeItem('token'); }
+  logout(): void { 
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('userId');
+  }
 }
