@@ -33,7 +33,7 @@ export class AuthService {
       tap(res => { 
         if (res?.token) localStorage.setItem('token', res.token);
         if (res?.user?.id) localStorage.setItem('userId', res.user.id);
-       })
+      })
     );
   }
 
