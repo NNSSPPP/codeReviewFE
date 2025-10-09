@@ -47,8 +47,9 @@
   </div>
 
   <!-- Table -->
+  
   <div class="table-responsive">
-    <table class="table table-striped table-hover table-bordered align-middle">
+    <table class="table table-striped table-hover table-bordered align-middle issues-table">
       <thead>
         <tr>
           <th class="text-center">
@@ -64,7 +65,7 @@
           <th>Project</th>
           <th>Assigned</th>
           <th>Status</th>
-          <th class="text-center">View</th>
+          <th class="text-center view-column sticky-col">View</th>
         </tr>
       </thead>
       <tbody>
@@ -79,7 +80,7 @@
           <td>{{ issue.project }}</td>
           <td>{{ issue.assignee }}</td>
           <td [ngClass]="statusClass(issue.status)">{{ issue.status | titlecase }}</td>
-          <td class="text-center">
+          <td class="text-center sticky-col">
             <a [routerLink]="['/issuedetail', issue.id_issue]" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i>
             </a>
@@ -87,32 +88,41 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
+ 
   <!-- Footer -->
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center my-3 gap-2">
-    <div><strong>Selected:</strong> {{ selectedCount() }}</div>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center my-3 gap-2">
+  <div><strong>Selected:</strong> {{ selectedCount() }}</div>
 
-    <div class="d-flex align-items-center gap-1">
-      <button class="btn btn-outline-primary btn-sm px-3 py-2 btn-big" (click)="prevPage()">
-        <i class="bi bi-chevron-left"></i>
-      </button>
-      <span class="mx-1">Page {{ currentPage }}</span>
-      <button class="btn btn-outline-primary btn-sm px-3 py-2 btn-big" (click)="nextPage()">
-        <i class="bi bi-chevron-right"></i>
-      </button>
-    </div>
-
-    <div class="d-flex gap-1 flex-wrap">
-      <button class="btn btn-primary btn-sm px-3 py-2 btn-big" (click)="assignDeveloper()" title="Assign Developer">
-        <i class="bi bi-person-plus me-1"></i>
-      </button>
-      <button class="btn btn-secondary btn-sm px-3 py-2 btn-big" (click)="changeStatus()" title="Change Status">
-        <i class="bi bi-arrow-repeat me-1"></i>
-      </button>
-      <button class="btn btn-success btn-sm px-3 py-2 btn-big" (click)="exportData()" title="Export">
-        <i class="bi bi-download me-1"></i>
-      </button>
-    </div>
+  <div class="pagination">
+    <!-- Prev -->
+    <button class="page-btn" [class.disabled]="currentPage === 1"
+            (click)="prevPage()">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+  
+    <!-- Page Label -->
+    <span class="page-label">Page {{currentPage}}</span>
+  
+    <!-- Next -->
+    <button class="page-btn" [class.disabled]="currentPage === totalPages"
+            (click)="nextPage()">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+  
+  <div class="d-flex gap-1 flex-wrap">
+    <button class="btn btn-primary btn-sm px-3 py-2 btn-big" (click)="assignDeveloper()" title="Assign Developer">
+      <i class="bi bi-person-plus me-1"></i>
+    </button>
+    <button class="btn btn-secondary btn-sm px-3 py-2 btn-big" (click)="changeStatus()" title="Change Status">
+      <i class="bi bi-arrow-repeat me-1"></i>
+    </button>
+    <button class="btn btn-success btn-sm px-3 py-2 btn-big" (click)="exportData()" title="Export">
+      <i class="bi bi-download me-1"></i>
+    </button>
   </div>
 </div>
+ 

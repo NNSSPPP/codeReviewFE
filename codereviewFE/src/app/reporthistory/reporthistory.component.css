@@ -226,6 +226,8 @@
     width: 100%;
     overflow-x: auto;
     white-space: nowrap;
+    position: relative;
+    background: var(--bg-card);
   }
 
   /* ลดขนาด font & padding */
@@ -252,5 +254,172 @@
   .pagination button {
     font-size: 0.8rem;
     padding: 5px 10px;
+  }
+}
+
+/* ===============================
+   Pagination (ให้เหมือน Issues Page)
+   =============================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.pagination button {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #2563eb;
+  background-color: #fff;
+  color: #2563eb;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.pagination button:hover,
+.pagination button.active {
+  background-color: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ===============================
+   Sticky Export Column — Seamless to table edge (FINAL)
+   =============================== */
+
+/* Table base */
+.report-table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+  position: relative;
+  background: var(--bg-card);
+  overflow: visible; /* ให้ sticky ใช้ได้ */
+}
+
+/* Sticky column (EXPORT) */
+.report-table th:last-child,
+.report-table td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background: var(--bg-card);
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.05);
+  backdrop-filter: none !important;
+}
+
+/* Header (Export) */
+.report-table thead th:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 6;
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+  color: var(--table-header-text, #333) !important;
+  border: none !important;
+}
+
+/* ลบเส้นขอบของคอลัมน์ก่อนหน้า (Format) */
+.report-table th:nth-last-child(2),
+.report-table td:nth-last-child(2) {
+  border-right: none !important;
+}
+
+/* เนียนต่อพื้นหลัง */
+.report-table td:last-child::after,
+.report-table th:last-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-card);
+  z-index: -1;
+}
+
+/* ปุ่ม Download */
+.report-table td:last-child .download-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.25);
+  transition: all 0.25s ease;
+}
+.report-table td:last-child .download-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+  box-shadow: 0 6px 14px rgba(22, 163, 74, 0.35);
+}
+
+/* ===============================
+   Dark Mode
+   =============================== */
+.dark-mode .report-table th:last-child,
+.dark-mode .report-table td:last-child {
+  background: var(--bg-panel);
+  box-shadow: -1px 0 0 rgba(255, 255, 255, 0.05);
+}
+.dark-mode .report-table td:last-child::after,
+.dark-mode .report-table th:last-child::after {
+  background: var(--bg-panel);
+}
+.dark-mode .report-table thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+}
+
+/* ===============================
+   Mobile Fix — seamless scroll
+   =============================== */
+@media (max-width: 768px) {
+  .report-history-container {
+    background: var(--bg-card);
+    position: relative;
+    overflow: hidden; /* ปิดขาวข้างหลัง */
+  }
+
+  .report-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    position: relative;
+    background: var(--bg-card);
+  }
+
+  /* Sticky column ทำงานเฉพาะมือถือ */
+  .report-table th:last-child,
+  .report-table td:last-child {
+    right: 0;
+    position: sticky;
+    background: var(--bg-card);
+    z-index: 5;
+  }
+
+  /* ✅ ปิดช่องขาวขวาสุด */
+  .report-table::after {
+    content: "";
+    position: sticky;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 0; /* ไม่มีระยะห่างเพิ่ม */
+    background: var(--bg-card);
+    z-index: 5;
   }
 }

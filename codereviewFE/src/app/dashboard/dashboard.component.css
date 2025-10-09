@@ -472,6 +472,151 @@
     }
   }
   
+/* ===============================
+   Sticky Action Column — Seamless + Header Color Match (FINAL)
+   =============================== */
 
-  
-  
+/* ===== 1. Table base ===== */
+.recent-scans table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  position: relative;
+  overflow: visible;
+  background: var(--bg-card);
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ล้างขอบทั้งหมดก่อนเริ่มใหม่ */
+.recent-scans table th,
+.recent-scans table td {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ===== 2. Normal rows ===== */
+.recent-scans td {
+  border-bottom: 1px solid var(--table-border);
+}
+
+/* ===== 3. Sticky Action column (cells) ===== */
+.recent-scans table td:last-child,
+.recent-scans table th:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background: var(--bg-card);
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
+}
+
+/* เพิ่มพื้นหลังต่อเนื่องเพื่อไม่ให้เห็นขอบ */
+.recent-scans table td:last-child::after,
+.recent-scans table th:last-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-card);
+  z-index: -1;
+}
+
+/* ===== 4. ลบเส้นคั่นจากคอลัมน์ TIME (ก่อนหน้า ACTION) ===== */
+.recent-scans table th:nth-last-child(2),
+.recent-scans table td:nth-last-child(2) {
+  border-right: none !important;
+  box-shadow: none !important;
+}
+
+/* ===== 5. Match header background (TIME = ACTION) ===== */
+.recent-scans table thead th {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2));
+  color: var(--table-header-text);
+}
+
+.recent-scans table thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+  color: var(--table-header-text) !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(3px);
+}
+
+/* ===== 6. Buttons inside ACTION column ===== */
+.recent-scans table td:last-child button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+/* ปุ่มฟ้า (View) */
+.recent-scans table td:last-child button.btn-primary {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 4px 10px rgba(37,99,235,0.25);
+}
+.recent-scans table td:last-child button.btn-primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 18px rgba(37,99,235,0.35);
+}
+
+/* ปุ่มส้ม (Retry) */
+.recent-scans table td:last-child button.btn-warning {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 4px 10px rgba(217,119,6,0.25);
+}
+.recent-scans table td:last-child button.btn-warning:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 6px 18px rgba(180,83,9,0.35);
+}
+
+/* Icon ขนาด */
+.recent-scans table td:last-child i {
+  font-size: 18px;
+}
+
+/* ===== 7. Dark mode fix ===== */
+.dark-mode .recent-scans table td:last-child,
+.dark-mode .recent-scans table th:last-child {
+  background: var(--bg-panel);
+}
+.dark-mode .recent-scans table td:last-child::after,
+.dark-mode .recent-scans table th:last-child::after {
+  background: var(--bg-panel);
+}
+.dark-mode .recent-scans table thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+}
+/* ===============================
+   FIX: Match ACTION header background color
+   =============================== */
+
+/* กำหนดสี background ของหัวคอลัมน์ Action ให้เหมือนหัวอื่น */
+.recent-scans table thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+  color: var(--table-header-text) !important;
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
+}
+
+/* ลบเงาจาง ๆ ที่ทำให้ดูขาวกว่า */
+.recent-scans table thead th:last-child::after {
+  content: none !important;
+}
+
+/* ให้คอลัมน์ Action sticky แต่ยังใช้สีหัวตารางเดิม */
+.recent-scans table th:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+}
