@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 type Priority = 'High' | 'Med' | 'Low';
@@ -33,6 +34,9 @@ interface DebtItem {
   styleUrl: './technicaldebt.component.css'
 })
 export class TechnicaldebtComponent {
+
+    constructor(private readonly router: Router) {}
+
     // Meta (matches your text)
     totalDays = 45;
     totalHours = 8;
@@ -68,12 +72,13 @@ export class TechnicaldebtComponent {
       { priority: 'Low', colorClass: 'low',  item: 'Code formatting',        time: '4h', cost: 6_000  },
     ];
 
+    
 
     // ปุ่มย้อนกลับ
   goBack(): void {
-    window.history.back();
+    this.router.navigate(['/analysis']);
   }
-    // Debt ย้อนหลัง 60 วัน แบ่งเป็น 10 วันต่อ point (6 points)
+
   debtSeries = [
     {
       name: 'Total Debt (days)',
@@ -123,9 +128,11 @@ export class TechnicaldebtComponent {
   
     // Actions
     generateDebtReport(): void {
-      // ตัวอย่างง่าย ๆ: เปิดหน้าพิมพ์ (สามารถเปลี่ยนเป็นสร้าง PDF ได้ในภายหลัง)
-      window.print();
+      this.router.navigate(['/generatereport'], {
+        queryParams: { reportType: 'technical-debt-analysis' }
+      });
     }
+    
   
     exportToExcel(): void {
       // สร้าง CSV (เปิดด้วย Excel ได้) จากข้อมูล Top Debt Items + Project summary
@@ -157,20 +164,28 @@ export class TechnicaldebtComponent {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      const date = new Date().toISOString().slice(0,10);
+      const date = new Date().toISOString().slice(0,10).replace(/-/g, '');
       a.download = `technical-debt-${date}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
   
+    actionPlanText = '';
+    isModalOpen = false;
+  
     createActionPlan(): void {
-      // เดโม่: สร้าง action plan จาก top items เป็นข้อความ / หรือจะ route ไปหน้าอื่น
-      const plan = this.topDebtItems.map((i, idx) =>
+      this.actionPlanText = this.topDebtItems.map((i, idx) =>
         `${idx + 1}. [${i.priority}] ${i.item} — Owner: <assign>, ETA: <date>`
       ).join('\n');
+    }
   
-      // แสดงเป็น dialog อย่างง่าย
-      alert(`Action Plan (draft):\n\n${plan}`);
+    openModal(): void {
+      this.createActionPlan();
+      this.isModalOpen = true;
+    }
+  
+    closeModal(): void {
+      this.isModalOpen = false;
     }
 
 }

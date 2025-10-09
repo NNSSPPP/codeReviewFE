@@ -1,326 +1,444 @@
 /* ===============================
    Container
    =============================== */
-   .report-container {
-    max-width: 900px;                  
-    margin: 30px auto;                 
-    padding: 24px 28px;                
-    border: 1px solid #e5e7eb;         
-    border-radius: 16px;               
-    background: #ffffff;               
-    font-family: "Inter", Arial, sans-serif;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    animation: fadeIn 0.5s ease;       
-  }
-  
-  /* Title */
-  .report-container h2 {
-    color: #2563eb;                    
-    margin-bottom: 20px;               
-    font-size: 1.4rem;                 
-    font-weight: 600;                  
-    display: flex;                     
-    align-items: center;               
-    gap: 8px;                          
-  }
-  
-  /* ===============================
-     Sections
-     =============================== */
-  .report-section {
-    margin-bottom: 20px;               
-  }
-  
-  .report-section label {
-    font-weight: 600;                  
-    display: block;                    
-    margin-bottom: 6px;                
-    color: #374151;                    
-  }
-  
-  /* Checkbox / Radio group */
-  .checkbox-group label,
-  .form-check-label {
-    display: block;                    
-    font-weight: 400;                  
-    margin-bottom: 4px;                
-    color: #4b5563;                    
-    cursor: pointer;                   
-  }
-  
-  /* Inputs & Select */
-  input[type="date"], 
-  select, 
-  input[type="email"], 
-  .form-control {
-    padding: 8px 10px;                 
-    border-radius: 8px;                
-    border: 1px solid #d1d5db;         
-    width: 100%;                       
-    max-width: 320px;                  
-    margin-right: 10px;                
-    transition: all 0.2s ease;         
-    font-size: 0.95rem;                
-  }
-  
-  input:focus, 
-  select:focus, 
-  .form-control:focus {
-    outline: none;                     
-    border-color: #2563eb;             
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
-  }
-  
-  /* Hover effect on inputs */
-  input[type="date"]:hover,
-  select:hover,
-  input[type="email"]:hover,
-  .form-control:hover {
-    border-color: #93c5fd;             
-  }
-  
-  /* ===============================
-     Actions
-     =============================== */
-  .report-actions,
-  .d-flex.justify-content-end {
-    display: flex;                     
-    justify-content: flex-end;         
-    gap: 12px;                         
-    margin-top: 20px;                  
-  }
-  
-  .report-actions button,
-  .d-flex.justify-content-end button {
-    padding: 9px 18px;                 
-    border: none;                      
-    border-radius: 10px;               
-    cursor: pointer;                   
-    font-weight: 600;                  
-    color: #fff;                       
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .report-actions button:nth-child(1),
-  .btn-secondary { background: #9ca3af; } /* ปุ่มเทา */
-  
-  .report-actions button:nth-child(2),
-  .btn-primary { background: #2563eb; }   /* ปุ่มน้ำเงิน */
-  
-  .report-actions button:nth-child(3),
-  .btn-success { background: #16a34a; }   /* ปุ่มเขียว */
-  
-  .report-actions button:hover,
-  .d-flex.justify-content-end button:hover {
-    transform: translateY(-2px);       
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    opacity: 0.95;                     
-  }
-  
-  /* ===============================
-     Error Text
-     =============================== */
-  .text-danger.small {
-    margin-top: 4px;                   
-    font-size: 0.8rem;                 
-    color: #dc2626;                    
-  }
-  
-  /* ===============================
-     Animation
-     =============================== */
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); } 
-    to { opacity: 1; transform: translateY(0); }     
-  }
-  
-  /* Checkbox & Radio smooth animation */
-  .form-check-input {
-    transition: transform 0.15s ease, background-color 0.2s ease;
-  }
-  
-  .form-check-input:checked {
-    background-color: #2563eb;         
-    border-color: #2563eb;             
-    transform: scale(1.05);            
-  }
-  
-  /* Divider between sections */
-  .report-section:not(:last-child) {
-    padding-bottom: 16px;              
-    border-bottom: 1px dashed #e5e7eb;
-  }
-  
-  /* Button loading state */
-  button.loading {
-    opacity: 0.7;                      
-    cursor: not-allowed;               
-    pointer-events: none;              
-    position: relative;                
-  }
-  
-  button.loading::after {
-    content: "";                       
-    position: absolute;                
-    right: 12px;                       
-    top: 50%;                          
-    width: 14px;                       
-    height: 14px;
-    border: 2px solid rgba(255,255,255,0.6);
-    border-top-color: #fff;            
-    border-radius: 50%;                
-    animation: spin 0.6s linear infinite;
-    transform: translateY(-50%);       
-  }
-  
-  @keyframes spin {
-    from { transform: translateY(-50%) rotate(0); }   
-    to { transform: translateY(-50%) rotate(360deg);} 
-  }
-  
-  /* ===============================
-     Report Page – Dark Mode
-     =============================== */
-  
-  /* Container */
-  :host-context(.dark-mode) .report-container {
-    background: #1e1e1e !important;     
-    border: 1px solid #374151 !important;
-    color: #f3f4f6 !important;          
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-  }
-  
-  /* Title */
-  :host-context(.dark-mode) .report-container h2 {
-    color: #60a5fa !important;          
-  }
-  
-  /* Labels */
-  :host-context(.dark-mode) .report-section label,
-  :host-context(.dark-mode) .form-label {
-    color: #e5e7eb !important;
-  }
-  
-  :host-context(.dark-mode) .checkbox-group label,
-  :host-context(.dark-mode) .form-check-label {
-    color: #cbd5e1 !important;
-  }
-  
-  /* Inputs & Select */
-  :host-context(.dark-mode) input[type="date"],
-  :host-context(.dark-mode) input[type="email"],
-  :host-context(.dark-mode) select,
-  :host-context(.dark-mode) .form-control {
-    background-color: #1e293b !important;
-    color: #f9fafb !important;
-    border: 1px solid #374151 !important;
-  }
-  
-  /* Placeholder */
-  :host-context(.dark-mode) input::placeholder,
-  :host-context(.dark-mode) .form-control::placeholder {
-    color: #ffffff !important;
-    opacity: 1 !important;
-  }
-  
-  /* Calendar Icon in Dark Mode */
-  :host-context(.dark-mode) input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1); 
-  }
-  
-  /* Focus State */
-  :host-context(.dark-mode) input:focus,
-  :host-context(.dark-mode) select:focus,
-  :host-context(.dark-mode) .form-control:focus {
-    border-color: #2563eb !important;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.4) !important;
-  }
-  
-  /* Divider */
-  :host-context(.dark-mode) .report-section:not(:last-child) {
-    border-bottom: 1px dashed #374151 !important;
-  }
-  
-  /* Buttons */
-  :host-context(.dark-mode) .report-actions button,
-  :host-context(.dark-mode) .d-flex.justify-content-end button {
-    color: #fff !important;
-  }
-  :host-context(.dark-mode) .btn-secondary {
-    background: #6b7280 !important;
-  }
-  :host-context(.dark-mode) .btn-primary {
-    background: #2563eb !important;
-  }
-  :host-context(.dark-mode) .btn-success {
-    background: #16a34a !important;
-  }
-  :host-context(.dark-mode) .report-actions button:hover {
-    opacity: 0.9 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
-  }
-  
-  /* Checkbox */
-  :host-context(.dark-mode) .form-check-input {
-    background-color: #1f2937 !important;
-    border: 1px solid #4b5563 !important;
-  }
-  :host-context(.dark-mode) .form-check-input:checked {
-    background-color: #2563eb !important;
-    border-color: #2563eb !important;
-  }
-  
-  /* Error Text */
-  :host-context(.dark-mode) .text-danger.small {
-    color: #f87171 !important;
-  }
-  
-  /* ===============================
-     Select Override (Dark Mode)
-     =============================== */
-  :host-context(.dark-mode) select.form-select {
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-  
-    background-color: #1f2937 !important;
-    color: #f9fafb !important;
-    border: 1px solid #374151 !important;
-    border-radius: 8px;
-  
-    padding-right: 2rem; /* เผื่อที่ให้ icon */
-  
-    /* ลูกศรสีขาว */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 24 24' width='16' height='16'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 16px;
-  }
-  
-  /* Placeholder option */
-  :host-context(.dark-mode) select.form-select option[disabled] {
-    color: #9ca3af !important;
-  }
-  
-  /* สำหรับ IE/Edge */
-  :host-context(.dark-mode) select.form-select::-ms-expand {
-    display: none;
-  }
+/* Wrapper – ไม่มีพื้นหลัง ไม่มีกรอบ */
+.report-wrapper {
+  max-width: 900px;
+  margin: 30px auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Title Box */
+.report-title {
+  border: 1px solid var(--card-border, #cbd5e1);
+  border-radius: 12px;
+  background-color: var(--bg-panel, #f9fafb);
+  padding: 14px 18px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--dashboard-title-color); /* ✅ ใช้ตัวแปร */
+  margin-bottom: 20px;
+}
+
+/* Report Title Frame */
+.report-container h2 {
+  border: 1px solid var(--card-border, #cbd5e1); /* กรอบ */
+  border-radius: 12px;                           /* มุมโค้ง */
+  background-color: var(--bg-panel, #f9fafb);    /* พื้นหลังจางๆ */
+  padding: 14px 18px;                            /* ระยะห่างใน */
+  font-size: 1.6rem;                             /* ขยายตัวอักษร */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  color: var(--dashboard-title-color); /* ✅ ใช้ตัวแปร */
+}
+
+/* Form Box */
+.report-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* Dark Mode Support */
+:host-context(.dark-mode) .report-title {
+  border: 1px solid #374151;
+  background-color: #1e293b;
+  color: var(--dashboard-title-color); /* ✅ ดึงสีจากตัวแปร */
+}
+
+:host-context(.dark-mode) .report-box {
+  background: #1e1e1e;
+  border: 1px solid #374151;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* ===============================
+   Sections
+   =============================== */
+.report-section {
+  margin-bottom: 20px;               
+}
+
+.report-section label {
+  font-weight: 600;                  
+  display: block;                    
+  margin-bottom: 6px;                
+  color: #374151;                    
+}
+
+/* Checkbox / Radio group */
+.checkbox-group label,
+.form-check-label {
+  display: block;                    
+  font-weight: 400;                  
+  margin-bottom: 4px;                
+  color: #4b5563;                    
+  cursor: pointer;                   
+}
+
+/* Inputs & Select */
+input[type="date"], 
+select, 
+input[type="email"], 
+.form-control {
+  padding: 8px 10px;                 
+  border-radius: 8px;                
+  border: 1px solid #d1d5db;         
+  width: 100%;                       
+  max-width: 320px;                  
+  margin-right: 10px;                
+  transition: all 0.2s ease;         
+  font-size: 0.95rem;                
+}
+
+input:focus, 
+select:focus, 
+.form-control:focus {
+  outline: none;                     
+  border-color: #2563eb;             
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+/* Hover effect on inputs */
+input[type="date"]:hover,
+select:hover,
+input[type="email"]:hover,
+.form-control:hover {
+  border-color: #93c5fd;             
+}
+
+/* ===============================
+   Actions
+   =============================== */
+.report-actions,
+.d-flex.justify-content-end {
+  display: flex;                     
+  justify-content: flex-end;         
+  gap: 12px;                         
+  margin-top: 20px;                  
+}
+
+.report-actions button,
+.d-flex.justify-content-end button {
+  padding: 9px 18px;                 
+  border: none;                      
+  border-radius: 10px;               
+  cursor: pointer;                   
+  font-weight: 600;                  
+  color: #fff;                       
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-actions button:nth-child(1),
+.btn-secondary { background: #9ca3af; } /* ปุ่มเทา */
+
+.report-actions button:nth-child(2),
+.btn-primary { background: #2563eb; }   /* ปุ่มน้ำเงิน */
+
+.report-actions button:nth-child(3),
+.btn-success { background: #16a34a; }   /* ปุ่มเขียว */
+
+.report-actions button:hover,
+.d-flex.justify-content-end button:hover {
+  transform: translateY(-2px);       
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  opacity: 0.95;                     
+}
+
+/* ===============================
+   Error Text
+   =============================== */
+.text-danger.small {
+  margin-top: 4px;                   
+  font-size: 0.8rem;                 
+  color: #dc2626;                    
+}
+
+/* ===============================
+   Animation
+   =============================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); } 
+  to { opacity: 1; transform: translateY(0); }     
+}
+
+/* Checkbox & Radio smooth animation */
+.form-check-input {
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.form-check-input:checked {
+  background-color: #2563eb;         
+  border-color: #2563eb;             
+  transform: scale(1.05);            
+}
+
+/* Divider between sections */
+.report-section:not(:last-child) {
+  padding-bottom: 16px;              
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+/* Button loading state */
+button.loading {
+  opacity: 0.7;                      
+  cursor: not-allowed;               
+  pointer-events: none;              
+  position: relative;                
+}
+
+button.loading::after {
+  content: "";                       
+  position: absolute;                
+  right: 12px;                       
+  top: 50%;                          
+  width: 14px;                       
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-top-color: #fff;            
+  border-radius: 50%;                
+  animation: spin 0.6s linear infinite;
+  transform: translateY(-50%);       
+}
+
+@keyframes spin {
+  from { transform: translateY(-50%) rotate(0); }   
+  to { transform: translateY(-50%) rotate(360deg);} 
+}
+
+/* ===============================
+   Report Page – Dark Mode
+   =============================== */
+
+/* Container */
+:host-context(.dark-mode) .report-container {
+  background: #1e1e1e !important;     
+  border: 1px solid #374151 !important;
+  color: #f3f4f6 !important;          
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+}
+
+/* Title */
+:host-context(.dark-mode) .report-container h2 {
+  color: var(--dashboard-title-color) !important; /* ✅ ใช้ตัวแปร */
+}
+
+/* Labels */
+:host-context(.dark-mode) .report-section label,
+:host-context(.dark-mode) .form-label {
+  color: #e5e7eb !important;
+}
+
+:host-context(.dark-mode) .checkbox-group label,
+:host-context(.dark-mode) .form-check-label {
+  color: #cbd5e1 !important;
+}
+
+/* Inputs & Select */
+:host-context(.dark-mode) input[type="date"],
+:host-context(.dark-mode) input[type="email"],
+:host-context(.dark-mode) select,
+:host-context(.dark-mode) .form-control {
+  background-color: #1e293b !important;
+  color: #f9fafb !important;
+  border: 1px solid #374151 !important;
+}
+
+/* Placeholder */
+:host-context(.dark-mode) input::placeholder,
+:host-context(.dark-mode) .form-control::placeholder {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Calendar Icon in Dark Mode */
+:host-context(.dark-mode) input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); 
+}
+
+/* Focus State */
+:host-context(.dark-mode) input:focus,
+:host-context(.dark-mode) select:focus,
+:host-context(.dark-mode) .form-control:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.4) !important;
+}
+
+/* Divider */
+:host-context(.dark-mode) .report-section:not(:last-child) {
+  border-bottom: 1px dashed #374151 !important;
+}
+
+/* Buttons */
+:host-context(.dark-mode) .report-actions button,
+:host-context(.dark-mode) .d-flex.justify-content-end button {
+  color: #fff !important;
+}
+:host-context(.dark-mode) .btn-secondary {
+  background: #6b7280 !important;
+}
+:host-context(.dark-mode) .btn-primary {
+  background: #2563eb !important;
+}
+:host-context(.dark-mode) .btn-success {
+  background: #16a34a !important;
+}
+:host-context(.dark-mode) .report-actions button:hover {
+  opacity: 0.9 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
+}
+
+/* Checkbox */
+:host-context(.dark-mode) .form-check-input {
+  background-color: #1f2937 !important;
+  border: 1px solid #4b5563 !important;
+}
+:host-context(.dark-mode) .form-check-input:checked {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+/* Error Text */
+:host-context(.dark-mode) .text-danger.small {
+  color: #f87171 !important;
+}
+
+/* ===============================
+   Select Override (Dark Mode)
+   =============================== */
+:host-context(.dark-mode) select.form-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border: 1px solid #374151 !important;
+  border-radius: 8px;
+
+  padding-right: 2rem; /* เผื่อที่ให้ icon */
+
+  /* ลูกศรสีขาว */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 24 24' width='16' height='16'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 16px;
+}
+
+/* Placeholder option */
+:host-context(.dark-mode) select.form-select option[disabled] {
+  color: #9ca3af !important;
+}
+
+/* สำหรับ IE/Edge */
+:host-context(.dark-mode) select.form-select::-ms-expand {
+  display: none;
+}
+
 /* ===============================
    Fix Bootstrap Outline Primary in Dark Mode
    =============================== */
-   :host-context(.dark-mode) .btn-outline-primary,
-   :host-context(.dark-mode) .btn-outline-primary:hover,
-   :host-context(.dark-mode) .btn-outline-primary:focus {
-     background-color: #2563eb !important;  /* น้ำเงิน */
-     color: #ffffff !important;             /* ตัวอักษรขาว */
-     border-color: #2563eb !important;      /* กรอบน้ำเงิน */
-   }
-   
-   /* Checkbox inside button */
-   :host-context(.dark-mode) .btn-outline-primary input[type="checkbox"] {
-     accent-color: #ffffff !important;      /* ขีดถูกสีขาว */
-     background-color: #2563eb !important;  /* พื้นหลัง checkbox น้ำเงิน */
-     border: 1px solid #1e40af !important;  /* กรอบน้ำเงินเข้ม */
-   }
-     
+:host-context(.dark-mode) .btn-outline-primary,
+:host-context(.dark-mode) .btn-outline-primary:hover,
+:host-context(.dark-mode) .btn-outline-primary:focus {
+  background-color: #2563eb !important;  /* น้ำเงิน */
+  color: #ffffff !important;             /* ตัวอักษรขาว */
+  border-color: #2563eb !important;      /* กรอบน้ำเงิน */
+}
+
+/* Checkbox inside button */
+:host-context(.dark-mode) .btn-outline-primary input[type="checkbox"] {
+  accent-color: #ffffff !important;      /* ขีดถูกสีขาว */
+  background-color: #2563eb !important;  /* พื้นหลัง checkbox น้ำเงิน */
+  border: 1px solid #1e40af !important;  /* กรอบน้ำเงินเข้ม */
+}
+/* ===============================
+   Responsive Design (Mobile Support)
+   =============================== */
+
+/* จอเล็กกว่า 768px (มือถือแนวตั้ง) */
+@media (max-width: 768px) {
+
+  .report-wrapper {
+    margin: 15px;
+    padding: 0;
+  }
+
+  .report-box {
+    padding: 16px 18px;
+  }
+
+  /* Date Range – จัดเรียงแนวตั้งแทนแนวนอน */
+  .report-section input[type="date"] {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Checkbox Group */
+  .checkbox-group label,
+  .form-check-label {
+    font-size: 0.9rem;
+  }
+
+  /* ปรับปุ่มให้เต็มความกว้าง */
+  .report-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .report-actions button {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  /* ช่อง Email */
+  input[type="email"] {
+    max-width: 100%;
+  }
+
+  /* ส่วนหัว */
+  .report-title,
+  .report-container h2 {
+    font-size: 1.2rem;
+    padding: 12px 14px;
+  }
+}
+
+/* จอเล็กกว่า 480px (มือถือขนาดเล็ก) */
+@media (max-width: 480px) {
+
+  .report-box {
+    padding: 14px;
+  }
+
+  .report-section label {
+    font-size: 0.9rem;
+  }
+
+  .report-actions button {
+    padding: 10px 0;
+    font-size: 0.95rem;
+  }
+
+  input[type="date"],
+  input[type="email"],
+  select {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+  .form-check-label {
+    font-size: 0.85rem;
+  }
+}

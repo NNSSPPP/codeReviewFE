@@ -3,14 +3,15 @@
   margin: 2rem auto;                  /* จัดให้อยู่กลางหน้าด้วย margin */
   padding: 1rem;                      /* ระยะห่างด้านใน */
   font-family: 'Inter', system-ui, sans-serif; /* ฟอนต์หลัก */
-  animation: fadeInUp 0.5s ease;      /* โหลดเข้ามาพร้อมแอนิเมชัน */
+  animation: fadeInUp 0.5s ease; 
+  border-radius: 12px !important;     /* โหลดเข้ามาพร้อมแอนิเมชัน */
 }
 
 h2 {                                  /* หัวข้อหลัก */
   padding: 1rem;                      /* เว้นรอบตัวอักษร */
   font-size: 1.4rem;                  /* ขนาดฟอนต์ */
   font-weight: 600;                   /* หนากำลังดี */
-  color: #1e293b;                     /* สีเทาเข้ม */
+  color: #2563eb;                       /* สีเทาเข้ม */
   display: flex;                      /* ใช้ flex จัด layout */
   align-items: center;                /* จัดกึ่งกลางแนวตั้ง */
   gap: .5rem;                         /* เว้นช่องระหว่างไอคอนกับข้อความ */
@@ -244,3 +245,94 @@ select.form-control:focus {           /* ตอนโฟกัส */
     background: #4b5563;
   }
   
+/* ===============================
+   Fix Toggle Alignment & Spacing
+   =============================== */
+
+/* กล่องหลักของแต่ละแถว toggle */
+.switch-row {
+  display: flex;
+  justify-content: space-between;  /* ข้อความซ้าย toggle ขวา */
+  align-items: center;             /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  gap: 1rem;                       /* เว้นระยะระหว่างข้อความกับ toggle */
+  padding: 0.4rem 0.2rem;          /* เพิ่ม padding ด้านบนล่าง */
+  border-bottom: 1px dashed #e5e7eb; /* เส้นคั่นบางๆ (ถ้าอยากให้มี) */
+}
+
+/* เอาเส้นคั่นออกในแถวสุดท้าย */
+.switch-row:last-child {
+  border-bottom: none;
+}
+
+/* สวิตช์ */
+.switch {
+  position: relative;
+  display: inline-flex;
+  justify-content: flex-end;
+  width: 52px;     /* ขยายให้ได้สัดส่วนสวย */
+  height: 28px;
+  flex-shrink: 0;  /* ไม่ให้บีบตัว */
+}
+
+/* พื้นหลัง toggle */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #e2e8f0;
+  border-radius: 28px;
+  transition: background 0.3s ease;
+}
+
+/* วงกลมใน toggle */
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 22px; width: 22px;
+  left: 3px; bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* เปิด toggle */
+.switch input:checked + .slider {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* เพิ่มความสวยเมื่อ hover */
+.switch-row:hover .slider {
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+/* ===============================
+   Responsive (mobile)
+   =============================== */
+@media (max-width: 768px) {
+  .switch-row {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .switch {
+    width: 48px;
+    height: 26px;
+  }
+
+  .slider:before {
+    height: 20px;
+    width: 20px;
+    transform: none;
+  }
+
+  .switch input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+}

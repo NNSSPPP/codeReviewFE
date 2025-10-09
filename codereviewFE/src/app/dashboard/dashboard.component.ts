@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { Router, RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
@@ -29,7 +31,7 @@ interface ScanHistory {
   projectId: string;                
   project: string;
   typeproject: 'Angular' | 'SpringBoot';
-  status: 'Passed' | 'Warning' | 'Failed';
+  status: 'Passed' | 'Failed';
   grade: string;
   time: string;
 }
@@ -53,6 +55,7 @@ interface Notification {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [CommonModule, NgApexchartsModule, RouterModule],
   imports: [CommonModule, NgApexchartsModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']

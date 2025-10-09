@@ -5,7 +5,7 @@
     padding: 24px;
     max-width: 1000px;
     margin: 0 auto;
-    background: #ffffff;
+    background: var(--bg-card, #ffffff);
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     transition: all 0.3s ease;
@@ -20,17 +20,20 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 16px;
+    border: 1px solid var(--card-border, #cbd5e1);
+    border-radius: 12px;
+    background-color: var(--bg-panel, #f9fafb);
   }
   
-  h2 {
-    color: #007bff;
+  .header-row h2 {
+    color: var(--dashboard-title-color); /* ✅ ใช้ตัวแปร (ฟ้าใน light, ขาวใน dark) */
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
+    margin: 0;
   }
   
   /* ===============================
@@ -45,8 +48,8 @@
   
   .search-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
   }
   
   /* ===============================
@@ -59,31 +62,26 @@
   }
   
   .report-table th {
-    background: #f8f9fa;
+    background: var(--table-header-bg, #f8f9fa);
     padding: 10px;
     font-weight: 600;
-    color: #444;
-    border-bottom: 2px solid #eee;
+    color: var(--table-header-text, #444);
+    border-bottom: 2px solid var(--table-border, #eee);
   }
   
   .report-table td {
-    background: #fff;
+    background: var(--bg-card, #fff);
     border: none;
     padding: 12px;
     text-align: center;
     vertical-align: middle;
     transition: all 0.2s ease;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--table-border, #f0f0f0);
   }
   
-  /* ให้แถวสุดท้ายไม่มีเส้นล่าง */
-  .report-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  /* Row hover effect */
+  /* Hover */
   .report-table tr:hover td {
-    background: #f9fbff;
+    background: var(--bg-panel, #f9fbff);
     transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(0,0,0,0.05);
   }
@@ -116,16 +114,9 @@
      =============================== */
   .no-data {
     text-align: center;
-    color: #666;
-    font-style: normal;
+    color: var(--text-muted, #666);
     font-size: 0.95rem;
     padding: 16px;
-  }
-  
-  .no-data::before {
-    content: "📄 ";
-    font-size: 1.2rem;
-    opacity: 0.6;
   }
   
   /* ===============================
@@ -140,8 +131,9 @@
   
   .pagination button {
     padding: 6px 14px;
-    border: 1px solid #ddd;
-    background: #fff;
+    border: 1px solid var(--card-border, #ddd);
+    background: #3c72e9;
+    color: #fff;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.9rem;
@@ -149,14 +141,14 @@
   }
   
   .pagination button:hover:not(:disabled) {
-    background: #007bff;
+    background: #2563eb;
     color: #fff;
-    border-color: #007bff;
+    border-color: #1e40af;
   }
   
   .pagination button:disabled {
-    background: #f1f1f1;
-    color: #999;
+    background: var(--bg-panel, #f1f1f1);
+    color: var(--text-muted, #999);
     cursor: not-allowed;
   }
   
@@ -164,65 +156,270 @@
      Dark Mode Overrides
      =============================== */
   :host-context(.dark-mode) .report-history-container {
-    background: #1e1e1e !important;
+    background: var(--bg-card) !important;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
   }
   
   :host-context(.dark-mode) .header-row {
-    border-bottom: 1px solid #374151 !important;
+    background-color: var(--bg-panel) !important;
+    border: 1px solid var(--card-border) !important;
   }
   
-  :host-context(.dark-mode) h2 {
-    color: #60a5fa !important;
+  :host-context(.dark-mode) .header-row h2 {
+    color: var(--dashboard-title-color) !important; 
   }
-  
-  :host-context(.dark-mode) .search-input {
-    background: #111827 !important;
-    border: 1px solid #374151 !important;
-    color: #f9fafb !important;
-  }
-  
-  :host-context(.dark-mode) .search-input::placeholder {
-    color: #9ca3af !important;
-  }
-  
-  :host-context(.dark-mode) .report-table th {
-    background: #374151 !important;
-    color: #f3f4f6 !important;
-    border-bottom: 2px solid #4b5563 !important;
-  }
-  
-  :host-context(.dark-mode) .report-table td {
-    background: #1f2937 !important;
-    color: #e5e7eb !important;
-    border-bottom: 1px solid #374151 !important;
-  }
-  
-  :host-context(.dark-mode) .report-table tr:hover td {
-    background: #2d3748 !important;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4) !important;
-  }
-  
-  :host-context(.dark-mode) .no-data {
-    color: #9ca3af !important;
-  }
-  
-  :host-context(.dark-mode) .pagination button {
-    background: #1f2937 !important;
-    border: 1px solid #374151 !important;
-    color: #e5e7eb !important;
+/* ===============================
+   Dark Mode Pagination
+   =============================== */
+   :host-context(.dark-mode) .pagination button {
+    background: #2563eb !important;   /* กล่องฟ้า */
+    color: #fff !important;           /* ตัวหนังสือขาว */
+    border: 1px solid #2563eb !important;
   }
   
   :host-context(.dark-mode) .pagination button:hover:not(:disabled) {
-    background: #2563eb !important;
-    border-color: #2563eb !important;
+    background: #1e40af !important;   /* ฟ้าเข้มตอน hover */
+    border-color: #1e40af !important;
     color: #fff !important;
   }
   
   :host-context(.dark-mode) .pagination button:disabled {
-    background: #374151 !important;
-    color: #6b7280 !important;
+    background: #374151 !important;   /* เทาเข้มตอน disabled */
+    color: #9ca3af !important;        /* เทาอ่อน */
+    border-color: #4b5563 !important;
   }
   
-  
-  
+
+
+
+
+
+ /* ===============================
+   Mobile Responsive Table (320px - 768px)
+   =============================== */
+@media (max-width: 768px) {
+  .report-history-container {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  /* Header row จัดเรียงเป็นแนวตั้ง */
+  .header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .header-row h2 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  /* ห่อ table ด้วย scroll */
+  .report-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    position: relative;
+    background: var(--bg-card);
+  }
+
+  /* ลดขนาด font & padding */
+  .report-table th,
+  .report-table td {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  /* ปรับปุ่มเล็กลง */
+  .download-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+
+  /* Pagination ปรับไม่ให้ชนกัน */
+  .pagination {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pagination button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+}
+
+/* ===============================
+   Pagination (ให้เหมือน Issues Page)
+   =============================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.pagination button {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #2563eb;
+  background-color: #fff;
+  color: #2563eb;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.pagination button:hover,
+.pagination button.active {
+  background-color: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ===============================
+   Sticky Export Column — Seamless to table edge (FINAL)
+   =============================== */
+
+/* Table base */
+.report-table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+  position: relative;
+  background: var(--bg-card);
+  overflow: visible; /* ให้ sticky ใช้ได้ */
+}
+
+/* Sticky column (EXPORT) */
+.report-table th:last-child,
+.report-table td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background: var(--bg-card);
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: -1px 0 0 rgba(0, 0, 0, 0.05);
+  backdrop-filter: none !important;
+}
+
+/* Header (Export) */
+.report-table thead th:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 6;
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+  color: var(--table-header-text, #333) !important;
+  border: none !important;
+}
+
+/* ลบเส้นขอบของคอลัมน์ก่อนหน้า (Format) */
+.report-table th:nth-last-child(2),
+.report-table td:nth-last-child(2) {
+  border-right: none !important;
+}
+
+/* เนียนต่อพื้นหลัง */
+.report-table td:last-child::after,
+.report-table th:last-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-card);
+  z-index: -1;
+}
+
+/* ปุ่ม Download */
+.report-table td:last-child .download-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.25);
+  transition: all 0.25s ease;
+}
+.report-table td:last-child .download-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+  box-shadow: 0 6px 14px rgba(22, 163, 74, 0.35);
+}
+
+/* ===============================
+   Dark Mode
+   =============================== */
+.dark-mode .report-table th:last-child,
+.dark-mode .report-table td:last-child {
+  background: var(--bg-panel);
+  box-shadow: -1px 0 0 rgba(255, 255, 255, 0.05);
+}
+.dark-mode .report-table td:last-child::after,
+.dark-mode .report-table th:last-child::after {
+  background: var(--bg-panel);
+}
+.dark-mode .report-table thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+}
+
+/* ===============================
+   Mobile Fix — seamless scroll
+   =============================== */
+@media (max-width: 768px) {
+  .report-history-container {
+    background: var(--bg-card);
+    position: relative;
+    overflow: hidden; /* ปิดขาวข้างหลัง */
+  }
+
+  .report-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    position: relative;
+    background: var(--bg-card);
+  }
+
+  /* Sticky column ทำงานเฉพาะมือถือ */
+  .report-table th:last-child,
+  .report-table td:last-child {
+    right: 0;
+    position: sticky;
+    background: var(--bg-card);
+    z-index: 5;
+  }
+
+  /* ✅ ปิดช่องขาวขวาสุด */
+  .report-table::after {
+    content: "";
+    position: sticky;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 0; /* ไม่มีระยะห่างเพิ่ม */
+    background: var(--bg-card);
+    z-index: 5;
+  }
+}

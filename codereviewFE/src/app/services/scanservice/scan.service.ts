@@ -3,6 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
+import { Observable , of } from 'rxjs';
+
 // ชนิดสถานะ/ค่า gate
 export type ScanStatus = 'Active' | 'Scanning' | 'Paused' | 'Error' | 'Cancelled';
 export type YN = 'Y' | 'N';
@@ -12,6 +14,7 @@ export interface Scan {
   scans_id: string;            // UUID
   project_id: string;          // UUID
   quality_gate?: string;
+ 
   status: ScanStatus;
   started_at?: string;         // ISO string
   completed_at?: string;       // ISO string
@@ -20,6 +23,22 @@ export interface Scan {
   maintainability_gate?: YN;
   security_review_gate?: YN;
   metrics?: Record<string, number>;
+
+    
+  status: 'Active' | 'Scanning' |'Error' | 'Cancelled';
+  started_at?: Date;
+  completed_at?: Date;
+  reliability_gate?: 'Y' | 'N';
+  security_gate?: 'Y' | 'N';
+  maintainability_gate?: 'Y' | 'N';
+  security_review_gate?: 'Y' | 'N';
+  // metrics?: Record<string, number>;
+  metrics?: {
+    coverage?: number;
+    bugs?: number;
+    vulnerabilities?: number;
+  };
+
   log_file_path?: string;
 
   // ถ้ามีจริงค่อยเติม

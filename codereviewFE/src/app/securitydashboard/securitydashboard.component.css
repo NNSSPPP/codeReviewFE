@@ -197,7 +197,51 @@ body.dark-mode .apexcharts-tooltip {
   color: #f9fafb !important;
   border: 1px solid #374151 !important;
 }
-
+/* =========================
+   BACK BUTTON
+   ========================= */
+   .back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;                       /* กะทัดรัด */
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #2563eb;                     /* ฟ้า */
+    text-decoration: none;
+    border: none;
+    border-radius: 12px;                /* มุมโค้งมน */
+    background: transparent;            /* พื้นหลังใส */
+    box-shadow: none;                   /* ไม่มีเงา */
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .back-btn:hover {
+    background: #e5f0ff;                /* ฟ้าอ่อนตอน hover */
+    transform: translateX(-4px);        /* ขยับซ้าย */
+  }
+  .back-btn:active {
+    background: #dbeafe;                /* ฟ้าเข้มขึ้นตอนกด */
+    transform: translateX(-2px) scale(0.96); /* ย่อลงเล็กน้อย */
+  }
+  .back-btn i {
+    font-size: 1.5rem;
+  }
+  
+  /* =========================
+     DARK MODE OVERRIDE
+     ========================= */
+  :host-context(.dark-mode) .back-btn {
+    background: transparent !important; /* ปกติใส */
+    color: #3b82f6 !important;          /* ฟ้าอ่อนกว่าเล็กน้อย */
+    box-shadow: none !important;
+  }
+  :host-context(.dark-mode) .back-btn:hover {
+    background: rgba(59,130,246,0.15) !important; /* ฟ้าใสตอน hover */
+  }
+  :host-context(.dark-mode) .back-btn:active {
+    background: rgba(59,130,246,0.25) !important; /* ฟ้าเข้มขึ้นตอนกด */
+  }
+  
 
 
   

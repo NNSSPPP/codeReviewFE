@@ -1,239 +1,237 @@
-.user-management-container {                     
-  padding: 20px;                                 /* ระยะห่างด้านใน container */
-  font-family: 'Inter', system-ui, sans-serif;   /* ฟอนต์หลัก Inter ถ้าไม่มีใช้ system-ui */
-  animation: fadeInUp 0.5s ease;                 /* ใส่ animation ตอนโหลดหน้า */
-}
-
-h2 {
-  font-size: 1.5rem;            /* ขนาดตัวอักษรหัวข้อใหญ่ */
-  font-weight: 600;             /* กึ่งหนา */
-  color: #1e293b;               /* สีเทาเข้ม */
-  display: flex;                /* ใช้ flex เพื่อวางไอคอน + ข้อความ */
-  align-items: center;          /* จัดกึ่งกลางแนวตั้ง */
-  gap: .5rem;                   /* ระยะห่างระหว่างไอคอนกับข้อความ */
-  margin-bottom: 1rem;          /* เว้นขอบล่าง */
-}
-
-/* Toolbar */
-.toolbar {
-  display: flex;                        /* ใช้ flex layout */
-  justify-content: space-between;       /* จัด search ไปซ้าย, ปุ่มไปขวา */
-  margin-bottom: 15px;                  /* เว้นด้านล่าง */
-}
-
-.search-input {
-  flex: 1;                              /* ขยายเต็มที่ใน flex */
-  max-width: 250px;                     /* กำหนดกว้างสุด */
-  padding: 8px 12px;                    /* ระยะห่างด้านใน */
-  border: 1px solid #e2e8f0;            /* เส้นขอบสีเทาอ่อน */
-  border-radius: 8px;                   /* มุมโค้ง */
-  transition: all .25s ease;            /* ทำให้เปลี่ยนสมูท */
-}
-.search-input:focus {
-  outline: none;                        /* เอาเส้น outline เริ่มต้นออก */
-  border-color: #2b8aef;                /* เปลี่ยนขอบเป็นฟ้า */
-  box-shadow: 0 0 0 3px rgba(43,138,239,0.2); /* glow ฟ้าอ่อน */
-}
-
-/* Table */
-.user-table {
-  width: 100%;                          /* ตารางเต็มความกว้าง */
-  border-collapse: separate;            /* แยก cell */
-  border-spacing: 0;                    /* ไม่มีช่องว่าง */
-  background: #fff;                     /* พื้นหลังขาว */
-  border-radius: 12px;                  /* มุมโค้ง */
-  overflow: hidden;                     /* กันไม่ให้ขอบล้น */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* เงาบาง */
-}
-.user-table th {
-  background: #f8fafc;                  /* พื้นหลังหัวตาราง */
-  padding: 12px;                        /* เว้นใน */
-  font-weight: 600;                     /* ตัวหนา */
-  font-size: .9rem;                     /* ขนาดเล็ก */
-  color: #475569;                       /* สีเทาเข้ม */
-  border-bottom: 1px solid #e2e8f0;     /* เส้นคั่น */
-}
-.user-table td {
-  padding: 12px;                        /* ระยะห่างภายใน cell */
-  font-size: .9rem;                     /* ขนาดฟอนต์เล็ก */
-  color: #334155;                       /* สีตัวหนังสือเทาเข้ม */
-  border-bottom: 1px solid #f1f5f9;     /* เส้นคั่นแถว */
-}
-.user-table tr:hover td {
-  background: #f9fbff;                  /* highlight row เวลา hover */
-}
-
-/* Actions */
-.actions-col {
-  text-align: center;   /* จัดปุ่มให้อยู่ตรงกลาง */
-  width: 120px;         /* กำหนดความกว้างคอลัมน์ */
-}
-.btn {
-  border: none;         /* ไม่มีเส้นขอบ */
-  border-radius: 8px;   /* มุมโค้ง */
-  padding: .4rem .8rem; /* ขนาดปุ่ม (สูง/กว้าง) */
-  font-size: .85rem;    /* ขนาดตัวอักษรเล็กลง */
-  cursor: pointer;      /* cursor เป็น pointer */
-  transition: all .2s ease; /* เวลา hover/active สมูท */
-}
-.actions-col .btn {
-  margin: 0 2px;        /* เพิ่มระยะห่างซ้าย-ขวาของปุ่ม */
-}
-.btn:hover {
-  transform: translateY(-2px);               /* ยกขึ้นเล็กน้อย */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);    /* ใส่เงา */
-}
-.btn:active {
-  transform: scale(0.96);                    /* ย่อเล็กลงตอนกด */
-}
-.btn-primary {
-  background: linear-gradient(135deg,#2b8aef,#4f9dfc); /* ไล่เฉดฟ้า */
-  color: #fff;                                        /* ตัวอักษรขาว */
-}
-.btn-warning {
-  background: #facc15; /* เหลือง */
-  color: #1f2937;      /* เทาเข้ม */
-}
-.btn-danger {
-  background: #ef4444; /* แดง */
-  color: #fff;
-}
-.btn-secondary {
-  background: #f1f5f9; /* เทาอ่อน */
-  color: #334155;      /* เทาเข้ม */
-}
-
-/* Status Badges */
-span.active {
-  display: inline-block;            /* ทำเป็นบล็อกเล็ก */
-  padding: .2rem .6rem;             /* ขนาดภายใน */
-  background: #dcfce7;              /* เขียวอ่อน */
-  color: #16a34a;                   /* เขียวเข้ม */
-  font-weight: 600;                 /* ตัวหนา */
-  border-radius: 20px;              /* pill shape */
-  font-size: .8rem;                 /* ตัวเล็ก */
-}
-span.inactive {
-  display: inline-block;
-  padding: .2rem .6rem;
-  background: #fee2e2;              /* แดงอ่อน */
-  color: #dc2626;                   /* แดงเข้ม */
-  font-weight: 600;
-  border-radius: 20px;
-  font-size: .8rem;
-}
-
-/* Modal */
-.modal {
-  display: none;                    /* เริ่มต้นซ่อน */
-  position: fixed;                  /* ลอยครอบจอ */
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.5);/* พื้นหลังโปร่งดำ */
-  justify-content: center;          /* จัดกึ่งกลาง */
-  align-items: center;              
-  z-index: 999;                     /* อยู่บนสุด */
-  animation: fadeIn .3s ease;       /* ค่อย ๆ โผล่มา */
-}
-.modal.show {
-  display: flex;                    /* โชว์ modal เมื่อมี class show */
-}
-.modal-content {
-  background: #fff;                 /* กล่อง modal สีขาว */
-  padding: 20px;
-  width: 420px;                     /* กำหนดความกว้าง */
-  border-radius: 14px;              /* มุมโค้ง */
-  position: relative;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12); /* เงาเข้ม */
-  animation: scaleIn .3s ease;      /* effect ขยายขึ้น */
-}
-.modal-header {
-  display: flex;
-  justify-content: space-between;   /* title ซ้าย, close button ขวา */
-  align-items: center;
-  margin-bottom: 15px;
-}
-.close-btn {
-  background: none;                 /* ปุ่มปิดไม่มีพื้นหลัง */
-  border: none;
-  font-size: 22px;                  /* ขนาดใหญ่ */
-  cursor: pointer;
-  color: #64748b;                   /* เทา */
-  transition: color .2s ease;       /* เปลี่ยนสีนุ่มนวล */
-}
-.close-btn:hover {
-  color: #ef4444;                   /* เปลี่ยนเป็นแดงเมื่อ hover */
-}
-
-/* Form inside modal */
-.modal-body .form-group {
-  margin-bottom: 12px;              /* เว้นระหว่างฟิลด์ */
-}
-.form-control {
-  width: 100%;                      /* กว้างเต็มบรรทัด */
-  padding: 8px 12px;                /* ระยะห่างด้านใน */
-  border-radius: 8px;               /* มุมโค้ง */
-  border: 1px solid #e2e8f0;        /* เส้นขอบเทา */
-  transition: all .25s ease;
-}
-.form-control:focus {
-  border-color: #2b8aef;            /* ขอบฟ้า */
-  box-shadow: 0 0 0 3px rgba(43,138,239,0.2); /* glow ฟ้า */
-  outline: none;
-}
-.text-danger {
-  font-size: .8rem;                 /* ข้อความ error เล็ก */
-}
-
-/* Modal footer */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;        /* ปุ่มอยู่ขวา */
-  gap: 10px;                        /* ระยะห่างระหว่างปุ่ม */
-  margin-top: 10px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }              /* เริ่มโปร่ง */
-  to { opacity: 1; }                /* ชัดเจน */
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); } /* ลอยขึ้น */
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes scaleIn {
-  from { transform: scale(0.9); opacity: 0; }       /* ขยายจากเล็ก */
-  to { transform: scale(1); opacity: 1; }
-}
 /* ===============================
-   Dark Mode: User Management
+   👤 User Management Container
    =============================== */
-   :host-context(.dark-mode) .user-management-container {
-    background: #111827;                /* พื้นหลังหลักเข้ม */
-    color: #f3f4f6;                     /* ตัวอักษรอ่อน */
+   .user-management-container {
+    padding: 20px;
+    font-family: 'Inter', system-ui, sans-serif;
+    animation: fadeInUp 0.5s ease;
   }
   
-  /* หัวข้อ */
-  :host-context(.dark-mode) h2 {
-    color: #e5e7eb;                     /* สีเทาอ่อน */
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1rem;
   }
   
-  /* Toolbar */
+  /* ===============================
+     🔎 Toolbar
+     =============================== */
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  
+  .search-input {
+    flex: 1;
+    max-width: 250px;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all .25s ease;
+  }
+  .search-input:focus {
+    outline: none;
+    border-color: #2b8aef;
+    box-shadow: 0 0 0 3px rgba(43,138,239,0.2);
+  }
+  
+  /* ===============================
+     📊 User Table
+     =============================== */
+  .user-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .user-table th {
+    background: #f8fafc;
+    padding: 12px;
+    font-weight: 600;
+    font-size: .9rem;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .user-table td {
+    padding: 12px;
+    font-size: .9rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .user-table tr:hover td {
+    background: #f9fbff;
+  }
+  
+  /* ===============================
+     🎛 Actions Column + Buttons
+     =============================== */
+  .actions-col {
+    text-align: center;
+    width: 120px;
+  }
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: .4rem .8rem;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .actions-col .btn {
+    margin: 0 2px;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  }
+  .btn:active {
+    transform: scale(0.96);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg,#2b8aef,#4f9dfc);
+    color: #fff;
+  }
+  .btn-warning {
+    background: #facc15;
+    color: #1f2937;
+  }
+  .btn-danger {
+    background: #ef4444;
+    color: #fff;
+  }
+  .btn-secondary {
+    background: #f1f5f9;
+    color: #334155;
+  }
+  
+  /* ===============================
+     🏷 Status Badges
+     =============================== */
+  span.active {
+    display: inline-block;
+    padding: .2rem .6rem;
+    background: #dcfce7;
+    color: #16a34a;
+    font-weight: 600;
+    border-radius: 20px;
+    font-size: .8rem;
+  }
+  span.inactive {
+    display: inline-block;
+    padding: .2rem .6rem;
+    background: #fee2e2;
+    color: #dc2626;
+    font-weight: 600;
+    border-radius: 20px;
+    font-size: .8rem;
+  }
+  
+  /* ===============================
+     🪟 Modal
+     =============================== */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    animation: fadeIn .3s ease;
+  }
+  .modal.show { display: flex; }
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    width: 420px;
+    border-radius: 14px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    animation: scaleIn .3s ease;
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #64748b;
+    transition: color .2s ease;
+  }
+  .close-btn:hover { color: #ef4444; }
+  
+  /* Form inside modal */
+  .modal-body .form-group { margin-bottom: 12px; }
+  .form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all .25s ease;
+  }
+  .form-control:focus {
+    border-color: #2b8aef;
+    box-shadow: 0 0 0 3px rgba(43,138,239,0.2);
+    outline: none;
+  }
+  .text-danger { font-size: .8rem; }
+  
+  /* Footer */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  /* ===============================
+     🎞 Animations
+     =============================== */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  
+  /* ===============================
+     🌙 Dark Mode Overrides
+     =============================== */
+  :host-context(.dark-mode) .user-management-container {
+    background: #111827;
+    color: #f3f4f6;
+  }
+  :host-context(.dark-mode) h2 { color: #e5e7eb; }
   :host-context(.dark-mode) .search-input {
     background: #1f2937;
     color: #f9fafb;
     border: 1px solid #374151;
   }
-  :host-context(.dark-mode) .search-input::placeholder {
-    color: #9ca3af;
-  }
+  :host-context(.dark-mode) .search-input::placeholder { color: #9ca3af; }
   :host-context(.dark-mode) .search-input:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
   }
-  
-  /* Table */
   :host-context(.dark-mode) .user-table {
     background: #1f2937;
     color: #f9fafb;
@@ -251,7 +249,6 @@ span.inactive {
   :host-context(.dark-mode) .user-table tr:hover td {
     background: #2d3748;
   }
-  
   /* Buttons */
   :host-context(.dark-mode) .btn-primary {
     background: linear-gradient(135deg,#2563eb,#3b82f6);
@@ -269,8 +266,7 @@ span.inactive {
     background: #374151;
     color: #f9fafb;
   }
-  
-  /* Status Badges */
+  /* Status */
   :host-context(.dark-mode) span.active {
     background: #064e3b;
     color: #34d399;
@@ -279,35 +275,26 @@ span.inactive {
     background: #7f1d1d;
     color: #f87171;
   }
-  
   /* Modal */
   :host-context(.dark-mode) .modal-content {
     background: #1f2937;
     color: #f3f4f6;
     box-shadow: 0 8px 24px rgba(0,0,0,0.6);
   }
-  :host-context(.dark-mode) .close-btn {
-    color: #9ca3af;
-  }
-  :host-context(.dark-mode) .close-btn:hover {
-    color: #ef4444;
-  }
-  
-  /* Form inside modal */
+  :host-context(.dark-mode) .close-btn { color: #9ca3af; }
+  :host-context(.dark-mode) .close-btn:hover { color: #ef4444; }
+  /* Form */
   :host-context(.dark-mode) .form-control {
     background: #111827;
     border: 1px solid #374151;
     color: #f9fafb;
   }
+  :host-context(.dark-mode) .form-control::placeholder { color: #9ca3af; }
   :host-context(.dark-mode) .form-control:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
   }
-  :host-context(.dark-mode) .form-control::placeholder {
-    color: #9ca3af;
-  }
-  
-  /* Modal Footer Buttons */
+  /* Modal Footer */
   :host-context(.dark-mode) .modal-footer .btn-primary {
     background: linear-gradient(135deg,#2563eb,#3b82f6);
   }
@@ -316,3 +303,96 @@ span.inactive {
     color: #f9fafb;
   }
   
+  /* ===============================
+     📱 Responsive (Tablet & Mobile)
+     =============================== */
+  /* Tablet (768px–1024px) */
+  @media (max-width: 1024px) and (min-width: 768px) {
+    .user-management-container {
+      padding: 16px;
+    }
+    .user-management-container h2 { 
+      font-size: 1.25rem;
+    }
+    .toolbar { 
+      flex-direction: column; 
+      align-items: stretch; 
+      gap: 10px;
+    }
+    .search-input { 
+      width: 100%; 
+      max-width: 100%; 
+      font-size: 14px; 
+      padding: 6px 10px; 
+    }
+    .user-table th, .user-table td { 
+      padding: 8px; 
+      font-size: 14px; 
+    }
+    .actions-col { 
+      width: auto; 
+      white-space: nowrap; 
+    }
+    .actions-col .btn { 
+      font-size: 13px; 
+      padding: 5px 8px; 
+      margin: 2px; 
+    }
+    .modal-content { 
+      width: 90%; 
+      max-width: 500px; 
+    }
+  }
+  
+  /* 📱 Mobile (น้อยกว่า 768px) */
+@media (max-width: 767px) {
+  .user-management-container {
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    text-align: left;         
+    flex-direction: row;      
+    justify-content: flex-start;
+    gap: 6px;                 
+  }
+
+  /* Toolbar บนมือถือเรียงลงมาแทน */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 100%;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  /* ตารางให้เลื่อนได้ */
+  .user-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .user-table th,
+  .user-table td {
+    padding: 6px;
+    font-size: 13px;
+  }
+
+  /* ปุ่มเล็กลง */
+  .btn {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  /* Modal ให้กว้างเต็มหน้าจอมือถือ */
+  .modal-content {
+    width: 95%;
+    max-width: none;
+  }
+}

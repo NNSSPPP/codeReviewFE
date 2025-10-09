@@ -438,6 +438,43 @@ button:hover {
 :host-context(.dark-mode) .extra-links a:hover {
   color: #93c5fd;
 }
+/* ===============================
+   Tablet Responsive (768px–1024px)
+   =============================== */
+   @media (min-width: 768px) and (max-width: 1024px) {
+    .register-wrapper {
+      max-width: 700px;    /* ลดความกว้างทั้งกรอบ */
+      border-radius: 20px; /* มุมโค้งเล็กลง */
+    }
+  
+    .welcome-section {
+      padding: 2rem;       /* ลด padding ฝั่งซ้าย */
+    }
+  
+    .welcome-section h1 {
+      font-size: 1.8rem;   /* ลดขนาดหัวข้อ */
+    }
+  
+    .register-box {
+      padding: 2rem;       /* ลด padding ฟอร์มขวา */
+      min-height: auto;    /* ไม่ fix ความสูง */
+    }
+  
+    .register-header h2 {
+      font-size: 1.5rem;   /* Login/Register Title เล็กลง */
+    }
+  
+    .input-group input {
+      padding: 0.7rem;
+      font-size: 0.95rem;
+    }
+  
+    button {
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+  }
+  
 
 
 
