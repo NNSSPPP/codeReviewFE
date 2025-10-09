@@ -143,6 +143,7 @@
      padding: 12px;
      z-index: 9999;
    }
+   
    .notifications-panel * { white-space: normal; word-break: break-word; }
    .notifications-header {
      display: flex; justify-content: space-between; align-items: center;
@@ -156,11 +157,15 @@
    }
    .notification-tabs button {
      flex: 1 1 auto;
-     min-width: 80px; padding: 4px 8px;
-     font-size: 11px; border-radius: 6px;
+     min-width: 80px; 
+     padding: 4px 8px;
+     font-size: 11px; 
+     border-radius: 6px;
      border: 1px solid var(--card-border);
      background: var(--bg-panel);
-     cursor: pointer; transition: 0.2s;
+     color: var(--text-main);
+     cursor: pointer; 
+     transition: 0.2s;
    }
    .notification-tabs button:hover {
      background: var(--notification-bg); 
@@ -407,26 +412,7 @@
     fill: var(--text-main) !important;
     color: var(--text-main) !important;
   }
-  /* ปกติ */
-.notification-tabs button {
-  flex: 1 1 auto;
-  min-width: 80px;
-  padding: 4px 8px;
-  font-size: 11px;
-  border-radius: 6px;
-  border: 1px solid var(--card-border);
-  background: var(--bg-panel);
-  color: var(--text-main);   /* ✅ เพิ่มตรงนี้ */
-  cursor: pointer;
-  transition: 0.2s;
-}
 
-/* Hover */
-.notification-tabs button:hover {
-  background: var(--notification-bg);
-  border-color: var(--btn-primary-bg);
-  color: var(--btn-primary-bg);
-}
 
 /* Dark mode */
 .dark-mode .notification-tabs button {

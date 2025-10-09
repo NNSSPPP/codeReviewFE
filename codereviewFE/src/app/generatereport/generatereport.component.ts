@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import{RepositoryService,Repository} from '../services/reposervice/repository.service';
+
 interface Project {
   name: string;
   selected: boolean;
@@ -29,13 +31,13 @@ interface OutputFormat {
 export class GeneratereportComponent {
 
   reportType: string = '';
-  projects = [
-    { name: 'Angular-App', selected: false },
-    { name: 'API-Service', selected: false },
-    { name: 'Web-Portal', selected: false },
-    { name: 'Auth-Servic', selected: false },
-    { name: 'Mobile-App', selected: false }
-  ];
+  projects: Project[] = [];  // จะเติมมาจาก backend
+  dateFrom?: string;
+  dateTo?: string;
+  outputFormat: string = '';
+  email: string = '';
+
+ 
   sections = [
     { name: 'Quality Gate Summary', selected: true },
     { name: 'Issue Breakdown', selected: true },
@@ -44,17 +46,20 @@ export class GeneratereportComponent {
     { name: 'Trend Analysis', selected: true },
     { name: 'Recommendations', selected: true }
   ];
-  dateFrom?: string;
-  dateTo?: string;
-  outputFormat: string = '';
-  email: string = '';
-  constructor(private readonly route: ActivatedRoute) {} // ✅ inject route ที่นี่
+
+  constructor(private readonly route: ActivatedRoute,private readonly repositoryService: RepositoryService) {} 
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['type']) {
-        this.reportType = params['type']; // แก้ให้ตรงกับ property
+      if (params['reportType']) {
+        this.reportType = params['reportType']; 
       }
+    });
+    this.repositoryService.getAllRepo().subscribe(repos => {
+      this.projects = repos.map(repo => ({
+        name: repo.name,
+        selected: false
+      }));
     });
   }
 

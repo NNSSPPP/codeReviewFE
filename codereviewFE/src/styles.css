@@ -1,3 +1,5 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 /* ===============================
    Light mode (default)
    =============================== */
@@ -343,3 +345,109 @@ body.dark-mode .modal-footer .btn-primary:hover {
   background-color: var(--btn-primary-bg-hover) !important;
 }
 
+
+
+
+
+
+
+/* Base container */
+.mat-mdc-snack-bar-container.app-snack {
+  --bg: #2563eb;
+  --fg: #ffffff;
+  --radius: 20px;
+  --shadow: 0 4px 12px rgba(0,0,0,.15);
+
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--radius) !important;
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+  box-shadow: var(--shadow) !important;
+
+  /* 👇 จำกัดความกว้าง */
+  width: auto !important;
+  max-width: 320px;         /* อยากให้ยาวสุดเท่าไหร่ */
+  min-width: 180px;         /* สั้นสุด */
+  padding: 10px 20px !important;
+}
+
+/* Surface (ล้างค่า width:100% ของ Material ออก) */
+.mat-mdc-snack-bar-container.app-snack .mdc-snackbar__surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  width: auto !important;   /* 👈 สำคัญ */
+  min-width: unset !important;
+  max-width: unset !important;
+  padding: 0 !important;
+}
+
+/* Label */
+.mat-mdc-snack-bar-container.app-snack .mdc-snackbar__label {
+  font-size: 0.9rem;
+  line-height: 1.3rem;
+  color: var(--fg) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center;
+}
+
+/* ถ้ามีปุ่ม */
+.mat-mdc-snack-bar-container.app-snack .mdc-button {
+  margin-left: 8px;
+  height: 28px;
+}
+.mat-mdc-snack-bar-container.app-snack .mdc-button__label {
+  color: var(--fg) !important;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* Light/Dark Theme */
+.mat-mdc-snack-bar-container.app-snack-blue {
+  --bg: #2563eb;
+  --fg: #fff;
+}
+@media (prefers-color-scheme: dark) {
+  .mat-mdc-snack-bar-container.app-snack-blue {
+    --bg: #1e3a8a;
+    --fg: #fff;
+  }
+}
+
+/* Margin จากขอบจอ */
+.mdc-snackbar {
+  margin: 12px;
+}
+/* Desktop/Tablet */
+.mat-mdc-snack-bar-container.app-snack {
+  width: auto !important;
+  max-width: 320px;
+  min-width: 200px;
+  margin: 12px !important;
+  justify-content: center;
+}
+
+/* 👇 Mobile: Center + ขยายไม่ให้แคบเกินไป */
+@media (max-width: 600px) {
+  .mat-mdc-snack-bar-container.app-snack {
+    max-width: 90vw !important;   /* ใช้ % ของหน้าจอ */
+    min-width: unset !important;
+    width: auto !important;
+    margin: 8px auto !important;  /* จัดให้อยู่ตรงกลาง */
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .mat-mdc-snack-bar-container.app-snack .mdc-snackbar__surface {
+    width: auto !important;
+    max-width: 100% !important;
+  }
+
+  .mat-mdc-snack-bar-container.app-snack .mdc-snackbar__label {
+    text-align: center;
+    width: 100%;
+  }
+}

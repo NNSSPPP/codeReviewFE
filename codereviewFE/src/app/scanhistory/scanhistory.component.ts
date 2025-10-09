@@ -13,7 +13,7 @@ interface Scan {
   status: string;
   statusText: string;
   grade: string;
-  issues: { bugs: number; locks: number; warnings: number };
+  issues?: { bugs?: number; locks?: number; warnings?: number };
 }
 
 @Component({
@@ -21,7 +21,7 @@ interface Scan {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './scanhistory.component.html',
-  styleUrl: './scanhistory.component.css'
+  styleUrls: ['./scanhistory.component.css']  
 })
 export class ScanhistoryComponent {
 
@@ -103,24 +103,24 @@ export class ScanhistoryComponent {
 
   // Export CSV
   exportHistory(): void {
-   const flatData = this.filteredScans.map((scan, index) => ({
-    No : index + 1,
-    Date: this.formatDate(scan.date),
-    Time: scan.time,
-    Project: scan.project,
-    Status: scan.status,
-    StatusText: scan.statusText,
-    Grade: scan.grade,
-    Bugs: scan.issues.bugs,
-    Locks: scan.issues.locks,
-    Warnings: scan.issues.warnings
-  }));
+    const flatData = this.filteredScans.map((scan, index) => ({
+      No : index + 1,                   
+      Date: this.formatDate(scan.date),   
+      Time: scan.time,
+      Project: scan.project,
+      Status: scan.status,
+      StatusText: scan.statusText,
+      Grade: scan.grade,
+      Bugs: scan.issues?.bugs ?? 0,
+      Locks: scan.issues?.locks ?? 0,
+      Warnings: scan.issues?.warnings ?? 0
+    }));
 
-  const header = Object.keys(flatData[0]).join(',');
-  const rows = flatData.map(r => Object.values(r).join(',')).join('\n');
-  const csv = header + '\n' + rows;
+    const header = Object.keys(flatData[0]).join(',');
+    const rows = flatData.map(r => Object.values(r).join(',')).join('\n');
+    const csv = header + '\n' + rows;
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
 
   const now = new Date();
