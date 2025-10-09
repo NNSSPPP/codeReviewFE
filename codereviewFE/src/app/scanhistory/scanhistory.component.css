@@ -573,4 +573,208 @@
   
 
 
+  /* ===============================
+   Pagination (Custom)
+   =============================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+/* ปุ่ม (default) */
+.page-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #2563eb;   /* เส้นขอบฟ้า */
+  background-color: #fff;      /* พื้นหลังขาว */
+  color: #2563eb;              /* ไอคอนฟ้า */
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover + Active */
+.page-btn:hover,
+.page-btn.active {
+  background-color: #2563eb;   /* น้ำเงิน */
+  color: #fff;                 /* ไอคอนขาว */
+  border-color: #2563eb;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Disabled */
+.page-btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Label ตรงกลาง */
+.page-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+
+
+/* ===== Mobile-only sticky for Log + Result (Compact & Clean Final) ===== */
+@media (max-width: 768px) {
+
+  /* Scroll container */
+  .scan-history-container .table-responsive {
+    overflow-x: auto;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 0;
+    margin-right: 0;
+    scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+  }
+
+  /* Table base */
+  .scan-history-table {
+    min-width: 660px; /* ย่อรวมทั้งตาราง */
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 11.8px; /* ย่อฟอนต์อีกเล็กน้อย */
+  }
+
+  .scan-history-table th,
+  .scan-history-table td {
+    background-clip: padding-box;
+    padding: 5px 6px; /* ลด padding */
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  /* คอลัมน์ Log / Result */
+  .scan-history-table th.log-col,
+  .scan-history-table td.log-col { width: 78px; }
+
+  .scan-history-table th.result-col,
+  .scan-history-table td.result-col { width: 78px; }
+
+  /* Sticky col */
+  .scan-history-table .sticky-col {
+    position: sticky;
+    z-index: 3;
+    background: var(--bg-panel);
+    contain: paint;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    border-left: none !important;
+  }
+
+  /* จัดตำแหน่งพอดีไม่มีช่อง */
+  .scan-history-table .result-col {
+    right: 0 !important;
+  }
+
+  .scan-history-table .log-col {
+    right: 78px !important; /* เท่ากับความกว้าง result */
+  }
+
+  /* ใช้เส้นแบ่งจางๆ ระหว่าง Log กับ Result แทนช่อง */
+  .scan-history-table .log-col::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    background: var(--table-border);
+  }
+
+  /* Header สีเดียวกัน */
+  .scan-history-table thead th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-text);
+    font-weight: 600;
+  }
+
+  .scan-history-table thead th.sticky-col {
+    background-color: var(--table-header-bg) !important;
+  }
+
+  /* ลบ gradient ทั้งหมด */
+  .scan-history-table th.sticky-col::after,
+  .scan-history-table td.sticky-col::after {
+    background: none !important;
+  }
+
+  /* ปุ่มเล็กลงให้พอดีช่อง */
+  .scan-history-table td.sticky-col .btn {
+    width: 100%;
+    font-size: 10.8px;
+    padding: 3px 4px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  /* แถว hover สว่างเล็กน้อย */
+  .scan-history-table tbody tr:hover {
+    background-color: var(--table-header-bg2);
+  }
+
+  /* ปรับให้ scroll ลื่นสุด */
+  .scan-history-container .table {
+    display: table !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+
+  /* ปุ่ม action & pagination ให้ย่อด้วย */
+  .actions .btn {
+    min-width: 100px;
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  /* Dark mode */
+  :host-context(body.dark-mode) .scan-history-table .sticky-col {
+    background: var(--bg-card);
+  }
+  :host-context(body.dark-mode) .scan-history-table .log-col::after {
+    background: var(--card-border);
+  }
+}
+/* ===============================
+   Fix inside cell (prevent button clipping)
+   =============================== */
+   @media (max-width: 768px) {
+    /* ให้ปุ่มด้านในมีพื้นที่แสดงเต็มไม่โดนตัด */
+    .scan-history-table td.sticky-col {
+      overflow: visible !important;
+    }
+  
+    /* ขยายปุ่มให้พอดีกับ cell ด้านใน */
+    .scan-history-table td.sticky-col .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: calc(100% - 2px); /* ลดขอบนิดหน่อยกันขอบชน */
+      font-size: 11px;
+      padding: 4px 6px;
+      white-space: nowrap;
+    }
+  
+    /* สำหรับกรณีมี border หรือ shadow ใน sticky */
+    .scan-history-table .result-col .btn,
+    .scan-history-table .log-col .btn {
+      margin-right: 2px; /* ป้องกันถูกบีบจนขอบขวาตัด */
+    }
+  
+    /* ปุ่ม hover ให้คงอยู่ใน cell ไม่ล้น */
+    .scan-history-table td.sticky-col .btn:hover {
+      transform: none;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+  }
   

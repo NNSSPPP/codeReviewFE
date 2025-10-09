@@ -294,3 +294,38 @@
     stroke-width: 1.2px !important;
   }
   
+  /* =========================
+   ULTRA COMPACT BUTTONS (MOBILE)
+   ========================= */
+@media (max-width: 768px) {
+  .btn {
+    font-size: 0.75rem;         /* ตัวอักษรเล็กลง */
+    padding: 6px 10px;          /* ขอบรอบตัวลดลง */
+    border-radius: 6px;         /* มุมโค้งเล็กลง */
+    gap: 3px;                   /* ช่องว่างระหว่าง icon-text ลดลง */
+    width: 100%;                /* ขยายเต็มแนว */
+    justify-content: center;
+  }
+
+  .btn i,
+  .btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ให้ปุ่มเว้นระยะห่างกันพอดี */
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+/* จอเล็กพิเศษ (iPhone SE / Android Mini) */
+@media (max-width: 480px) {
+  .btn {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 5px;
+  }
+}

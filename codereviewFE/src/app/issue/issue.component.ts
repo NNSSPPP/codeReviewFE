@@ -50,7 +50,11 @@ export class IssueComponent {
 
   // Pagination
   currentPage = 1;
-  pageSize = 5;
+pageSize = 5;
+
+get totalPages(): number {
+  return Math.ceil(this.filteredIssues.length / this.pageSize) || 1;
+}
 
   // Issues
   issues: Issue[] = [
@@ -218,5 +222,7 @@ selectAll(event: any) {
       default: return '';
     }
   }
+  
+  
 
 }
