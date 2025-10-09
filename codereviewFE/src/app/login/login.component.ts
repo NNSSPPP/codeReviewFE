@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/authservice/auth.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -17,7 +18,7 @@ export class LoginComponent {
   loading = false;
   submitted = false;
 
-  constructor(private readonly auth: AuthService, private readonly router: Router) {}
+  constructor(private readonly auth: AuthService, private readonly router: Router, private readonly snack: MatSnackBar) {}
   
   onSubmit(form: NgForm) {
     if (!form.valid) return;
@@ -27,7 +28,12 @@ export class LoginComponent {
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
-        console.log('Login Success');
+          this.snack.open('Login Successfully!', '', {
+          duration: 2500,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-blue'], // ฟ้า-ขาว รองรับ dark mode
+        });
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
