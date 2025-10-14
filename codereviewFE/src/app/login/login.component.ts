@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/authservice/auth.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -16,33 +18,37 @@ export class LoginComponent {
   loading = false;
   submitted = false;
 
-  // mock user
-  mockUser = {
-    email: 'test@example.com',
-    password: '123456'
-  };
-
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly router: Router,
+    private readonly snack: MatSnackBar
+  ) {}
 
   onSubmit(form: NgForm) {
     if (!form.valid) return;
     this.loading = true;
     this.submitted = true;
 
-    // mock delay ให้เหมือน async call
-    setTimeout(() => {
-      if (
-        this.email === this.mockUser.email &&
-        this.password === this.mockUser.password
-      ) {
-        console.log('Login Success');
+    this.auth.login({ email: this.email, password: this.password }).subscribe({
+      next: () => {
         this.loading = false;
+        this.snack.open('Login Successfully!', '', {
+          duration: 2500,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-blue'],
+        });
         this.router.navigate(['/dashboard']);
-      } else {
-        console.log('Login Failed: Wrong credentials');
+      },
+      error: () => {
         this.loading = false;
-        alert('Invalid email or password');
-      }
-    }, 1000);
+        this.snack.open('Login Failed. Please try again.', '', {
+          duration: 2500,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red'],
+        });
+      },
+    });
   }
 }
