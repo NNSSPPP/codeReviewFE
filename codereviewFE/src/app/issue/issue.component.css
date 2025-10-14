@@ -195,19 +195,19 @@
 /* ===============================
    Custom "View" Button (Light Blue Soft)
    =============================== */
-   :host ::ng-deep .issues-container .btn-info {
-    background-color: #A5D8FF !important;   /* ฟ้าอ่อน */
-    border: 1px solid #74C0FC !important;   /* ฟ้ากลาง */
-    color: #004C64 !important;              /* ฟ้าน้ำทะเลเข้ม */
-    transition: all 0.25s ease;
-  }
-  
-  :host ::ng-deep .issues-container .btn-info:hover {
-    background-color: #74C0FC !important;   /* ฟ้าเข้มขึ้นเล็กน้อย */
-    border-color: #4EA8DE !important;
-    color: #ffffff !important;
-  }
-  
+:host ::ng-deep .issues-container .btn-info {
+  background-color: #A5D8FF !important;   /* ฟ้าอ่อน */
+  border: 1px solid #74C0FC !important;   /* ฟ้ากลาง */
+  color: #004C64 !important;              /* ฟ้าน้ำทะเลเข้ม */
+  transition: all 0.25s ease;
+}
+
+:host ::ng-deep .issues-container .btn-info:hover {
+  background-color: #74C0FC !important;   /* ฟ้าเข้มขึ้นเล็กน้อย */
+  border-color: #4EA8DE !important;
+  color: #ffffff !important;
+}
+
 
   
   /* ===============================

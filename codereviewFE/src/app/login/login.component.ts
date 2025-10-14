@@ -18,8 +18,12 @@ export class LoginComponent {
   loading = false;
   submitted = false;
 
-  constructor(private readonly auth: AuthService, private readonly router: Router, private readonly snack: MatSnackBar) {}
-  
+  constructor(
+    private readonly auth: AuthService,
+    private readonly router: Router,
+    private readonly snack: MatSnackBar
+  ) {}
+
   onSubmit(form: NgForm) {
     if (!form.valid) return;
     this.loading = true;
@@ -28,19 +32,23 @@ export class LoginComponent {
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
-          this.snack.open('Login Successfully!', '', {
+        this.snack.open('Login Successfully!', '', {
           duration: 2500,
           horizontalPosition: 'center',
           verticalPosition: 'top',
-          panelClass: ['app-snack', 'app-snack-blue'], // ฟ้า-ขาว รองรับ dark mode
+          panelClass: ['app-snack', 'app-snack-blue'],
         });
         this.router.navigate(['/dashboard']);
       },
-      error: (err) => {
+      error: () => {
         this.loading = false;
-        console.log('Login Failed: Wrong credentials');
-        alert('Invalid email or password');
-      }
+        this.snack.open('Login Failed. Please try again.', '', {
+          duration: 2500,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red'],
+        });
+      },
     });
   }
 }

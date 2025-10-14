@@ -60,9 +60,9 @@
   
           <td>
 
-            <span *ngIf="scan.issues.bugs"><i class="bi bi-bug"></i> {{scan.issues.bugs}}</span>
-            <span *ngIf="scan.issues.locks" class="ms-2"><i class="bi bi-lock"></i> {{scan.issues.locks}}</span>
-            <span *ngIf="scan.issues.warnings" class="ms-2"><i class="bi bi-exclamation-triangle"></i> {{scan.issues.warnings}}</span>
+            <span *ngIf="scan.issues?.bugs"><i class="bi bi-bug"></i> {{scan.issues?.bugs}}</span>
+            <span *ngIf="scan.issues?.locks" class="ms-2"><i class="bi bi-lock"></i> {{scan.issues?.locks}}</span>
+            <span *ngIf="scan.issues?.warnings" class="ms-2"><i class="bi bi-exclamation-triangle"></i> {{scan.issues?.warnings}}</span>
           </td>
   
           <!-- ไม่มีการซ้อน <td> -->
