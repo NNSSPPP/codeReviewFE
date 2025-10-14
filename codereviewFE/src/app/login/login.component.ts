@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../services/authservice/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,24 +16,33 @@ export class LoginComponent {
   loading = false;
   submitted = false;
 
-  constructor(private readonly auth: AuthService, private readonly router: Router) {}
-  
+  // mock user
+  mockUser = {
+    email: 'test@example.com',
+    password: '123456'
+  };
+
+  constructor(private readonly router: Router) {}
+
   onSubmit(form: NgForm) {
     if (!form.valid) return;
     this.loading = true;
     this.submitted = true;
 
-    this.auth.login({ email: this.email, password: this.password }).subscribe({
-      next: () => {
-        this.loading = false;
+    // mock delay ให้เหมือน async call
+    setTimeout(() => {
+      if (
+        this.email === this.mockUser.email &&
+        this.password === this.mockUser.password
+      ) {
         console.log('Login Success');
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
         this.loading = false;
+        this.router.navigate(['/dashboard']);
+      } else {
         console.log('Login Failed: Wrong credentials');
+        this.loading = false;
         alert('Invalid email or password');
       }
-    });
+    }, 1000);
   }
 }

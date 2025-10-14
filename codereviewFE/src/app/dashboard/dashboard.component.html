@@ -110,58 +110,66 @@
       </div>
     </div>
 
-    <!-- Recent Scans Table -->
-    <div class="recent-scans">
-      <h4 class="title">
-        <i class="bi bi-clock-history"></i> Recent Scans
-      </h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Status</th>
-            <th>Grade</th>
-            <th>Time</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let scan of latestScans">
-            <td>{{ scan.project }}</td>
-            <td [ngClass]="{
-              'status-cell status--passed':  scan.status === 'Passed',
-              'status-cell status--failed':  scan.status === 'Failed'
-            }">{{ scan.status }}</td>
-            <td [ngClass]="{
-              'grade-cell grade--a': scan.grade === 'A',
-              'grade-cell grade--b': scan.grade === 'B',
-              'grade-cell grade--c': scan.grade === 'C',
-              'grade-cell grade--d': scan.grade === 'D',
-              'grade-cell grade--e': scan.grade === 'E'
-            }">{{ scan.grade }}</td>
-            <td>{{ scan.time | date:'dd/MM/yyyy, hh:mm a'}}</td>
-            <td>
-              <button *ngIf="scan.status === 'Passed'"
-                class="btn btn-primary btn-sm text-white" title="view scan">
-                <i class="bi bi-eye"></i>
-              </button>
+   <!-- Recent Scans Table -->
+<div class="recent-scans">
+  <h4 class="title">
+    <i class="bi bi-clock-history"></i> Recent Scans
+  </h4>
 
-              <button *ngIf="scan.status === 'Failed'" class="btn btn-warning btn-sm text-white" title="retry scan">
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- View All -->
-      <div class="button-container">
-        <!-- link ไปหน้า scan history -->
-        <a [routerLink]="['/scanhistory']" class="view-all-link">
-          View All <i class="bi bi-arrow-right"></i>
-        </a>
-      </div>
-    </div>
+  <!-- ✅ เพิ่ม wrapper รอบ table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Grade</th>
+          <th>Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let scan of latestScans">
+          <td>{{ scan.project }}</td>
+          <td [ngClass]="{
+            'status-cell status--passed':  scan.status === 'Passed',
+            'status-cell status--failed':  scan.status === 'Failed'
+          }">{{ scan.status }}</td>
+          <td [ngClass]="{
+            'grade-cell grade--a': scan.grade === 'A',
+            'grade-cell grade--b': scan.grade === 'B',
+            'grade-cell grade--c': scan.grade === 'C',
+            'grade-cell grade--d': scan.grade === 'D',
+            'grade-cell grade--e': scan.grade === 'E'
+          }">{{ scan.grade }}</td>
+          <td>{{ scan.time | date:'dd/MM/yyyy, hh:mm a'}}</td>
+          <td>
+            <button *ngIf="scan.status === 'Passed'"
+              class="btn btn-primary btn-sm text-white" title="view scan">
+              <i class="bi bi-eye"></i>
+            </button>
+
+            <button *ngIf="scan.status === 'Failed'"
+              class="btn btn-warning btn-sm text-white" title="retry scan">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ✅ เพิ่ม overlay บังข้างหลัง -->
+    <div class="sticky-cover"></div>
   </div>
+
+  <!-- View All -->
+  <div class="button-container">
+    <a [routerLink]="['/scanhistory']" class="view-all-link">
+      View All <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+</div>
+
 
   <!-- Metrics -->
   <div class="metrics">
