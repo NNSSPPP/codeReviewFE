@@ -1,7 +1,6 @@
 <div class="page-wrapper">
   <div class="form-card">
 
-
     <h2>{{ isEditMode ? 'Edit Repository' : 'Add Repository' }}</h2>
 
     <form #repoForm="ngForm" (ngSubmit)="onSubmit(repoForm)">
@@ -28,9 +27,9 @@
           <label for="type" class="form-label">Project Type <span class="required">*</span></label>
           <select class="form-select" name="type"
                   [(ngModel)]="gitRepository.project_type" required #type="ngModel">
-                  <option [ngValue]="undefined" disabled>-- Select Type --</option>
-                  <option [ngValue]="'Angular'">Angular</option>
-                  <option [ngValue]="'Spring Boot'">Spring Boot</option>>
+            <option [ngValue]="undefined" disabled>-- Select Type --</option>
+            <option [ngValue]="'Angular'">Angular</option>
+            <option [ngValue]="'Spring Boot'">Spring Boot</option> <!-- ลบ > เกิน -->
           </select>
           <div class="error" *ngIf="type.invalid && type.touched">Project type required.</div>
         </div>
@@ -43,48 +42,13 @@
         </div>
       </fieldset>
 
-      <!-- Authentication -->
-      <!-- <fieldset>
+      <!-- Authentication (คงคอมเมนต์ไว้ตามเดิม) -->
+      <!--
+      <fieldset>
         <legend>Authentication<span class="required"> *</span></legend>
-
-        <div class="mb-3">
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="auth1" name="authMethod"
-                   [(ngModel)]="authMethod" value="usernamePassword" required>
-            <label class="form-check-label" for="auth1">Username / Password</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="auth2" name="authMethod"
-                   [(ngModel)]="authMethod" value="accessToken" required>
-            <label class="form-check-label" for="auth2">Access Token</label>
-          </div>
-        </div>
-
-        <div *ngIf="authMethod === 'usernamePassword'">
-          <div class="mb-3">
-            <label for="username" class="form-label">Username <span class="required">*</span></label>
-            <input type="text" class="form-control" name="username"
-                   [(ngModel)]="gitRepository.credentials.username" required #username="ngModel">
-            <div class="error" *ngIf="username.invalid && username.touched">Username required.</div>
-          </div>
-
-          <div class="mb-3">
-            <label for="password" class="form-label">Password <span class="required">*</span></label>
-            <input type="password" class="form-control" name="password"
-                   [(ngModel)]="gitRepository.credentials.password" required minlength="6" #password="ngModel">
-            <div class="error" *ngIf="password.invalid && password.touched">Password min 6 chars.</div>
-          </div>
-        </div>
-
-        <div *ngIf="authMethod === 'accessToken'">
-          <div class="mb-3">
-            <label for="token" class="form-label">Access Token <span class="required">*</span></label>
-            <input type="text" class="form-control" name="token"
-                   [(ngModel)]="gitRepository.credentials.token" required minlength="10" #token="ngModel">
-            <div class="error" *ngIf="token.invalid && token.touched">Token min 10 chars required.</div>
-          </div>
-        </div>
-      </fieldset> -->
+        ...
+      </fieldset>
+      -->
 
       <!-- SonarQube Config -->
       <fieldset>
@@ -104,7 +68,6 @@
           <div class="error" *ngIf="projectKey.invalid && projectKey.touched">Project key required.</div>
         </div>
 
-        <!-- custom round checkboxes -->
         <div class="form-check">
           <input class="form-check-input custom-check" type="checkbox" id="autoScan"
                  [(ngModel)]="sonarConfig.enableAutoScan" name="enableAutoScan" checked>
@@ -118,21 +81,21 @@
         </div>
       </fieldset>
 
-     <!-- Actions -->
-<div class="actions">
-  <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
-  <button type="button" class="btn btn-warning" (click)="clearForm(repoForm)">Clear Form</button>
-  <button type="button" class="btn btn-primary" (click)="onTest()">Test Connection</button>
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-warning" (click)="clearForm(repoForm)">Clear Form</button>
+        <button type="button" class="btn btn-primary" (click)="onTest()">Test Connection</button>
 
-  <!-- ปุ่ม Delete จะโชว์เฉพาะ Edit Mode -->
-  <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger" (click)="onDelete()">
-    Delete
-  </button>
+        <!-- ปุ่ม Delete จะโชว์เฉพาะ Edit Mode -->
+        <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger" (click)="onDelete()">
+          Delete
+        </button>
 
-  <button type="submit" class="btn btn-success" [disabled]="!repoForm.valid">
-    {{ isEditMode ? 'Update' : 'Save' }}
-  </button>
-</div>
+        <button type="submit" class="btn btn-success" [disabled]="!repoForm.valid">
+          {{ isEditMode ? 'Update' : 'Save' }}
+        </button>
+      </div>
 
     </form>
   </div>

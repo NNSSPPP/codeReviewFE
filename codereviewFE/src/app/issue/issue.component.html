@@ -47,18 +47,15 @@
   </div>
 
   <!-- Table -->
-  
+
   <div class="table-responsive">
     <table class="table table-striped table-hover table-bordered align-middle issues-table">
       <thead>
         <tr>
           <th class="text-center">
-            <input 
-              type="checkbox" 
-              [checked]="isPageAllSelected()" 
-              (change)="selectAll($event)">
+            <input type="checkbox" [checked]="isPageAllSelected()" (change)="selectAll($event)">
           </th>
-          
+
           <th>Type</th>
           <th>Severity</th>
           <th>Issue</th>
@@ -74,45 +71,43 @@
           <td><i class="bi me-1" [ngClass]="typeIcon(issue.type)"></i>{{ issue.type | titlecase }}</td>
           <td [ngClass]="severityClass(issue.severity)">{{ issue.severity | titlecase }}</td>
           <td>
-            <strong>{{ issue.title }}</strong><br>
+            <strong>{{ issue.message }}</strong><br>
             <small class="text-muted">{{ issue.details }}</small>
           </td>
-          <td>{{ issue.project }}</td>
+          <td>{{ issue.projectName }}</td>
           <td>{{ issue.assignee }}</td>
           <td [ngClass]="statusClass(issue.status)">{{ issue.status | titlecase }}</td>
           <td class="text-center sticky-col">
-            <a [routerLink]="['/issuedetail', issue.id_issue]" class="btn btn-info btn-sm">
+            <a *ngIf="issue?.issuesId" [routerLink]="['/issuedetail', issue.issuesId]" class="btn btn-info btn-sm">
               <i class="bi bi-eye"></i>
             </a>
           </td>
         </tr>
       </tbody>
     </table>
-    </div>
   </div>
+</div>
 
- 
-  <!-- Footer -->
+
+<!-- Footer -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center my-3 gap-2">
   <div><strong>Selected:</strong> {{ selectedCount() }}</div>
 
   <div class="pagination">
     <!-- Prev -->
-    <button class="page-btn" [class.disabled]="currentPage === 1"
-            (click)="prevPage()">
+    <button class="page-btn" [class.disabled]="currentPage === 1" (click)="prevPage()">
       <i class="bi bi-chevron-left"></i>
     </button>
-  
+
     <!-- Page Label -->
     <span class="page-label">Page {{currentPage}}</span>
-  
+
     <!-- Next -->
-    <button class="page-btn" [class.disabled]="currentPage === totalPages"
-            (click)="nextPage()">
+    <button class="page-btn" [class.disabled]="currentPage === totalPages" (click)="nextPage()">
       <i class="bi bi-chevron-right"></i>
     </button>
   </div>
-  
+
   <div class="d-flex gap-1 flex-wrap">
     <button class="btn btn-primary btn-sm px-3 py-2 btn-big" (click)="assignDeveloper()" title="Assign Developer">
       <i class="bi bi-person-plus me-1"></i>
@@ -125,4 +120,3 @@
     </button>
   </div>
 </div>
- 

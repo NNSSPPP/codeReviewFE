@@ -275,50 +275,87 @@ export class RepositoryService {
   // }
 
    /** ดึง repo + scans + issues (ทุก scan) */
-   getFullRepository(project_id: string): Observable<Repository | undefined> {
-    return this.getByIdRepo(project_id).pipe(
-      switchMap((repo) => {
-        if (!repo) return of<Repository | undefined>(undefined);
+getFullRepository(projectId: string): Observable<Repository | undefined> {
+    return RepositoryService.prototype.getByIdRepo.call(this, projectId).pipe(
+      switchMap(repo => {
+        if (!repo) return of(undefined);
+        return forkJoin({
+          scans: this.scanService.getScansByProjectId(projectId).pipe(
+            map(scans =>
+              scans.map(s => ({
+                ...s,
+                startedAt: s.started_at ? new Date(s.started_at) : undefined,
+                completedAt: s.completed_at ? new Date(s.completed_at) : undefined
+              }))
+            )
+          ),
+          issues: this.issueService.getAll(repo.user_id).pipe(
+            map(allIssues => allIssues.filter(i => i.projectId === projectId))
+          )
+        }).pipe(
+          map(({ scans, issues }) => {
+            const latest = scans.reduce((prev, curr) => {
+              return (curr.completedAt?.getTime() ?? 0) > (prev.completedAt?.getTime() ?? 0)
+                ? curr
+                : prev;
+            }, scans[0]);
 
-        return this.scanService.getScansByProjectId(project_id).pipe(
-          switchMap((scans) => {
-            const latest = scans.length ? scans[scans.length - 1] : undefined;
-
-            if (!scans.length) {
-              return of({
-                ...repo,
-                scans,
-                issues: [],
-                status: latest?.status === 'Scanning' ? 'Scanning' : 'Active',
-                lastScan: latest?.completed_at
-                  ? new Date(latest.completed_at).toLocaleString()
-                  : '-',
-                scanningProgress: latest?.status === 'Scanning' ? 50 : 100,
-                qualityGate: latest?.quality_gate,
-                metrics: latest?.metrics,
-              } as Repository);
-            }
-
-            return forkJoin(scans.map((s) => this.issueService.getByScanId(s.scans_id))).pipe(
-              map((issueGroups) => {
-                const issues = issueGroups.flat();
-                return {
-                  ...repo,
-                  scans,
-                  issues,
-                  status: latest ? latest.status : 'Active',
-                  lastScan: latest?.completed_at
-                    ? new Date(latest.completed_at).toLocaleString()
-                    : '-',
-                  scanningProgress: latest?.status === 'Scanning' ? 50 : 100,
-                  qualityGate: latest?.quality_gate,
-                  metrics: latest?.metrics,
-                } as Repository;
-              })
-            );
+            return {
+              ...repo,
+              scans,
+              issues,
+              status: latest?.status ?? 'Active',
+              lastScan: latest?.completedAt,
+              scanningProgress: latest?.status === 'Scanning' ? 50 : 100,
+              qualityGate: latest?.quality_gate,
+              metrics: latest?.metrics
+            } as Repository;
           })
         );
-      })
-    );
+      }
+    ));
+    }
+    // return this.getByIdRepo(projectId).pipe(
+    //   switchMap(repo => {
+    //     if (!repo) return of(undefined);
+  
+    //     // ดึง Scan ของ repository
+    //     const scans$ = this.scanService.getScansByProjectId(projectId).pipe(
+    //       map(scans =>
+    //         scans.map(s => ({
+    //           ...s,
+    //           startedAt: s.started_at ? new Date(s.started_at) : undefined,
+    //           completedAt: s.completed_at ? new Date(s.completed_at) : undefined
+    //         }))
+    //       )
+    //     );
+  
+    //     // ดึง Issue ของ repository
+    //     const issues$ = this.issueService.getIssueByProjectId(projectId).pipe(
+    //       map(allIssues => allIssues.filter(i => i.projectId === projectId))
+    //     );
+  
+    //     // รวม Scan + Issue เข้ากับ repo
+    //     return forkJoin({ scans: scans$, issues: issues$ }).pipe(
+    //       map(({ scans, issues }) => {
+    //         const latest = scans.reduce((prev, curr) => {
+    //           return (curr.completedAt?.getTime() ?? 0) > (prev.completedAt?.getTime() ?? 0)
+    //             ? curr
+    //             : prev;
+    //         }, scans[0]);
+  
+    //         return {
+    //           ...repo,
+    //           scans,
+    //           issues,
+    //           status: latest?.status ?? 'Active',
+    //           lastScan: latest?.completedAt,
+    //           scanningProgress: latest?.status === 'Scanning' ? 50 : 100,
+    //           qualityGate: latest?.quality_gate,
+    //           metrics: latest?.metrics
+    //         } as Repository;
+    //       })
+    //     );
+    //   })
+    // );
   }
-}
