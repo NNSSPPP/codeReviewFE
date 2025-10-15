@@ -9,7 +9,7 @@ import { Repository, RepositoryService } from '../services/reposervice/repositor
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './addrepository.component.html',
-  styleUrl: './addrepository.component.css'
+  styleUrls: ['./addrepository.component.css'] // <- แก้จาก styleUrl เป็น styleUrls
 })
 export class AddrepositoryComponent implements OnInit {
 
@@ -18,6 +18,7 @@ export class AddrepositoryComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly repositoryService: RepositoryService
   ) { }
+
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
   isEditMode: boolean = false;
 
@@ -28,8 +29,8 @@ export class AddrepositoryComponent implements OnInit {
     project_type: undefined,
     repository_url: '',
     branch: 'main',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    created_at: new Date(),
+    updated_at: new Date()
   };
 
   sonarConfig = {
@@ -51,61 +52,56 @@ export class AddrepositoryComponent implements OnInit {
     }
   }
 
-  // loadRepository(project_id: string) {
-  //   const repo = this.repositoryService.getByIdRepo(project_id);
-  //   if (repo) {
-  //     this.gitRepository = { ...repo };
-  //   }
-  // }
-  
+  // เวอร์ชันที่ถูกต้อง: เรียก service เดียวให้ชัดเจน และปิดวงเล็บให้ครบ
   loadRepository(project_id: string) {
-    this.repositoryService.getById(project_id).subscribe(repo => {
-      if (repo) {
-        this.gitRepository = { ...repo };
-      }
-
     this.repositoryService.getByIdRepo(project_id).subscribe({
       next: (repo) => {
         if (!repo) {
           console.error('Repository not found');
-          // ถ้า repo ไม่มีค่า ให้ reset form หรือ handle ตามต้องการ
           this.clearForm();
           return;
         }
-  
-        // แปลง object ให้ตรงกับ interface Repository
         this.gitRepository = {
-          project_id: repo.project_id || '',   // ให้ default ''
+          project_id: repo.project_id || '',
           user_id: repo.user_id || '',
           name: repo.name || '',
           repository_url: repo.repository_url || '',
           project_type: repo.project_type,
           branch: repo.branch || 'main',
           created_at: repo.created_at ? new Date(repo.created_at) : new Date(),
-          updated_at: repo.updated_at ? new Date(repo.updated_at) : new Date(),
-          scans: repo.scans,
-          issues: repo.issues
+          updated_at: repo.updated_at ? new Date(repo.updated_at) : new Date()
         };
       },
       error: (err) => console.error('Failed to load repository', err)
     });
   }
-  
-  
 
   onSubmit(form: NgForm) {
     if (form.valid) {
+      const payload = this.gitRepository;
       if (this.isEditMode) {
-        this.repositoryService.update(this.gitRepository.project_id, this.gitRepository).subscribe(() => {
-          alert("Repository updated successfully!");
+        this.repositoryService.updateRepo(payload.project_id, payload).subscribe({
+          next: () => {
+            alert("Repository updated successfully!");
+            this.router.navigate(['/repositories']); // นำทางหลังสำเร็จ
+          },
+          error: (err) => {
+            console.error(err);
+            alert("Operation failed. Please try again.");
+          }
         });
-        alert("Repository updated successfully!");
       } else {
-        this.repositoryService.create(this.gitRepository).subscribe(() => {
-          alert("Repository added successfully!");
+        this.repositoryService.addRepo(payload).subscribe({
+          next: () => {
+            alert("Repository added successfully!");
+            this.router.navigate(['/repositories']); // นำทางหลังสำเร็จ
+          },
+          error: (err) => {
+            console.error(err);
+            alert("Operation failed. Please try again.");
+          }
         });
       }
-      this.router.navigate(['/repositories']);
     } else {
       alert("Please fill all required fields correctly.");
     }
@@ -122,11 +118,16 @@ export class AddrepositoryComponent implements OnInit {
 
   onDelete() {
     if (confirm('Are you sure to delete this repository?')) {
-      this.repositoryService.delete(this.gitRepository.project_id).subscribe(() => {
-        alert('Deleted successfully!');
-        this.router.navigate(['/repositories']);
+      this.repositoryService.deleteRepo(this.gitRepository.project_id).subscribe({
+        next: () => {
+          alert('Deleted successfully!');
+          this.router.navigate(['/repositories']); // นำทางหลังลบเสร็จ
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Delete failed. Please try again.');
+        }
       });
-      
     }
   }
 
@@ -138,9 +139,8 @@ export class AddrepositoryComponent implements OnInit {
       project_type: undefined,
       repository_url: '',
       branch: 'main',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-
+      created_at: new Date(),
+      updated_at: new Date()
     };
 
     this.sonarConfig = {

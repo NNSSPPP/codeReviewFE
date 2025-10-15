@@ -106,7 +106,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #fff;
+    color: #111;
   }
   /* Severity */
   .badge.severity.critical { background: #e63946; }

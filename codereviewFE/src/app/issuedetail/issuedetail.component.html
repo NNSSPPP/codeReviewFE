@@ -1,37 +1,68 @@
-<div class="issue-container">
+<!-- Loading / Error guards -->
+<div *ngIf="loading" class="p-3">Loading…</div>
+<div *ngIf="!loading && error" class="alert alert-danger">{{ error }}</div>
+
+<!-- Content -->
+<div class="issue-container" *ngIf="!loading && !error && issue">
+
   <!-- Header -->
   <div class="issue-header">
-    <button class="back-btn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
-    <h2><i class="bi bi-shield-lock-fill"></i> {{ issue.type }} issue : {{ issue.title }}</h2>
-    <span class="priority" [ngClass]="issue.priority?.toLowerCase() || 'No priority'">
+    <button class="back-btn" type="button" (click)="goBack()" title="Go Back">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <h2>
+      <i class="bi bi-shield-lock-fill"></i>
+      {{ issue.type }} issue : {{ issue.title }}
+    </h2>
+
+    <span class="priority" [ngClass]="(issue.priority || 'none').toLowerCase()">
       {{ issue.priority || 'No priority' }}
     </span>
   </div>
 
- <!-- Issue Info -->
-<div class="issue-info">
-  <div class="info-row">
-    <div><strong>ID:</strong> {{ issue.id }}</div>
-    <div><strong>Type:</strong> {{ issue.type }}</div>
-  </div>
-  <div class="info-row">
-    <div><strong>Severity:</strong> <span class="badge severity {{ issue.severity.toLowerCase() }}">{{ issue.severity }}</span></div>
-    <div><strong>Status:</strong> <span class="badge status {{ issue.status.toLowerCase() }}">{{ issue.status }}</span></div>
-  </div>
-  <div class="info-row">
-    <div><strong>Project:</strong> {{ issue.project }}</div>
-    <div><strong>File:</strong> {{ issue.file }}</div>
-  </div>
-  <div class="info-row">
-    <div><strong>Line:</strong> {{ issue.line }}</div>
-    <div><strong>Created:</strong> {{ issue.created | date:'dd/MM/yyyy, hh:mm a' }}</div>
-  </div>
-  <div class="info-row">
-    <div><strong>Assigned:</strong> {{ issue.assignedTo?.length ? issue.assignedTo.join(', ') : issue.assignedTo || 'No assignee' }}</div>
-    <div><strong>Due Date:</strong> {{ issue.dueDate | date:'dd/MM/yyyy, hh:mm a' }}</div>
-  </div>
-</div>
+  <!-- Issue Info -->
+  <div class="issue-info">
+    <div class="info-row">
+      <div><strong>ID:</strong> {{ issue.id }}</div>
+      <div><strong>Type:</strong> {{ issue.type }}</div>
+    </div>
 
+    <div class="info-row">
+      <div>
+        <strong>Severity:</strong>
+        <span [ngClass]="['badge','severity',(issue.severity || '').toLowerCase()]">
+          {{ issue.severity }}
+        </span>
+      </div>
+      <div>
+        <strong>Status:</strong>
+        <span [ngClass]="['badge','status',(issue.status || '').toLowerCase()]">
+          {{ issue.status }}
+        </span>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div><strong>Project:</strong> {{ issue.project }}</div>
+      <div><strong>File:</strong> {{ issue.file }}</div>
+    </div>
+
+    <div class="info-row">
+      <div><strong>Line:</strong> {{ issue.line }}</div>
+      <div><strong>Created:</strong> {{ issue.created | date:'dd/MM/yyyy, hh:mm a' }}</div>
+    </div>
+
+    <div class="info-row">
+      <strong>Assigned:</strong>
+      {{ ((issue.assignedTo || []).length > 0) ? (issue.assignedTo || []).join(', ') : 'No assignee' }}
+
+      <div>
+        <strong>Due Date:</strong>
+        {{ issue.dueDate | date:'dd/MM/yyyy, hh:mm a' }}
+      </div>
+    </div>
+  </div>
 
   <!-- Description -->
   <div class="issue-description">
@@ -44,46 +75,49 @@
   <!-- Comments -->
   <div class="issue-comments">
     <h3>Comments & Discussion</h3>
-    <div class="comment" *ngFor="let c of issue.comments">
+
+    <div class="comment" *ngFor="let c of issue.comments; trackBy: trackByComment">
       <p><strong>{{ c.userId }}</strong> - {{ c.timestamp | date:'dd/MM/yyyy, hh:mm a' }}</p>
       <p>{{ c.comment }}</p>
+
       <div *ngIf="c.attachments?.length">
         <ul>
           <li *ngFor="let a of c.attachments">
-            <a [href]="a.url" target="_blank">📎 {{ a.filename }}</a>
+            <a [href]="a.url" target="_blank" rel="noopener">📎 {{ a.filename }}</a>
           </li>
         </ul>
       </div>
     </div>
 
+    <!-- Add comment -->
     <div class="add-comment d-flex align-items-center gap-2 mt-3">
-    
-      <!-- Comment Input -->
-      <input
-        type="text"
-        placeholder="Write a comment..."
-        [(ngModel)]="newComment.comment"
-        class="form-control flex-grow-1"
-        title="Write your comment"
-      />
-    
-      <!-- Post Button -->
-      <button class="btn btn-primary" (click)="postComment()">
-        <i class="bi bi-chat-dots"></i> 
+      <input type="text" placeholder="Write a comment..." [(ngModel)]="newComment.comment"
+        class="form-control flex-grow-1" title="Write your comment"
+        (keyup.enter)="newComment.comment.trim() && postComment()" />
+
+      <button class="btn btn-primary" type="button" title="Post comment" (click)="postComment()"
+        [disabled]="!newComment.comment.trim()">
+        <i class="bi bi-chat-dots"></i>
       </button>
     </div>
-    
+  </div>
 
   <!-- Action Buttons -->
-  <div class="action-icons">
-
-    <!--ยังไม่สำเร็จ-->
-    <button (click)="changeAssignee()" title="Change Assignee" class="btn btn-primary">
+  <div class="action-icons mt-3">
+    <button type="button" class="btn btn-primary" (click)="changeAssignee()" title="Change Assignee">
       <i class="bi bi-person"></i>
     </button>
-    
-    <button (click)="setPriority()" title="Set Priority"><i class="bi bi-lightning"></i></button>
-    <button (click)="updateStatus()" title="Update Status"><i class="bi bi-arrow-repeat"></i></button>
-    <button (click)="closeIssue()" title="Close Issue"><i class="bi bi-check"></i></button>
+
+    <button type="button" class="btn btn-warning" (click)="setPriority()" title="Set Priority">
+      <i class="bi bi-lightning"></i>
+    </button>
+
+    <button type="button" class="btn btn-secondary" (click)="updateStatus()" title="Update Status">
+      <i class="bi bi-arrow-repeat"></i>
+    </button>
+
+    <button type="button" class="btn btn-success" (click)="closeIssue()" title="Close Issue">
+      <i class="bi bi-check"></i>
+    </button>
   </div>
 </div>

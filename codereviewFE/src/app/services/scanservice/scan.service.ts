@@ -3,8 +3,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
-import { Observable , of } from 'rxjs';
-
 // ชนิดสถานะ/ค่า gate
 export type ScanStatus = 'Active' | 'Scanning' | 'Paused' | 'Error' | 'Cancelled';
 export type YN = 'Y' | 'N';
@@ -22,16 +20,8 @@ export interface Scan {
   security_gate?: YN;
   maintainability_gate?: YN;
   security_review_gate?: YN;
-  metrics?: Record<string, number>;
-
-    
-  status: 'Active' | 'Scanning' |'Error' | 'Cancelled';
-  started_at?: Date;
-  completed_at?: Date;
-  reliability_gate?: 'Y' | 'N';
-  security_gate?: 'Y' | 'N';
-  maintainability_gate?: 'Y' | 'N';
-  security_review_gate?: 'Y' | 'N';
+  coverage_gate?: YN;
+  duplication_gate?: YN;
   // metrics?: Record<string, number>;
   metrics?: {
     coverage?: number;
