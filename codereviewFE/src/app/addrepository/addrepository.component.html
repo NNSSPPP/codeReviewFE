@@ -42,6 +42,30 @@
         </div> -->
       </fieldset>
 
+      <!-- Authentication -->
+      <fieldset>
+        <legend>Authentication</legend>
+  
+        <div >
+          <label for="username">Username *</label>
+          <input type="text" name="username" [(ngModel)]="credentials.username" required #username="ngModel">
+          <div class="error" *ngIf="username.invalid && username.touched">Username required.</div>
+  
+          <label for="password">Password *</label>
+          <input type="password" name="password" [(ngModel)]="credentials.password" required minlength="6" #password="ngModel">
+          <div class="error" *ngIf="password.invalid && password.touched">Password min 6 chars.</div>
+        </div>
+
+         <div class="alert alert-warning mt-3 d-flex align-items-center" role="alert">
+    <i class="bi bi-shield-lock-fill me-2 fs-5"></i>
+    <div>
+      <strong>หมายเหตุ:</strong> ระบบนี้จะไม่เก็บ <strong>Username</strong> และ <strong>Password</strong>  
+      ข้อมูลนี้จะถูกใช้สำหรับการเชื่อมต่อเพียงครั้งเดียวเท่านั้น
+    </div>
+  </div>
+  
+      </fieldset>
+
       <!-- SonarQube Config -->
       <fieldset>
         <legend>SonarQube Configuration</legend>
@@ -77,7 +101,7 @@
       <div class="actions">
         <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
         <button type="button" class="btn btn-warning" (click)="clearForm(repoForm)">Clear Form</button>
-        <button type="button" class="btn btn-primary" (click)="onTest()">Test Connection</button>
+        <!-- <button type="button" class="btn btn-primary" (click)="onTest()">Test Connection</button> -->
 
         <!-- ปุ่ม Delete จะโชว์เฉพาะ Edit Mode -->
         <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger" (click)="onDelete()">
