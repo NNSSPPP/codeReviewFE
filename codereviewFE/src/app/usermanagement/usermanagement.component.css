@@ -396,3 +396,134 @@
     max-width: none;
   }
 }
+
+/* ===============================
+   ✅ Sticky Actions Column (iPad + Mobile)
+   =============================== */
+
+/* Scrollable Wrapper */
+.user-table-wrapper {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; /* สำหรับ iPad/iPhone */
+  position: relative;
+  width: 100%;
+  border-radius: 0; /* ❗️ห้ามมี radius ไม่งั้น sticky หาย */
+}
+
+/* Base Table */
+.user-table {
+  display: table;
+  width: 100%;
+  min-width: 900px; /* ให้มีพื้นที่ scroll */
+  border-collapse: separate !important;
+  border-spacing: 0;
+  position: relative;
+  table-layout: fixed;
+  overflow: visible !important; /* ป้องกัน sticky โดนตัด */
+}
+
+/* Sticky Action Column */
+.user-table th:last-child,
+.user-table td:last-child {
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0;
+  background: #fff;
+  z-index: 5;
+}
+
+.user-table thead th:last-child {
+  z-index: 6;
+  background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+}
+
+/* ขนาดคอลัมน์ Actions */
+.user-table .actions-col {
+  min-width: 110px;
+  text-align: center;
+}
+
+/* ===============================
+   📱 Mobile (ต่ำกว่า 768px)
+   =============================== */
+@media (max-width: 767px) {
+  .user-table {
+    min-width: 700px;
+  }
+
+  .user-table th,
+  .user-table td {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+}
+
+/* 🍎 iPad / iPad mini (แนวตั้ง + แนวนอน) */
+@media only screen
+  and (min-device-width: 768px)
+  and (max-device-width: 1024px)
+  and (-webkit-min-device-pixel-ratio: 1) {
+
+  .user-table-wrapper {
+    display: block !important;
+    overflow-x: scroll !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 0 !important;
+    position: relative !important;
+  }
+
+  .user-table {
+    display: table !important;
+    table-layout: fixed !important;
+    min-width: 950px !important;
+  }
+
+  .user-table th:last-child,
+  .user-table td:last-child {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    right: 0 !important;
+    z-index: 6 !important;
+    background: #fff !important;
+  }
+}
+
+/* 🌙 Dark Mode Support */
+:host-context(.dark-mode) .user-table th:last-child,
+:host-context(.dark-mode) .user-table td:last-child {
+  background: #1f2937 !important;
+  border-left: 1px solid #333 !important;
+  box-shadow: -1px 0 0 rgba(255,255,255,0.05);
+}
+/* ===============================
+   🎨 Fix Header Color for iPad Sticky Column
+   =============================== */
+
+/* ให้หัวคอลัมน์ Actions ใช้พื้นหลังเดียวกับคอลัมน์อื่น */
+.user-table thead th {
+  background-color: #f8fafc; /* สีเดียวกับคอลัมน์ Status */
+  background-image: none;
+}
+
+/* เฉพาะ Sticky Column (Actions) */
+.user-table thead th:last-child {
+  background-color: #f8fafc !important;
+  background-image: none !important;
+  border-left: 1px solid #e5e7eb;
+}
+
+/* 🍎 Safari บน iPad */
+@supports (-webkit-touch-callout: none) {
+  .user-table thead th:last-child {
+    background-color: #f8fafc !important;
+    background-image: none !important;
+  }
+}
+
+/* 🌙 Dark Mode */
+:host-context(.dark-mode) .user-table thead th:last-child {
+  background: #374151 !important;
+}

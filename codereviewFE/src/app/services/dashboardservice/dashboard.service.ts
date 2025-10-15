@@ -1,45 +1,62 @@
 // src/app/dashboard.service.ts
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { AuthService } from '../authservice/auth.service'
 
-export interface Dashboard 
-{
-
+export interface Dashboard {
   id: string;
   name: string;
-  metrics: string;
+  metrics: {
+    bugs: number;
+    vulnerabilities: number;
+    codeSmells: number;
+    coverage: number;   
+    duplications: number; 
+  };
+
 }
 
 export interface History {
-  id: string;       
-  name: string;
-  createdAt: Date;
+  projectId: string;
+  projectName: string;
+  projectType: string;
+  createdAt: string;
 }
 
 export interface Trends {
-  id: string;       
+  id: string;
   qualityGate: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
+  private readonly base = environment.apiUrl + '/dashboard';
 
-  private base = 'http://localhost:8080/api/dashboard';
-
-  /** GET /api/dashboard/{userId} */
+  private authOpts() {
+    const token = this.auth.token;
+    return token
+      ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+      : {};
+  }
   getOverview(userId: string | number): Observable<Dashboard[]> {
-    return this.http.get<Dashboard[]>(`${this.base}/${userId}`);
+    return this.http.get<Dashboard[]>(`${this.base}/${userId}`, this.authOpts());
   }
 
-  /** GET /api/dashboard/{userId}/history */
+  /** GET /api/dashboard/{userId}/history */ 
   getHistory(userId: string | number): Observable<History[]> {
-    return this.http.get<History[]>(`${this.base}/${userId}/history`);
+    return this.http.get<History[]>(`${this.base}/${userId}/history`, this.authOpts());
   }
 
   /** GET /api/dashboard/{userId}/trends */
   getTrends(userId: string | number): Observable<Trends[]> {
-    return this.http.get<Trends[]>(`${this.base}/${userId}/trends`);
+    return this.http.get<Trends[]>(`${this.base}/${userId}/trends`, this.authOpts());
   }
+}
+
+function toDashboard(value: Dashboard, index: number, array: Dashboard[]): Dashboard {
+  throw new Error('Function not implemented.');
 }

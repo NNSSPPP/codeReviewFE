@@ -1,7 +1,6 @@
 <div class="page-wrapper">
   <div class="form-card">
 
-
     <h2>{{ isEditMode ? 'Edit Repository' : 'Add Repository' }}</h2>
 
     <form #repoForm="ngForm" (ngSubmit)="onSubmit(repoForm)">
@@ -61,7 +60,6 @@
           <div class="error" *ngIf="sonarProjectKey.invalid && sonarProjectKey.touched">Project key required.</div>
         </div>
 
-        <!-- custom round checkboxes -->
         <div class="form-check">
           <input class="form-check-input custom-check" type="checkbox" id="autoScan"
                  [(ngModel)]="sonarConfig.enableAutoScan" name="enableAutoScan" checked>
@@ -75,21 +73,21 @@
         </div>
       </fieldset>
 
-     <!-- Actions -->
-<div class="actions">
-  <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
-  <button type="button" class="btn btn-warning" (click)="clearForm(repoForm)">Clear Form</button>
-  <button type="button" class="btn btn-primary" (click)="onTest()">Test Connection</button>
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-warning" (click)="clearForm(repoForm)">Clear Form</button>
+        <button type="button" class="btn btn-primary" (click)="onTest()">Test Connection</button>
 
-  <!-- ปุ่ม Delete จะโชว์เฉพาะ Edit Mode -->
-  <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger" (click)="onDelete()">
-    Delete
-  </button>
+        <!-- ปุ่ม Delete จะโชว์เฉพาะ Edit Mode -->
+        <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger" (click)="onDelete()">
+          Delete
+        </button>
 
-  <button type="submit" class="btn btn-success" [disabled]="!repoForm.valid">
-    {{ isEditMode ? 'Update' : 'Save' }}
-  </button>
-</div>
+        <button type="submit" class="btn btn-success" [disabled]="!repoForm.valid">
+          {{ isEditMode ? 'Update' : 'Save' }}
+        </button>
+      </div>
 
     </form>
   </div>

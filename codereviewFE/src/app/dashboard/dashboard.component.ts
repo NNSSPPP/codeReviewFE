@@ -2,17 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-
+import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
+import { AuthService } from '../services/authservice/auth.service';
+import { forkJoin } from 'rxjs';
+import { Component } from '@angular/core';
 
 interface Condition {
   metric: string;
-  status: 'OK' | 'WARN' | 'ERROR';
+  status: 'OK' | 'ERROR';
   actual: number;
   threshold: number;
 }
-
 interface Issue {
   id: number;
   type: string;
@@ -20,52 +20,35 @@ interface Issue {
   message: string;
   project: string;
 }
-
 interface SecurityHotspot {
   id: number;
   status: 'REVIEWED' | 'TO_REVIEW';
   description: string;
   project: string;
 }
-
 interface ScanHistory {
+  projectId: string;
   project: string;
   typeproject: 'Angular' | 'SpringBoot';
   status: 'Passed' | 'Failed';
   grade: string;
   time: string;
 }
-
 interface DashboardData {
-  qualityGate: {
-    status: 'OK' | 'ERROR';
-    conditions: Condition[];
-  };
-  metrics: {
-    bugs: number;
-    vulnerabilities: number;
-    codeSmells: number;
-    coverage: number;
-    duplications: number;
-    technicalDebt: string;
-  };
+  id: string;
+  name: string;
+  qualityGate: { status: 'OK' | 'ERROR'; conditions: Condition[]; };
+  metrics: { bugs: number; vulnerabilities: number; codeSmells: number; coverage: number; duplications: number; technicalDebt?: string; };
   issues: Issue[];
   securityHotspots: SecurityHotspot[];
   history: ScanHistory[];
   coverageHistory: number[];
   days: number[];
 }
-
 type NotificationTab = 'All' | 'Unread' | 'Scans' | 'Issues' | 'System';
-
 interface Notification {
-  noti_id: string;
-  title: string;
-  message: string;
-  icon: string;
-  type: NotificationTab;
-  timestamp: Date;
-  read: boolean;
+  title: string; message: string; icon: string; type: NotificationTab;
+  timestamp: Date; read: boolean;
 }
 
 @Component({
@@ -75,182 +58,278 @@ interface Notification {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-
-
 export class DashboardComponent {
-  constructor(private readonly router: Router) { }
+  constructor(
+    private readonly router: Router,
+    private readonly dash: DashboardService,
+    private readonly auth: AuthService
+  ) { }
 
   ngOnInit() {
+    const userId = this.auth.userId;
+    if (!userId) { this.router.navigate(['/login']); return; }
+    this.fetchFromServer(userId);
+    this.dash.getOverview(this.auth.userId || '').subscribe({
+      next: data => console.log('Dashboard overview data:', data),
+      error: err => console.error('Error fetching dashboard overview:', err)
+    });
 
-    this.loadDashboardData();
-    this.loadCoverageChart();
-    this.calculateProjectDistribution();
   }
 
-  // Mock Dashboard Data
+  loading = true;
+
   dashboardData: DashboardData = {
-    qualityGate: {
-      status: 'OK',
-      conditions: [
-        { metric: 'Coverage', status: 'WARN', actual: 78, threshold: 80 },
-        { metric: 'Bugs', status: 'OK', actual: 2, threshold: 5 },
-        { metric: 'Code Smells', status: 'ERROR', actual: 150, threshold: 100 }
-      ]
-    },
-    metrics: {
-      bugs: 2,
-      vulnerabilities: 1,
-      codeSmells: 150,
-      coverage: 78,
-      duplications: 5,
-      technicalDebt: '12d'
-    },
-    issues: [
-      { id: 1, type: 'Bug', severity: 'CRITICAL', message: 'SQL Injection vulnerability', project: 'Project A' },
-      { id: 2, type: 'Bug', severity: 'MAJOR', message: 'Memory Leak', project: 'Project B' }
-    ],
-    securityHotspots: [
-      { id: 1, status: 'TO_REVIEW', description: 'Use of weak cryptography', project: 'Project C' },
-      { id: 2, status: 'REVIEWED', description: 'Hardcoded password', project: 'Project A' }
-    ],
-    history: [
-      { project: 'Project A', typeproject: 'Angular', status: 'Passed', grade: 'A', time: '2025-08-21 12:00' },
-      { project: 'Project B', typeproject: 'SpringBoot', status: 'Passed', grade: 'B', time: '2025-08-19 15:00' },
-      { project: 'Project C', typeproject: 'Angular', status: 'Failed', grade: 'C', time: '2025-08-18 09:00' },
-      { project: 'Project D', typeproject: 'SpringBoot', status: 'Failed', grade: 'E', time: '2025-08-17 09:00' },
-      { project: 'Project E', typeproject: 'Angular', status: 'Passed', grade: 'A', time: '2025-08-20 12:00' },
-      { project: 'Project F', typeproject: 'SpringBoot', status: 'Failed', grade: 'B', time: '2025-08-15 15:00' },
-      { project: 'Project G', typeproject: 'Angular', status: 'Failed', grade: 'D', time: '2025-08-01 09:00' }
-    ],
-    coverageHistory: [70, 75, 80, 85, 90, 95, 100],
-    days: [1, 5, 10, 15, 20, 25, 30]
+    id: '',
+    name: '',
+    qualityGate: { status: 'OK', conditions: [] },
+    metrics: { bugs: 0, vulnerabilities: 0, codeSmells: 0, coverage: 0, duplications: 0, technicalDebt: '0' },
+    issues: [],
+    securityHotspots: [],
+    history: [],
+    coverageHistory: [],
+    days: []
   };
 
+  Data = { passedCount: 0, failedCount: 0 };
+
+  pieChartOptions!: ApexOptions;
+  totalProjects = 0;
+  grade = '';
+  gradePercent = 0;
+
+  coverageChartSeries: any[] = [];
+  coverageChartOptions: ApexOptions = {};
+
+  // ---------- Fetch real data ----------
+  fetchFromServer(userId: string | number) {
+    this.loading = true;
+    forkJoin({
+      overview: this.dash.getOverview(userId),
+      history: this.dash.getHistory(userId),
+      trends: this.dash.getTrends(userId),
+    }).subscribe({
+      next: ({ overview, history, trends }) => {
+        this.applyOverview(overview);
+        this.applyHistory(history);
+        this.applyTrends(trends);
+        this.calculateProjectDistribution();
+        this.loadDashboardData();
+        this.loadCoverageChart();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching dashboard data:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  // ---------- Mapping helpers ----------
+  private applyOverview(overview: any) {
+    if (!Array.isArray(overview) || overview.length === 0) return;
+
+    const list = overview.map((o: any) => {
+      const m = o?.metrics ?? {};
+      return {
+        bugs: this.asNumber(m.bugs),
+        vulnerabilities: this.asNumber(m.vulnerabilities),
+        codeSmells: this.asNumber(m.code_smells),
+        coverage: this.asNumber(m.coverage),
+        duplications: this.asNumber(m.duplicated_lines_density),
+      };
+    });
+
+    const n = list.length || 1;
+    const sum = list.reduce((a, x) => ({
+      bugs: a.bugs + x.bugs,
+      vulnerabilities: a.vulnerabilities + x.vulnerabilities,
+      codeSmells: a.codeSmells + x.codeSmells,
+      coverage: a.coverage + x.coverage,
+      duplications: a.duplications + x.duplications,
+    }), { bugs: 0, vulnerabilities: 0, codeSmells: 0, coverage: 0, duplications: 0 });
+
+    this.dashboardData.metrics = {
+      bugs: sum.bugs,
+      vulnerabilities: sum.vulnerabilities,
+      codeSmells: sum.codeSmells,
+      coverage: +(sum.coverage / n).toFixed(1),
+      duplications: +(sum.duplications / n).toFixed(1),
+      technicalDebt: this.dashboardData.metrics.technicalDebt ?? '0'
+    };
+
+    const qg: 'OK' | 'ERROR' = this.dashboardData.metrics.coverage >= 80 ? 'OK' : 'ERROR';
+    this.dashboardData.qualityGate.status = qg;
+    this.dashboardData.qualityGate.conditions = [{
+      metric: 'Coverage',
+      status: qg,
+      actual: this.dashboardData.metrics.coverage,
+      threshold: 80,
+    }];
+  }
+
+  private applyHistory(history: History[]) {
+    this.dashboardData.history = (history || []).map(h => {
+      const t = new Date(h.createdAt);
+      const typeproject = this.normalizeProjectType((h as any).projectType);
+      return {
+        projectId: (h as any).projectId,
+        project: (h as any).projectName,
+        typeproject,
+        status: (h as any).status ?? 'Passed',
+        grade: (h as any).grade ?? 'A',
+        time: t.toISOString().slice(0, 16).replace('T', ' ')
+      };
+    });
+  }
+
+  private normalizeProjectType(v?: string): 'Angular' | 'SpringBoot' {
+    const s = (v || '').toLowerCase();
+    if (s.includes('spring')) return 'SpringBoot';
+    if (s.includes('angular')) return 'Angular';
+    return 'Angular';
+  }
+
+  private normalizeQgStatus(v: any): 'Passed' | 'Failed' {
+    const s = String(v ?? '').trim().toUpperCase();
+    return s === 'OK' ? 'Passed' : 'Failed';
+  }
+
+  private applyTrends(trends: Trends[]) {
+    const t0: any = trends?.[0] || {};
+    if (Array.isArray(t0.coverageHistory)) this.dashboardData.coverageHistory = t0.coverageHistory;
+    if (Array.isArray(t0.days)) this.dashboardData.days = t0.days;
+    if (t0.qualityGate) {
+      this.dashboardData.qualityGate.status = (t0.qualityGate as any) as 'OK' | 'ERROR';
+    }
+  }
+
+  private asNumber(v: any): number {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  private normalizeRawMetrics(m: Dashboard['metrics']) {
+    return {
+      bugs: this.asNumber(m?.bugs),
+      vulnerabilities: this.asNumber(m?.vulnerabilities),
+      codeSmells: this.asNumber(m?.codeSmells),
+      coverage: this.asNumber(m?.coverage),
+      duplications: this.asNumber(m?.duplications)
+    };
+  }
+
+  private normalizeOverviewArray(raw: Dashboard[]) {
+    const perProject: DashboardData[] = (raw || []).map(o => ({
+      id: o.id,
+      name: o.name,
+      metrics: this.normalizeRawMetrics(o.metrics || ({} as any)),
+      qualityGate: { status: 'OK', conditions: [] },
+      issues: [],
+      securityHotspots: [],
+      history: [],
+      coverageHistory: [],
+      days: []
+    }));
+
+    const totalProjects = perProject.length || 1;
+    const sum = perProject.reduce((acc, p) => {
+      acc.bugs += p.metrics.bugs;
+      acc.vulnerabilities += p.metrics.vulnerabilities;
+      acc.codeSmells += p.metrics.codeSmells;
+      acc.coverage += p.metrics.coverage;
+      acc.duplications += p.metrics.duplications;
+      return acc;
+    }, { bugs: 0, vulnerabilities: 0, codeSmells: 0, coverage: 0, duplications: 0 });
+
+    const totals = {
+      bugs: sum.bugs,
+      vulnerabilities: sum.vulnerabilities,
+      codeSmells: sum.codeSmells,
+      coverage: Number((sum.coverage / totalProjects).toFixed(1)),
+      duplications: Number((sum.duplications / totalProjects).toFixed(1)),
+    };
+
+    return { perProject, totals };
+  }
+
+  private safeParse<T>(s: string): Partial<T> { try { return JSON.parse(s); } catch { return {}; } }
+  private toNum(v: any): number { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+
+  // ---------- Notifications ----------
   showNotifications = false;
   isMobile = false;
   activeTab: NotificationTab = 'All';
   displayCount = 5;
 
-  getTimeAgo(timestamp: Date): string {
-    const now = new Date();
-    const diff = now.getTime() - timestamp.getTime(); // millisecond
-
-    const minutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    if (minutes < 1) return 'Just now';
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    return `${days}d ago`;
-  }
-
-
   notifications: Notification[] = [
-    { noti_id: '1',title: '1.New Scan Completed', message: 'Scan #123 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-09-30T10:00:00'), read: false },
-    { noti_id: '2',title: '2.System Update', message: 'Update v1.2 deployed.', icon: '⚙️', type: 'System', timestamp: new Date('2025-09-29T09:00:00'), read: false },
-    { noti_id: '3',title: '3.Error Detected', message: 'Server error reported.', icon: '❌', type: 'Issues', timestamp: new Date('2025-09-30T11:00:00'), read: true },
-    { noti_id: '4',title: '4.New Issue', message: 'Issue #456 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-09-25T10:00:00'), read: false },
-    { noti_id: '5',title: '5.Backup Done', message: 'Daily backup completed.', icon: '💾', type: 'System', timestamp: new Date('2025-08-25T11:00:00'), read: true },
-    { noti_id: '6',title: '6.Security Alert', message: 'Login from new device.', icon: '🔒', type: 'System', timestamp: new Date('2025-07-26T10:00:00'), read: false },
-    { noti_id: '7',title: '7.Scan #124 Completed', message: 'Scan #124 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T12:00:00'), read: false },
-    { noti_id: '8',title: '8.New Issue', message: 'Issue #457 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-26T08:00:00'), read: false }
+    { title: '1.New Scan Completed', message: 'Scan #123 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T10:00:00'), read: false },
+    { title: '2.System Update', message: 'Update v1.2 deployed.', icon: '⚙️', type: 'System', timestamp: new Date('2025-08-26T09:00:00'), read: false },
+    { title: '3.Error Detected', message: 'Server error reported.', icon: '❌', type: 'Issues', timestamp: new Date('2025-08-26T11:00:00'), read: true },
+    { title: '4.New Issue', message: 'Issue #456 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-25T10:00:00'), read: false },
+    { title: '5.Backup Done', message: 'Daily backup completed.', icon: '💾', type: 'System', timestamp: new Date('2025-08-25T11:00:00'), read: true },
+    { title: '6.Security Alert', message: 'Login from new device.', icon: '🔒', type: 'System', timestamp: new Date('2025-07-26T10:00:00'), read: false },
+    { title: '7.Scan #124 Completed', message: 'Scan #124 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T12:00:00'), read: false },
+    { title: '8.New Issue', message: 'Issue #457 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-26T08:00:00'), read: false }
   ];
 
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-  }
-  closeNotifications() {
-    this.showNotifications = false;
-  }
-
-  markAllRead() {
-    this.notifications.forEach(n => n.read = true);
-    this.displayCount = Math.min(this.displayCount, this.totalFilteredCount);
-  }
-  
-
-  selectTab(tab: NotificationTab) {
-    this.activeTab = tab;
-    this.displayCount = 5;
+  getTimeAgo(value: Date | string | number): string {
+    const t = value instanceof Date ? value.getTime() : new Date(value).getTime();
+    if (Number.isNaN(t)) return 'Just now';
+    let diffSec = Math.floor((Date.now() - t) / 1000);
+    if (diffSec < 0) diffSec = 0;
+    const m = Math.floor(diffSec / 60), h = Math.floor(diffSec / 3600), d = Math.floor(diffSec / 86400);
+    if (m < 1) return 'Just now';
+    if (m < 60) return `${m}m ago`;
+    if (h < 24) return `${h}h ago`;
+    return `${d}d ago`;
   }
 
+  toggleNotifications() { this.showNotifications = !this.showNotifications; }
+  closeNotifications() { this.showNotifications = false; }
+  markAllRead() { this.notifications.forEach(n => n.read = true); }
+  selectTab(tab: NotificationTab) { this.activeTab = tab; this.displayCount = 5; }
+
+  /** ✅ ฟังก์ชันที่ขาดไปในเทมเพลต */
+  viewNotification(n: Notification) {
+    n.read = true;
+    // ถ้าต้องการ route ต่อจากชนิดแจ้งเตือน ทำแบบนี้ได้:
+    // if (n.type === 'Issues') this.router.navigate(['/issue']);
+    // else if (n.type === 'Scans') this.router.navigate(['/scanhistory']);
+    // ปัจจุบัน: แค่ mark read และคง panel ไว้
+  }
 
   get filteredNotifications() {
     let filtered = this.notifications;
-
     if (this.activeTab === 'Unread') filtered = filtered.filter(n => !n.read);
     else if (this.activeTab !== 'All') filtered = filtered.filter(n => n.type === this.activeTab);
-
     filtered = filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-
     return filtered.slice(0, this.displayCount);
   }
-
-
-  get unreadCount() {
-    return this.notifications.filter(n => !n.read).length;
-  }
-
-
-  viewNotification(n: Notification) {
-    // 1. ทำเครื่องหมายว่าอ่านแล้ว
-    n.read = true;
-  
-    // 2. แสดงเนื้อหา notification แบบ modal หรือ alert
-    alert(`${n.title}\n\n${n.message}\n\nTime: ${n.timestamp.toLocaleString()}`);
-  
-    // 3. รีเฟรช list โดยเฉพาะถ้า tab เป็น Unread
-    if (this.activeTab === 'Unread') {
-      this.displayCount = Math.min(this.displayCount, this.totalFilteredCount);
-    }
-  }
-  
-  
-
-  loadMore() {
-    this.displayCount += 5;
-  }
-
+  get unreadCount() { return this.notifications.filter(n => !n.read).length; }
+  loadMore() { this.displayCount += 5; }
   get totalFilteredCount() {
     if (this.activeTab === 'All') return this.notifications.length;
     if (this.activeTab === 'Unread') return this.notifications.filter(n => !n.read).length;
     return this.notifications.filter(n => n.type === this.activeTab).length;
   }
 
-
-
-
-
-  get latestScans(): ScanHistory[] {
-    return [...this.dashboardData.history]
-      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-      .slice(0, 5);
-  }
-
+  // ---------- Calculations / Charts ----------
   projectDistribution: { type: string, count: number, percent: number }[] = [];
-
 
   calculateProjectDistribution() {
     const typeCounts: Record<string, number> = {};
-    const total = this.dashboardData.history.length;
-
-    this.dashboardData.history.forEach(h => {
-      if (typeCounts[h.typeproject]) typeCounts[h.typeproject]++;
-      else typeCounts[h.typeproject] = 1;
-    });
-
+    const total = this.dashboardData.history.length || 1;
+    this.dashboardData.history.forEach(h => { typeCounts[h.typeproject] = (typeCounts[h.typeproject] || 0) + 1; });
     this.projectDistribution = Object.entries(typeCounts).map(([type, count]) => ({
-      type,
-      count,
-      percent: Math.round((count / total) * 100)
+      type, count, percent: Math.round((count / total) * 100)
     }));
   }
 
-
-
-  onRefresh() {
-    console.log('Refreshing dashboard...');
+  private recomputeStatusCountsFromHistory() {
+    const passed = this.dashboardData.history.filter(h => h.status === 'Passed').length;
+    const failed = this.dashboardData.history.filter(h => h.status === 'Failed').length;
+    this.Data = { passedCount: passed, failedCount: failed };
+    this.totalProjects = passed + failed;
   }
 
   onExport() {
@@ -404,32 +483,42 @@ export class DashboardComponent {
     else if (passPercent >= 0.4) this.grade = 'E';
     else this.grade = 'F';
 
-    this.gradePercent = Math.round(passPercent * 100);
+    let passPercent: number;
+    if (this.totalProjects > 0) {
+      passPercent = this.Data.passedCount / this.totalProjects;
+    } else {
+      passPercent = Math.max(0, Math.min(1, (this.dashboardData.metrics.coverage || 0) / 100));
+    }
 
-    const gradePercentSeries = this.gradePercent; // % ของเกรด
-    const remainingPercent = 100 - this.gradePercent; // ส่วนที่เหลือ
+    this.grade =
+      passPercent >= 0.8 ? 'A' :
+        passPercent >= 0.7 ? 'B' :
+          passPercent >= 0.6 ? 'C' :
+            passPercent >= 0.5 ? 'D' :
+              passPercent >= 0.4 ? 'E' : 'F';
+
+    this.gradePercent = Math.round(passPercent * 100);
+    const gradePercentSeries = this.gradePercent;
+    const remainingPercent = 100 - this.gradePercent;
 
     this.pieChartOptions = {
       chart: { type: 'donut', height: 300 },
       series: [gradePercentSeries, remainingPercent],
-      labels: ['', ''], // ปิด label segment
-      colors: [this.getGradeColor(this.grade), '#E5E7EB'], // สีเกรด + สีเทา
-      
+      labels: ['', ''],
+      colors: [this.getGradeColor(this.grade), '#E5E7EB'],
       plotOptions: {
         pie: {
           donut: {
             labels: {
               show: true,
-              value: {                       // ✅ เพิ่มส่วนนี้
-                color: 'var(--text-main)',   // เปลี่ยนสีของ 83%
-              },
+              value: { color: 'var(--text-main)' },
               total: {
                 show: true,
                 showAlways: true,
-                label: this.grade, // ตัวอักษรเกรด
+                label: this.grade,
                 fontSize: '24px',
                 color: 'var(--text-main)',
-                formatter: () => this.gradePercent + '%' // ตัวเลข %
+                formatter: () => this.gradePercent + '%'
               }
             }
           }
@@ -442,40 +531,34 @@ export class DashboardComponent {
     this.loading = false;
   }
 
-  coverageChartSeries: any[] = [];
-  coverageChartOptions: ApexOptions = {};
-
-
   loadCoverageChart() {
-    this.coverageChartSeries = [
-      {
-        name: 'Coverage',
-        data: this.dashboardData.coverageHistory
-      }
-    ];
+    const data = this.dashboardData.coverageHistory?.length
+      ? this.dashboardData.coverageHistory
+      : [this.dashboardData.metrics.coverage];
+    const cats = (this.dashboardData.days?.length === data.length && this.dashboardData.days.length)
+      ? this.dashboardData.days
+      : data.map((_, i) => i + 1);
 
+    this.coverageChartSeries = [{ name: 'Coverage', data }];
     this.coverageChartOptions = {
-      chart: {
-        type: 'line',
-        height: 200,
-        foreColor: 'var(--apexcharts-text)'
-      },
-      stroke: {
-        curve: 'smooth',
-        width: 3
-      },
-      markers: {
-        size: 4
-      },
+      chart: { type: 'line', height: 200, foreColor: 'var(--apexcharts-text)' },
+      stroke: { curve: 'smooth', width: 3 },
+      markers: { size: 4 },
       colors: ['#2563eb'],
-      xaxis: {
-        categories: this.dashboardData.days
-      },
-      yaxis: {
-        labels: {
-          formatter: (val) => val + '%'
-        }
-      }
+      xaxis: { categories: cats },
+      yaxis: { labels: { formatter: (val) => val + '%' } }
     };
   }
+
+  // ---------- Misc ----------
+  get latestScans(): ScanHistory[] {
+    return [...this.dashboardData.history]
+      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+      .slice(0, 5);
+  }
+
+  onRefresh() { this.fetchFromServer(this.auth.userId!); }
+  onExport() { console.log('Exporting data...'); }
+  onLogout() { this.router.navigate(['/']); }
 }
+

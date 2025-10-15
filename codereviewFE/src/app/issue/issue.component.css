@@ -1,267 +1,297 @@
-.issues-header {
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  background-color: var(--bg-panel);
-  padding: 12px 16px;
-  margin-bottom: 16px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.issues-header h2 {
-  margin: 0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--dashboard-title-color);
-}
-
-
+/* ============================================
+   ISSUES MANAGEMENT PAGE STYLE (CLEAN VERSION)
+   ============================================ */
 
 /* ===============================
-   Custom Button
+   Container + Header
    =============================== */
-   :host ::ng-deep .issues-container .custom-btn {
+   .issues-container {
+    background: transparent;
+    padding: 16px 20px;
+    border-radius: 12px;
+    transition: background-color 0.35s ease;
+  }
+  
+  .issues-header {
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    background-color: var(--bg-panel);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .issues-header h2 {
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--dashboard-title-color);
+  }
+  
+  /* ===============================
+     Custom Button
+     =============================== */
+  .issues-header .custom-btn,
+  :host ::ng-deep .issues-container .custom-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 20px;
-    background-color: #FFC107; /* สีเหลืองเข้ม */
-    color: #1A1A1A; /* ข้อความเข้ม */
+    padding: 10px 18px;
+    background-color: #ffc107;
+    color: #1a1a1a;
     font-weight: 500;
     border-radius: 8px;
     text-decoration: none;
     transition: background-color 0.3s, transform 0.2s;
+    white-space: nowrap;
   }
-  :host ::ng-deep .issues-container .custom-btn:hover {
-    background-color: #FFB300; /* เหลืองเข้มขึ้น */
+  
+  .custom-btn:hover {
+    background-color: #ffb300;
     transform: scale(1.05);
   }
   
   /* ===============================
-     Table Base Style
+     Filters
      =============================== */
-  :host ::ng-deep .issues-container .table {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transition: box-shadow 0.3s ease;
-  }
-  :host ::ng-deep .issues-container .table:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  :host ::ng-deep .issues-container .table thead th {
-    background-color: #f9fafb;
-    font-weight: 600;
-    color: #374151;
-  }
-  :host ::ng-deep .issues-container .table td,
-  :host ::ng-deep .issues-container .table th {
-    vertical-align: middle;
-    padding: 12px;
-    transition: background-color 0.25s ease;
-  }
-  :host ::ng-deep .issues-container .table tbody tr:hover {
-    background-color: #f3f4f6;
-  }
-  :host ::ng-deep .issues-container .table tbody tr:nth-child(even) {
-    background-color: #fafafa;
-  }
-  :host ::ng-deep .issues-container .table tbody tr {
-    border-bottom: 1px solid #f0f0f0;
+  .issues-container .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
   }
   
-  /* ===============================
-     Icons in Table
-     =============================== */
-  :host ::ng-deep .issues-container .table td i.bi {
-    margin-right: 5px;
-    font-size: 1.1rem;
-    transition: transform 0.25s ease;
-  }
-  :host ::ng-deep .issues-container .table td:hover i.bi {
-    transform: scale(1.15);
-  }
-  
-  /* ===============================
-     Filters (select/input)
-     =============================== */
-  :host ::ng-deep .issues-container .filters select,
-  :host ::ng-deep .issues-container .filters input,
-  :host ::ng-deep .issues-container .form-select,
-  :host ::ng-deep .issues-container .form-control {
-    min-width: 150px;
+  .issues-container .filters select,
+  .issues-container .filters input {
+    min-width: 140px;
     border-radius: 8px;
     border: 1px solid #d1d5db;
+    padding: 6px 10px;
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
-  :host ::ng-deep .issues-container .filters select:focus,
-  :host ::ng-deep .issues-container .filters input:focus,
-  :host ::ng-deep .issues-container .form-select:focus,
-  :host ::ng-deep .issues-container .form-control:focus {
+  
+  .issues-container .filters select:focus,
+  .issues-container .filters input:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     outline: none;
   }
   
   /* ===============================
+     Table
+     =============================== */
+  .issues-container .table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .issues-container .table:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .issues-container .table th {
+    background-color: var(--table-header-bg);
+    font-weight: 600;
+    color: var(--table-header-text);
+    text-align: center;
+  }
+  
+  .issues-container .table td,
+  .issues-container .table th {
+    vertical-align: middle;
+    padding: 12px;
+    transition: background-color 0.25s ease;
+  }
+  
+  .issues-container .table tbody tr:hover {
+    background-color: var(--table-header-bg2);
+  }
+  
+  .issues-container .table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  .issues-container .table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    opacity: 0;
+    transform: translateY(5px);
+    animation: fadeInRow 0.4s ease forwards;
+  }
+  
+  .issues-container .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+  .issues-container .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+  .issues-container .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+  .issues-container .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+  
+  @keyframes fadeInRow {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* ===============================
      Buttons
      =============================== */
-  :host ::ng-deep .issues-container .btn {
+  .issues-container .btn {
     border-radius: 8px;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: transform 0.25s ease,
-                box-shadow 0.25s ease,
-                background-color 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
-  :host ::ng-deep .issues-container .btn i {
-    transition: transform 0.25s ease;
-  }
-  :host ::ng-deep .issues-container .btn:hover i {
-    transform: translateX(2px);
-  }
-  :host ::ng-deep .issues-container .btn:hover {
+  
+  .issues-container .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   }
-  :host ::ng-deep .issues-container .btn:active {
+  
+  .issues-container .btn:active {
     transform: translateY(0);
     box-shadow: none;
   }
-  :host ::ng-deep .issues-container .btn-big {
-    font-size: 1.1rem;
-    padding: 0.6rem 1.2rem;
+  
+  .issues-container .btn-big {
+    font-size: 1rem;
+    padding: 0.55rem 1.1rem;
     border-radius: 10px;
   }
   
   /* Button Colors */
-  :host ::ng-deep .issues-container .btn-primary {
+  .btn-primary {
     background: linear-gradient(90deg, #2563eb, #1d4ed8);
     border: none;
+    color: #fff;
   }
-  :host ::ng-deep .issues-container .btn-primary:hover {
-    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
-  }
-  :host ::ng-deep .issues-container .btn-secondary {
+  .btn-secondary {
     background-color: #e5e7eb;
     border: none;
     color: #374151;
   }
-  :host ::ng-deep .issues-container .btn-secondary:hover {
-    box-shadow: 0 0 8px rgba(107, 114, 128, 0.4);
-  }
-  :host ::ng-deep .issues-container .btn-success {
+  .btn-success {
     background-color: #10b981;
     border: none;
-  }
-  :host ::ng-deep .issues-container .btn-success:hover {
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-  }
-  :host ::ng-deep .issues-container .btn-outline-primary {
-    border: 1px solid #2563eb;
-    color: #2563eb;
-  }
-  :host ::ng-deep .issues-container .btn-outline-primary:hover {
-    background-color: #2563eb;
     color: #fff;
   }
-  :host ::ng-deep .issues-container .btn-info {
-    background-color: #95cbf0;
-    border: 1px solid #7dd3fc;
-    color: #0369a1;
-  }
-  :host ::ng-deep .issues-container .btn-info:hover {
-    background-color: #bae6fd;
-    border-color: #0284c7;
-    color: #075985;
-  }
+  .btn-outline-primary {
+  border: 1px solid #A5D8FF;   /* ฟ้าอ่อน */
+  color: #007BFF;              /* ฟ้าน้ำเงินนิด ๆ */
+  background: #fff;
+}
+.btn-outline-primary:hover {
+  background-color: #74C0FC;   /* ฟ้าอ่อนขึ้นตอน hover */
+  border-color: #74C0FC;
+  color: #fff;
+}
+/* ===============================
+   Custom "View" Button (Light Blue Soft)
+   =============================== */
+:host ::ng-deep .issues-container .btn-info {
+  background-color: #A5D8FF !important;   /* ฟ้าอ่อน */
+  border: 1px solid #74C0FC !important;   /* ฟ้ากลาง */
+  color: #004C64 !important;              /* ฟ้าน้ำทะเลเข้ม */
+  transition: all 0.25s ease;
+}
+
+:host ::ng-deep .issues-container .btn-info:hover {
+  background-color: #74C0FC !important;   /* ฟ้าเข้มขึ้นเล็กน้อย */
+  border-color: #4EA8DE !important;
+  color: #ffffff !important;
+}
+
+
   
   /* ===============================
-     Checkbox
+     Pagination
      =============================== */
-  :host ::ng-deep .issues-container input[type="checkbox"] {
-    accent-color: #2563eb;
-    transform: scale(1.1);
-    transition: transform 0.2s ease;
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 16px 0;
   }
-  :host ::ng-deep .issues-container input[type="checkbox"]:checked {
-    transform: scale(1.2);
+  
+  .page-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid #2563eb;
+    background-color: #fff;
+    color: #2563eb;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  
+  .page-btn:hover,
+  .page-btn.active {
+    background-color: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  
+  .page-btn.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  
+  .page-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
   }
   
   /* ===============================
      Footer
      =============================== */
-  :host ::ng-deep .issues-container footer,
-  :host ::ng-deep .issues-container .d-flex.my-3 {
+  .issues-container footer,
+  .issues-container .d-flex.my-3 {
     border-top: 1px solid #e5e7eb;
     padding-top: 12px;
     margin-top: 20px;
   }
   
   /* ===============================
-     Row Animation
+     Dark Mode
      =============================== */
-  :host ::ng-deep .issues-container .table tbody tr {
-    opacity: 0;
-    transform: translateY(5px);
-    animation: fadeInRow 0.4s ease forwards;
-  }
-  :host ::ng-deep .issues-container .table tbody tr:nth-child(1) { animation-delay: 0.05s; }
-  :host ::ng-deep .issues-container .table tbody tr:nth-child(2) { animation-delay: 0.1s; }
-  :host ::ng-deep .issues-container .table tbody tr:nth-child(3) { animation-delay: 0.15s; }
-  :host ::ng-deep .issues-container .table tbody tr:nth-child(4) { animation-delay: 0.2s; }
-  @keyframes fadeInRow {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  :host-context(body.dark-mode) .issues-container .table {
+    background-color: var(--bg-card);
+    border-color: var(--card-border);
   }
   
-  /* ===============================
-     Dark Mode (Issues Page)
-     =============================== */
-  :host-context(body.dark-mode) .issues-container table {
-    background-color: var(--bg-card) !important;
-    border-color: var(--card-border) !important;
-    color: #ffffff !important; /* ค่าเริ่มต้นข้อความใน dark mode */
-  }
   :host-context(body.dark-mode) .issues-container th {
-    background-color: var(--table-header-bg) !important;
-    color: #ffffff !important;
+    background-color: var(--table-header-bg);
+    color: #fff;
   }
+  
   :host-context(body.dark-mode) .issues-container td {
-    background-color: var(--bg-card) !important;
-    border-color: var(--card-border) !important;
-    color: #ffffff !important; /* ทำให้ตัวหนังสือหลักเป็นสีขาว */
+    background-color: var(--bg-card);
+    color: #fff;
   }
-  :host-context(body.dark-mode) .issues-container tr:nth-of-type(odd) {
-    background-color: var(--bg-panel) !important;
-  }
+  
   :host-context(body.dark-mode) .issues-container tr:hover {
     background-color: var(--table-header-bg2) !important;
   }
   
-  /* ===============================
-     Severity/Status Colors (ไม่ถูก override)
-     =============================== */
-  :host-context(body.dark-mode) .issues-container td.text-danger {
-    color: #ef4444 !important; /* แดง */
-  }
-  :host-context(body.dark-mode) .issues-container td.text-warning {
-    color: #f59e0b !important; /* เหลือง */
-  }
-  :host-context(body.dark-mode) .issues-container td.text-success {
-    color: #10b981 !important; /* เขียว */
-  }
-  :host-context(body.dark-mode) .issues-container td.text-primary {
-    color: #2563eb !important; /* น้ำเงิน */
-  }
+  :host-context(body.dark-mode) .issues-container td.text-danger { color: #ef4444 !important; }
+  :host-context(body.dark-mode) .issues-container td.text-warning { color: #f59e0b !important; }
+  :host-context(body.dark-mode) .issues-container td.text-success { color: #10b981 !important; }
+  :host-context(body.dark-mode) .issues-container td.text-primary { color: #2563eb !important; }
+  
   :host-context(body.dark-mode) .issues-container .btn-outline-primary {
     background-color: #2563eb;
     color: #fff;
@@ -270,119 +300,168 @@
   :host-context(body.dark-mode) .issues-container .btn-outline-primary:hover {
     background-color: #1d4ed8;
   }
-  :host-context(body.dark-mode) .issues-container .table td small,
-:host-context(body.dark-mode) .issues-container .table td .text-muted {
-  color: #9ca3af !important; /* เทาอ่อน */
-}
-/* ===============================
-   Tablet Responsive (768px–1024px)
-   =============================== */
-   @media (max-width: 1024px) and (min-width: 768px) {
-    /* Container */
-    :host ::ng-deep .issues-container {
-      padding: 12px 14px;
-    }
   
-    /* Table cells */
-    :host ::ng-deep .issues-container .table th,
-    :host ::ng-deep .issues-container .table td {
+  /* ===============================
+     Responsive (Tablet & Mobile)
+     =============================== */
+  @media (max-width: 1024px) and (min-width: 768px) {
+    .issues-container { padding: 12px 14px; }
+  
+    .issues-container .table th,
+    .issues-container .table td {
       padding: 8px;
       font-size: 14px;
     }
   
-    /* Filter row: input + select */
-    :host ::ng-deep .issues-container .filters select,
-    :host ::ng-deep .issues-container .filters input,
-    :host ::ng-deep .issues-container .form-select,
-    :host ::ng-deep .issues-container .form-control {
+    .issues-container .filters select,
+    .issues-container .filters input {
       min-width: 120px;
       font-size: 14px;
       padding: 5px 8px;
     }
   
-    /* Custom Button */
-    :host ::ng-deep .issues-container .custom-btn {
+    .custom-btn {
       padding: 8px 14px;
       font-size: 14px;
     }
   
-    /* Normal buttons */
-    :host ::ng-deep .issues-container .btn {
+    .issues-container .btn {
       font-size: 13px;
       padding: 6px 10px;
       gap: 4px;
     }
   
-    /* Pagination (ถ้ามี) */
-    :host ::ng-deep .issues-container .pagination .page-link {
+    .pagination .page-link {
       padding: 4px 8px;
       font-size: 13px;
     }
   }
-  /* ===============================
-   Mobile Responsive (320px–768px)
-   =============================== */
-@media (max-width: 768px) {
-  /* Container */
-  :host ::ng-deep .issues-container {
-    flex-wrap: nowrap;
-  }
-
-  /* Header (หัวข้อ + ปุ่ม) */
-  .issues-header {
-    flex-wrap: wrap;              /* ถ้าแคบ ให้ขึ้นบรรทัดใหม่ */
-    gap: 8px;
-  }
-  .issues-header h2 {
-    font-size: 16px;
-  }
-
-  /* ปุ่ม My Assignment */
-  :host ::ng-deep .issues-container .custom-btn {
-    padding: 6px 12px;
-    font-size: 13px;
-    white-space: nowrap;
-    margin-left: auto; 
-  }
-
-  /* Filter */
-  :host ::ng-deep .issues-container .filters {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  :host ::ng-deep .issues-container .filters select,
-  :host ::ng-deep .issues-container .filters input {
-    min-width: 100px;
-    font-size: 13px;
-    padding: 5px 8px;
-  }
-
-  /* Table */
-  :host ::ng-deep .issues-container .table th,
-  :host ::ng-deep .issues-container .table td {
-    padding: 6px;
-    font-size: 13px;
-  }
-  :host ::ng-deep .issues-container .table {
-    font-size: 13px;
-  }
-}
-/* ปรับ container ของ filters ไม่ให้บีบ dropdown */
-:host ::ng-deep .issues-container .filters {
-  flex-wrap: wrap;
-  gap: 6px;
-  overflow: visible;     
-  position: relative;    
-  z-index: 1;
-}
-
-/* สำหรับ select เอง */
-:host ::ng-deep .issues-container .filters select {
-  min-width: 120px;      
-  max-width: 100%;       
-}
-
-
   
+  @media (max-width: 768px) {
+    .issues-header h2 { font-size: 16px; }
+  
+    .custom-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+      margin-left: auto;
+    }
+  
+    .issues-container .table th,
+    .issues-container .table td {
+      padding: 6px;
+      font-size: 13px;
+    }
+  
+    .issues-container .table {
+      overflow: visible !important;
+      border-radius: 10px;
+    }
+  }
+  
+  /* ===============================
+     Sticky Column (View)
+     =============================== */
+  @media (max-width: 768px) {
+    :host ::ng-deep .issues-table .sticky-col {
+      border-left: 1px solid var(--card-border);
+      position: sticky;
+      right: -1px;
+      background: #fff;
+      z-index: 3;
+    }
+  
+    :host ::ng-deep .issues-table tbody td.sticky-col::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: #f0f0f0;
+      pointer-events: none;
+    }
+  
+    :host ::ng-deep .issues-table tbody tr:last-child td.sticky-col::before {
+      display: none;
+    }
+  
+    :host ::ng-deep .issues-table thead th.sticky-col {
+      border-left: 1px solid var(--card-border);
+      position: sticky;
+    }
+  
+    :host ::ng-deep .issues-table thead th.sticky-col::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: #eef1f5;
+      pointer-events: none;
+    }
+  
+    :host-context(body.dark-mode) .issues-table tbody td.sticky-col::before,
+    :host-context(body.dark-mode) .issues-table thead th.sticky-col::before {
+      background: var(--card-border);
+      opacity: .7;
+    }
+  }
+  
+  
+/* ===== Pagination: ให้เหมือนภาพ (Prev เทา ghost, Next น้ำเงิน, label ขาว) ===== */
+:host-context(body.dark-mode) .pagination .page-label {
+  color:#fff;
+  font-weight:600;
+}
 
-    
+:host-context(body.dark-mode) .pagination .page-btn {
+  width:48px;height:48px;border-radius:16px;
+  background:#1f2937;            /* เทาเข้ม */
+  border:1px solid #111827;
+  color:#9ca3af;                  /* ไอคอนเทาอ่อน */
+  transition:background-color .25s,color .25s,transform .2s;
+}
+:host-context(body.dark-mode) .pagination .page-btn:hover {
+  background:#374151; color:#e5e7eb; transform:translateY(-2px);
+}
+
+/* Prev = ghost/มืด */
+:host-context(body.dark-mode) .pagination .page-btn:first-child {
+  background:#111827; border-color:#262a33; color:#6b7280;
+}
+/* Disabled look ที่ยังเห็นลูกศร */
+:host-context(body.dark-mode) .pagination .page-btn.disabled {
+  opacity:1; pointer-events:none; transform:none; box-shadow:none;
+  background:#111827; border-color:#262a33; color:#4b5563;
+}
+
+/* Next = ปุ่ม primary น้ำเงิน */
+:host-context(body.dark-mode) .pagination .page-btn:last-child {
+  background:#2563eb; border-color:#2563eb; color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.35);
+}
+:host-context(body.dark-mode) .pagination .page-btn:last-child:hover {
+  background:#1d4ed8; border-color:#1d4ed8; color:#fff; transform:translateY(-2px);
+}
+/* เผื่อมี .active กับปุ่มเลขหน้า */
+:host-context(body.dark-mode) .pagination .page-btn.active {
+  background:#2563eb; border-color:#2563eb; color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.35);
+}
+
+/* Fix muted text on dark mode (e.g., "Line 245 in UserService.java") */
+:host-context(body.dark-mode) .issues-container .text-muted,
+:host-context(body.dark-mode) .issues-container small,
+:host-context(body.dark-mode) .issues-table .text-muted {
+  color: #cbd5e1 !important;   /* slate-300: อ่านง่ายบนพื้นมืด */
+  opacity: 0.95;               /* ลดซีด */
+}
+
+/* เผื่อข้อความใน modal/log pane */
+:host-context(body.dark-mode) .modal-body-custom .text-muted,
+:host-context(body.dark-mode) .modal-body-custom small {
+  color: #cbd5e1 !important;
+  opacity: 0.95;
+}
+
+/* ให้ไอคอน bootstrap (.bi) ในบรรทัดนั้นรับสีตามตัวอักษร */
+.issues-container .bi { color: currentColor; }

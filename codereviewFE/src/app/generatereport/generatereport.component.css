@@ -362,3 +362,83 @@ button.loading::after {
   background-color: #2563eb !important;  /* พื้นหลัง checkbox น้ำเงิน */
   border: 1px solid #1e40af !important;  /* กรอบน้ำเงินเข้ม */
 }
+/* ===============================
+   Responsive Design (Mobile Support)
+   =============================== */
+
+/* จอเล็กกว่า 768px (มือถือแนวตั้ง) */
+@media (max-width: 768px) {
+
+  .report-wrapper {
+    margin: 15px;
+    padding: 0;
+  }
+
+  .report-box {
+    padding: 16px 18px;
+  }
+
+  /* Date Range – จัดเรียงแนวตั้งแทนแนวนอน */
+  .report-section input[type="date"] {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Checkbox Group */
+  .checkbox-group label,
+  .form-check-label {
+    font-size: 0.9rem;
+  }
+
+  /* ปรับปุ่มให้เต็มความกว้าง */
+  .report-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .report-actions button {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  /* ช่อง Email */
+  input[type="email"] {
+    max-width: 100%;
+  }
+
+  /* ส่วนหัว */
+  .report-title,
+  .report-container h2 {
+    font-size: 1.2rem;
+    padding: 12px 14px;
+  }
+}
+
+/* จอเล็กกว่า 480px (มือถือขนาดเล็ก) */
+@media (max-width: 480px) {
+
+  .report-box {
+    padding: 14px;
+  }
+
+  .report-section label {
+    font-size: 0.9rem;
+  }
+
+  .report-actions button {
+    padding: 10px 0;
+    font-size: 0.95rem;
+  }
+
+  input[type="date"],
+  input[type="email"],
+  select {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+  .form-check-label {
+    font-size: 0.85rem;
+  }
+}
