@@ -11,7 +11,7 @@ import { AuthService } from '../services/authservice/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule],
   templateUrl: './addrepository.component.html',
-  styleUrl: './addrepository.component.css'
+  styleUrls: ['./addrepository.component.css'] // <- แก้จาก styleUrl เป็น styleUrls
 })
 export class AddrepositoryComponent implements OnInit {
 
@@ -110,6 +110,7 @@ export class AddrepositoryComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     if (form.valid) {
+      const payload = this.gitRepository;
       if (this.isEditMode) {
         this.repositoryService.updateRepo(this.gitRepository.projectId!, this.gitRepository)
           .subscribe({
@@ -179,7 +180,6 @@ export class AddrepositoryComponent implements OnInit {
         });
         this.router.navigate(['/repositories']);
       });
-      
     }
   }
 

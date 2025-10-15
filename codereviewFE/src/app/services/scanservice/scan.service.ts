@@ -3,22 +3,30 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { AuthService } from '../authservice/auth.service';
 
-
 export type ScanStatus = 'Active' | 'Scanning' | 'Error' | 'Cancelled';
 export type YN = 'Y' | 'N';
 
 export interface Scan {
+
   scanId: string;            // UUID
   projectId: string;          // UUID
   qualityGate?: string;
-  status: 'Active' | 'Scanning' |'Error' ;
   startedAt?: Date;
   completedAt?: Date;
+  status: ScanStatus;
   reliabilityGate?: string;
   securityGate?: string;
   maintainabilityGate?: string;
-  securityReviewGate?: string;
-  metrics?: Record<string, any>;
+  securityReviewGate?: string; 
+  coverageGate?: YN;
+  duplicationGate?: YN;
+  // metrics?: Record<string, number>;
+  metrics?: {
+    coverage?: number;
+    bugs?: number;
+    vulnerabilities?: number;
+  };
+
 
   log_file_path?: string;
 

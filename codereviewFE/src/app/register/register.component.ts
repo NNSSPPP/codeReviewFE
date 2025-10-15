@@ -65,7 +65,7 @@ export class RegisterComponent {
 
   onSubmit(form: NgForm) {
   
-    this.submitted = true; // ให้ UI แสดง validation ทันทีตอนกด
+    this.submitted = true; 
 
     if (form.invalid || this.passwordsMismatch) {
       this.snack.open('Registration failed', '', {
@@ -114,7 +114,6 @@ export class RegisterComponent {
           if (msg.includes('username')) form.controls['username']?.setErrors({ ...(form.controls['username']?.errors || {}), duplicate: true });
           if (msg.includes('email')) form.controls['email']?.setErrors({ ...(form.controls['email']?.errors || {}), duplicate: true });
           if (msg.includes('phone')) form.controls['phoneNumber']?.setErrors({ ...(form.controls['phoneNumber']?.errors || {}), duplicate: true });
-          return;
         }
         this.snack.open('Registration failed', '', {
           duration: 2500,

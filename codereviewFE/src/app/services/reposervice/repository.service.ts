@@ -14,11 +14,11 @@ export interface Repository {
   projectType?: 'Angular' | 'Spring Boot';
   branch?: string;
   sonarProjectKey?: string;
-  createdAt?: Date;   
-  updatedAt?: Date;   
+  createdAt?: Date;
+  updatedAt?: Date;
 
   scans?: Scan[];
-  status?: 'Active' | 'Scanning' | 'Error' ;
+  status?: 'Active' | 'Scanning' | 'Error';
   lastScan?: Date;
   scanningProgress?: number;
   qualityGate?: string;
@@ -83,7 +83,7 @@ export class RepositoryService {
       map(r => ({
         ...r,
         createdAt: r.createdAt ? new Date(r.createdAt) : undefined,
-      updatedAt: r.updatedAt ? new Date(r.updatedAt) : undefined,
+        updatedAt: r.updatedAt ? new Date(r.updatedAt) : undefined,
         userId: (r as any).userId || (r as any).user_id
       }))
     );
@@ -111,12 +111,12 @@ export class RepositoryService {
 
   testGitHubConnection(repositoryUrl: string): Observable<boolean> {
     if (!repositoryUrl) return of(false);
-  
+
     // ตัด .git ออกหากมี เพื่อให้เรียกผ่าน browser ได้
     const cleanUrl = repositoryUrl.endsWith('.git')
       ? repositoryUrl.replace(/\.git$/, '')
       : repositoryUrl;
-  
+
     return this.http.get(cleanUrl, { responseType: 'text' }).pipe(
       map(() => true),
       catchError(err => {
@@ -125,7 +125,7 @@ export class RepositoryService {
       })
     );
   }
-  
+
 
   /** ---------------- Enrich ด้วย Scan/Issue ---------------- */
 
@@ -142,7 +142,7 @@ export class RepositoryService {
                 const latest = scans.length ? scans[scans.length - 1] : undefined;
                 return {
                   ...repo,
-                  status:  latest ? this.scanService.mapStatus(latest.status) : 'Active',
+                  status: latest ? this.scanService.mapStatus(latest.status) : 'Active',
                   lastScan: latest?.completedAt ? new Date(latest.completedAt) : undefined,
                   scanningProgress: latest?.status === 'Scanning' ? 50 : 100,
                   qualityGate: latest?.qualityGate,
@@ -150,7 +150,7 @@ export class RepositoryService {
                 } as Repository;
               })
             );
-          }) 
+          })
         ).pipe(
           map(reposWithScans =>
             reposWithScans.sort((a, b) => {
@@ -173,7 +173,7 @@ export class RepositoryService {
     return this.getByIdRepo(projectId).pipe(
       switchMap(repo => {
         if (!repo) return of(undefined);
-  
+
         // ดึง Scan ของ repository
         const scans$ = this.scanService.getScansByProjectId(projectId).pipe(
           map(scans =>
@@ -184,12 +184,12 @@ export class RepositoryService {
             }))
           )
         );
-  
+
         // ดึง Issue ของ repository
         const issues$ = this.issueService.getIssueByProjectId(projectId).pipe(
           map(allIssues => allIssues.filter(i => i.projectId === projectId))
         );
-  
+
         // รวม Scan + Issue เข้ากับ repo
         return forkJoin({ scans: scans$, issues: issues$ }).pipe(
           map(({ scans, issues }) => {
@@ -198,7 +198,7 @@ export class RepositoryService {
                 ? curr
                 : prev;
             }, scans[0]);
-  
+
             return {
               ...repo,
               scans,
@@ -211,11 +211,56 @@ export class RepositoryService {
             } as Repository;
           })
         );
-      })
-    );
+      }
+      ));
   }
-  
-  
+  // return this.getByIdRepo(projectId).pipe(
+  //   switchMap(repo => {
+  //     if (!repo) return of(undefined);
+
+  //     // ดึง Scan ของ repository
+  //     const scans$ = this.scanService.getScansByProjectId(projectId).pipe(
+  //       map(scans =>
+  //         scans.map(s => ({
+  //           ...s,
+  //           startedAt: s.started_at ? new Date(s.started_at) : undefined,
+  //           completedAt: s.completed_at ? new Date(s.completed_at) : undefined
+  //         }))
+  //       )
+  //     );
+
+  //     // ดึง Issue ของ repository
+  //     const issues$ = this.issueService.getIssueByProjectId(projectId).pipe(
+  //       map(allIssues => allIssues.filter(i => i.projectId === projectId))
+  //     );
+
+  //     // รวม Scan + Issue เข้ากับ repo
+  //     return forkJoin({ scans: scans$, issues: issues$ }).pipe(
+  //       map(({ scans, issues }) => {
+  //         const latest = scans.reduce((prev, curr) => {
+  //           return (curr.completedAt?.getTime() ?? 0) > (prev.completedAt?.getTime() ?? 0)
+  //             ? curr
+  //             : prev;
+  //         }, scans[0]);
+
+  //         return {
+  //           ...repo,
+  //           scans,
+  //           issues,
+  //           status: latest?.status ?? 'Active',
+  //           lastScan: latest?.completedAt,
+  //           scanningProgress: latest?.status === 'Scanning' ? 50 : 100,
+  //           qualityGate: latest?.quality_gate,
+  //           metrics: latest?.metrics
+  //         } as Repository;
+  //       })
+  //     );
+  //   })
+  // );
+}
+
+
+
 
   // private repositories: Repository[] = [
   //   {
@@ -294,13 +339,13 @@ export class RepositoryService {
   //   } as Repository;
 
   //   this.repositories.push(newRepo);
-    
+
   //   if (autoScan) {
   //     this.scanService.startScan({ project_id: newRepo.project_id }).subscribe(() => {
   //       this.simulateScan(newRepo);
   //     });
   //   }
-    
+
   //   return of(newRepo);
   // }
 
@@ -365,4 +410,5 @@ export class RepositoryService {
   //   return of(`Cloned repo: ${newRepo.project_id}`);
   // }
   
-}
+//}
+

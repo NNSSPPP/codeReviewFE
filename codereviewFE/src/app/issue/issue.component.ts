@@ -1,46 +1,57 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import{FormsModule} from '@angular/forms';
-import {RouterLink, ActivatedRoute} from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { RouterLink, Router } from '@angular/router';
+import { IssueService } from '../services/issueservice/issue.service';
+import { AuthService } from '../services/authservice/auth.service';
 
 interface Issue {
-  id_issue: string;
-  type: string;
-  severity: string;
-  title: string;
-  details: string;
-  project: string;
-  assignee: string;
-  status: string;
+  issuesId: string;
+  type: string;        // 'bug' | 'security' | 'code-smell'
+  severity: string;    // 'critical' | 'high' | 'medium' | 'low'
+  message: string;       // from message
+  details: string;     // from component
+  projectName: string;     // project name or id (fallback)
+  assignee: string;    // '@user' | 'Unassigned'
+  status: string;      // 'open' | 'in-progress' | 'resolved' | 'closed'
   selected?: boolean;
-  //scanId: string | null ;
 }
 
 @Component({
   selector: 'app-issue',
   standalone: true,
-  imports: [CommonModule,FormsModule,RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './issue.component.html',
-  styleUrl: './issue.component.css'
+  styleUrls: ['./issue.component.css'] 
 })
 export class IssueComponent {
   issueId: string | null = null;
 
-  constructor(private readonly route: ActivatedRoute) {}
+  constructor(
+    private readonly router: Router,
+    private readonly issueApi: IssueService,
+    private readonly auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.filterType = params['type'] || 'All Types';
-      this.filterProject = params['project'] || 'All Projects';
-      this.filterSeverity = params['severity'] || 'All Severity';
-      this.filterStatus = params['status'] || 'All Status';
-      this.searchText = params['search'] || '';
+    const userId = this.auth.userId;
+    if (!userId) { this.router.navigate(['/login']); return; }
 
-      this.currentPage = 1;
-    });
+    // อ่านค่า filter จาก query param (โครงเดิม)
+    // this.route.queryParams.subscribe(params => {
+    //   this.filterType     = params['type']     || 'All Types';
+    //   this.filterProject  = params['project']  || 'All Projects';
+    //   this.filterSeverity = params['severity'] || 'All Severity';
+    //   this.filterStatus   = params['status']   || 'All Status';
+    //   this.searchText     = params['search']   || '';
+    //   this.currentPage = 1;
+    // });
+
+    this.loadIssues(String(userId));
+    console.log(`Issue ID: ${this.issueId}`);
   }
 
-  // Filters
+  // ---------- Filters ----------
   filterType = 'All Types';
   filterSeverity = 'All Severity';
   filterStatus = 'All Status';
@@ -48,28 +59,92 @@ export class IssueComponent {
   searchText = '';
   selectAllCheckbox = false;
 
-  // Pagination
+  // ---------- Pagination ----------
   currentPage = 1;
   pageSize = 5;
 
-  // Issues
-  issues: Issue[] = [
-    {id_issue: '1', type: 'bug', severity: 'high', title: 'Null Pointer Exception', details: 'Line 245 in UserService.java', project: 'API-Service', assignee: '@john.dev', status: 'in-progress' },
-    {id_issue: '2', type: 'security', severity: 'critical', title: 'SQL Injection Risk', details: 'Line 89 in database.service.ts', project: 'Angular-App', assignee: '@jane.dev', status: 'open' },
-    {id_issue: '3', type: 'code-smell', severity: 'medium', title: 'Duplicate Code Block', details: 'Lines 120-150 in util.ts', project: 'Web-Portal', assignee: 'Unassigned', status: 'open' },
-    {id_issue: '4', type: 'bug', severity: 'low', title: 'Missing null check', details: 'Line 67 in helper.java', project: 'Auth-Service', assignee: '@mike.dev', status: 'resolved' },
-    {id_issue: '5', type: 'bug', severity: 'low', title: 'Missing null check', details: 'Line 67 in helper.java', project: 'Auth-Service', assignee: '@mike.dev', status: 'resolved' },
-    {id_issue: '6', type: 'code-smell', severity: 'low', title: 'Missing null check', details: 'Line 67 in helper.java', project: 'Auth-Service', assignee: '@mike.dev', status: 'resolved' },
-  ];
+  get totalPages(): number {
+    return Math.ceil(this.filteredIssues.length / this.pageSize) || 1;
+  }
 
-  // Filtered & Paginated
+  // ---------- State ----------
+  loading = false;
+  errorMsg = '';
+
+  // ดาต้าจริง (แทน mock)
+  issues: Issue[] = [];
+
+  // ---------- Fetch ----------
+  private loadIssues(userId: string) {
+    this.loading = true; this.errorMsg = '';
+    this.issueApi.getAll(userId).subscribe({
+      next: (rows) => {
+        // map backend Issue -> UI Issue
+        this.issues = (rows || []).map(r => this.mapApiIssueToUi(r));
+        // เติมรายการ project ให้ filter ถ้าต้องการใช้ใน template ภายหลัง
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMsg = 'Failed to load issues.';
+        this.loading = false;
+      }
+    });
+  }
+
+  private mapApiIssueToUi(r: import('../services/issueservice/issue.service').Issue): Issue {
+    // type mapping: 'Bug' | 'Vulnerability' | 'Code Smell'  ->  'bug' | 'security' | 'code-smell'
+    const typeMap: Record<string, string> = {
+      'BUG': 'bug',
+      'VULNERABILITY': 'security',
+      'CODE SMELL': 'code-smell',
+      'CODE_SMELL': 'code-smell'
+    };
+    const uiType = typeMap[(r.type || '').toUpperCase()] || (r.type || '').toLowerCase();
+
+    // severity mapping: Blocker->critical, Critical->high, Major->medium, Minor->low
+    const sevMap: Record<string, string> = {
+      'BLOCKER': 'critical',
+      'CRITICAL': 'high',
+      'MAJOR': 'medium',
+      'MINOR': 'low'
+    };
+    const uiSeverity = sevMap[(r.severity || '').toUpperCase()] || (r.severity || '').toLowerCase();
+
+    // status mapping: 'Open' | 'In Progress' | 'Resolved' | 'Closed' -> 'open' | 'in-progress' | 'resolved' | 'closed'
+    const st = (r.status || '').toLowerCase();
+    const uiStatus =
+      st.includes('in progress') ? 'in-progress' :
+      st.includes('resolved')    ? 'resolved' :
+      st.includes('closed')      ? 'closed'   : 'open';
+
+    // assignee: ใช้ user_id/assignedTo ถ้ามี
+    const rawAssignee = r.assignedTo || r.userId || '';
+    const assignee = rawAssignee ? `@${rawAssignee}` : 'Unassigned';
+
+    // project: ถ้าไม่มีชื่อให้ fallback เป็น project_id
+
+    return {
+      issuesId: r.issueId,
+      type: uiType,
+      severity: uiSeverity,
+      message: r.message || '(no message)',
+      details: r.component || '',
+      projectName: r.projectName,
+      assignee,
+      status: uiStatus,
+      selected: false
+    };
+  }
+
+  // ---------- Filter / Page ----------
   filterIssues() {
     return this.issues.filter(i =>
-      (this.filterType === 'All Types' || i.type === this.filterType) &&
+      (this.filterType === 'All Types'     || i.type === this.filterType) &&
       (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
-      (this.filterStatus === 'All Status' || i.status === this.filterStatus) &&
-      (this.filterProject === 'All Projects' || i.project === this.filterProject) &&
-      (this.searchText === '' || i.title.toLowerCase().includes(this.searchText.toLowerCase()))
+      (this.filterStatus === 'All Status'  || i.status === this.filterStatus) &&
+      (this.filterProject === 'All Projects' || i.projectName === this.filterProject) &&
+      (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
     );
   }
 
@@ -81,6 +156,7 @@ export class IssueComponent {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredIssues.slice(start, start + this.pageSize);
   }
+
 
   nextPage() {
     if (this.currentPage * this.pageSize < this.filteredIssues.length) {
@@ -94,88 +170,91 @@ export class IssueComponent {
     }
   }
 
-  // ตรวจว่าในหน้าปัจจุบันเลือกครบทุกอันหรือยัง
-isPageAllSelected(): boolean {
-  return this.paginatedIssues.length > 0 && this.paginatedIssues.every(i => i.selected);
-}
+  // ---------- Selection ----------
+  isPageAllSelected(): boolean {
+    return this.paginatedIssues.length > 0 && this.paginatedIssues.every(i => !!i.selected);
+  }
 
-selectAll(event: any) {
-  const checked = event.target.checked;
-  this.paginatedIssues.forEach(i => i.selected = checked);
-}
+  selectAll(event: any) {
+    const checked = event.target.checked;
+    this.paginatedIssues.forEach(i => i.selected = checked);
+  }
 
   selectedCount() {
     return this.issues.filter(i => i.selected).length;
   }
 
-  // Assign Developer
+  // ---------- Actions (ยังคงเค้าโครงเดิม) ----------
   assignDeveloper() {
     const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) {
-      alert("กรุณาเลือก Issue ก่อน");
-      return;
-    }
+    if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
 
-    const developers = ["Developer A", "Developer B", "Developer C"];
-    const dev = prompt("เลือก Developer: " + developers.join(", "));
+    const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
+    const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
+    if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
 
-    if (!dev || !developers.includes(dev)) {
-      alert("Developer ไม่ถูกต้อง");
-      return;
-    }
-
-    selectedIssues.forEach(issue => issue.assignee = dev);
-    alert(`Assigned ${selectedIssues.length} issue(s) to ${dev}`);
-  }
-
-  // Change Status
-  changeStatus() {
-    const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) {
-      alert("กรุณาเลือก Issue ก่อน");
-      return;
-    }
-
-    const statusSteps = ["open", "in-progress", "resolved"];
-    selectedIssues.forEach(issue => {
-      const idx = statusSteps.indexOf(issue.status);
-      if (idx < statusSteps.length - 1) {
-        issue.status = statusSteps[idx + 1];
-      }
+    // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
+    let ok = 0;
+    selectedIssues.forEach(row => {
+      this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
+        next: () => {
+          row.assignee = `@${dev}`;
+          ok++;
+        },
+        error: (e) => console.error('assign failed', e)
+      });
     });
 
-    alert(`Changed status for ${selectedIssues.length} issue(s)`);
+    alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
   }
 
-  // Export CSV
+  changeStatus() {
+    const selectedIssues = this.issues.filter(i => i.selected);
+    if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
+
+    const statusSteps = ['open', 'in-progress', 'resolved', 'closed'];
+    selectedIssues.forEach(row => {
+      const idx = statusSteps.indexOf(row.status);
+      const next = statusSteps[Math.min(idx + 1, statusSteps.length - 1)];
+      // แปลงกลับเป็นรูปแบบ API
+      const apiStatus =
+        next === 'in-progress' ? 'In Progress' :
+        next === 'resolved'    ? 'Resolved' :
+        next === 'closed'      ? 'Closed' : 'Open';
+
+      this.issueApi.updateStatus(row.issuesId, apiStatus as any).subscribe({
+        next: () => row.status = next,
+        error: (e) => console.error('update status failed', e)
+      });
+    });
+
+    alert(`Requested status change for ${selectedIssues.length} issue(s).`);
+  }
+
   exportData() {
     const selectedIssues = this.issues.filter(i => i.selected);
     const exportIssues = selectedIssues.length ? selectedIssues : this.issues;
-  
-    // ✅ กำหนดชื่อไฟล์
+
     const datenow = new Date();
-    const dateStr = datenow.toISOString().split("T")[0].replaceAll("-", "");
-    const fileType = selectedIssues.length ? "selected" : "all";
+    const dateStr = datenow.toISOString().split('T')[0].replaceAll('-', '');
+    const fileType = selectedIssues.length ? 'selected' : 'all';
     const fileName = `issues_${fileType}_${dateStr}.csv`;
 
     const csvContent = [
-      ["No.", "Title", "Severity", "Status", "Assignee"].join(","), // header
+      ['No.', 'Title', 'Severity', 'Status', 'Assignee'].join(','),
       ...exportIssues.map((i, idx) => [
-        idx + 1,                        // ID = ลำดับแทน id_issue
-        `"${i.title}"`,                 // ครอบ "" กัน comma หลุด
+        idx + 1,
+        `"${i.message.replaceAll('"','""')}"`,
         i.severity,
         i.status,
-        i.assignee || "-"
-      ].join(","))
-    ].join("\n");
-  
-    // ✅ สร้างไฟล์
+        i.assignee || '-'
+      ].join(','))
+    ].join('\n');
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    a.click();
+    const a = document.createElement('a');
+    a.href = url; a.download = fileName; a.click();
     window.URL.revokeObjectURL(url);
   }
 
@@ -190,9 +269,9 @@ selectAll(event: any) {
     this.issues.forEach(i => i.selected = false);
   }
 
-  // Helper for icons & styles
+  // ---------- Helpers (โครงเดิม) ----------
   typeIcon(type: string) {
-    switch(type.toLowerCase()) {
+    switch (type.toLowerCase()) {
       case 'bug': return 'bi-bug';
       case 'security': return 'bi-shield-lock';
       case 'code-smell': return 'bi-code-slash';
@@ -201,7 +280,7 @@ selectAll(event: any) {
   }
 
   severityClass(severity: string) {
-    switch(severity.toLowerCase()) {
+    switch (severity.toLowerCase()) {
       case 'critical':
       case 'high': return 'text-danger';
       case 'medium': return 'text-warning';
@@ -211,12 +290,12 @@ selectAll(event: any) {
   }
 
   statusClass(status: string) {
-    switch(status.toLowerCase()) {
+    switch (status.toLowerCase()) {
       case 'open': return 'text-danger';
       case 'in-progress': return 'text-warning';
       case 'resolved': return 'text-success';
+      case 'closed': return 'text-secondary';
       default: return '';
     }
   }
-
 }

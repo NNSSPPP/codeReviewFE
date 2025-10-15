@@ -231,12 +231,49 @@
   color: #ffffff !important; /* ขาว */
 }
 
-
-
 @media (max-width: 767px) {
   .config-container h5 {
     font-size: 1.2rem;
   }
 }
-
+/* ===============================
+   MOBILE COMPACT BUTTONS (CONFIG PAGE)
+   =============================== */
+   @media (max-width: 768px) {
+    .config-container .btn {
+      font-size: 0.78rem !important;
+      padding: 6px 10px !important;  /* ลดพื้นที่ในปุ่ม */
+      border-radius: 6px !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important; /* ไม่ตัดคำขึ้นบรรทัดใหม่ */
+      flex: 1 1 auto !important;
+      min-width: auto !important;
+    }
+  
+    /* กล่องรวมปุ่ม ให้เรียงกันสวยขึ้น */
+    .config-container .button-group,
+    .config-container .d-flex {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      justify-content: center !important;
+    }
+  
+    /* ไอคอนในปุ่มเล็กลงนิด */
+    .config-container .btn i,
+    .config-container .btn svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+  
+  /* สำหรับจอเล็กมาก (ต่ำกว่า iPhone SE) */
+  @media (max-width: 480px) {
+    .config-container .btn {
+      font-size: 0.7rem !important;
+      padding: 4px 8px !important;
+      border-radius: 5px !important;
+    }
+  }
+  
   

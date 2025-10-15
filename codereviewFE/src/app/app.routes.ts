@@ -5,16 +5,16 @@ import { RegisterComponent } from './register/register.component';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
-import {AddrepositoryComponent} from './addrepository/addrepository.component';
-import {DetailrepositoryComponent} from './detailrepository/detailrepository.component';
+import { AddrepositoryComponent } from './addrepository/addrepository.component';
+import { DetailrepositoryComponent } from './detailrepository/detailrepository.component';
 import { ScanhistoryComponent } from './scanhistory/scanhistory.component';
 import { ScanresultComponent } from './scanresult/scanresult.component';
 import { LogviewerComponent } from './logviewer/logviewer.component';
 import { IssueComponent } from './issue/issue.component';
-import {IssuedetailComponent} from './issuedetail/issuedetail.component';
-import {AssignmentComponent} from './assignment/assignment.component';
+import { IssuedetailComponent } from './issuedetail/issuedetail.component';
+import { AssignmentComponent } from './assignment/assignment.component';
 import { AnalysisComponent } from './analysis/analysis.component';
-import {SecuritydashboardComponent} from './securitydashboard/securitydashboard.component';
+import { SecuritydashboardComponent } from './securitydashboard/securitydashboard.component';
 import { TechnicaldebtComponent } from './technicaldebt/technicaldebt.component';
 import { GeneratereportComponent } from './generatereport/generatereport.component';
 import { ReporthistoryComponent } from './reporthistory/reporthistory.component';
@@ -23,12 +23,12 @@ import { NotificationsettingComponent } from './notificationsetting/notification
 import { UsermanagementComponent } from './usermanagement/usermanagement.component';
 
 export const routes: Routes = [
- 
-  { path: '', component: LandingpageComponent },
+
+  { path: '', component: LandingpageComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  
+
   {
     path: '',
     component: LayoutComponent, // Layout มี Navbar
