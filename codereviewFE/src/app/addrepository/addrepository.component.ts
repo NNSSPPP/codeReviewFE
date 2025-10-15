@@ -31,7 +31,12 @@ export class AddrepositoryComponent implements OnInit {
     name: '',
     projectType: undefined,
     repositoryUrl: '',
-    sonarProjectKey: '',
+    sonarProjectKey: ''
+  };
+
+  credentials= {
+    username: '',
+    password: ''
   };
 
   sonarConfig = {
