@@ -64,16 +64,16 @@ export class RegisterComponent {
 
 
   onSubmit(form: NgForm) {
-    this.snack.open('Successfully registered!', '', {
-  duration: 2500,
-  horizontalPosition: 'right',
-  verticalPosition: 'top',
-  panelClass: ['app-snack', 'app-snack-blue'], // ฟ้า-ขาว รองรับ dark mode
-});
-
+  
     this.submitted = true; // ให้ UI แสดง validation ทันทีตอนกด
 
     if (form.invalid || this.passwordsMismatch) {
+      this.snack.open('Registration failed', '', {
+        duration: 2500,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['app-snack', 'app-snack-red'], 
+      });
       return;
     }
 
@@ -87,11 +87,11 @@ export class RegisterComponent {
     }).subscribe({
       next: (res: any) => {
         this.loading = false;
-        this.snack.open(res?.message || 'Registered', 'OK', {
-          duration: 2000,
-          horizontalPosition: 'center',
+        this.snack.open('Successfully registered!', '', {
+          duration: 2500,
+          horizontalPosition: 'right',
           verticalPosition: 'top',
-          panelClass: ['toast-success', 'toast'],
+          panelClass: ['app-snack', 'app-snack-blue'], 
         });
         this.router.navigate(['/login']);
       },
@@ -116,6 +116,12 @@ export class RegisterComponent {
           if (msg.includes('phone')) form.controls['phoneNumber']?.setErrors({ ...(form.controls['phoneNumber']?.errors || {}), duplicate: true });
           return;
         }
+        this.snack.open('Registration failed', '', {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red'], 
+        });
       }
     });
   }

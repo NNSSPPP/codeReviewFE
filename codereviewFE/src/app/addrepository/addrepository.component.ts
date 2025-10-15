@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Repository, RepositoryService } from '../services/reposervice/repository.service';
+import { AuthService } from '../services/authservice/auth.service';
 
 @Component({
   selector: 'app-addrepository',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule],
   templateUrl: './addrepository.component.html',
   styleUrl: './addrepository.component.css'
 })
@@ -16,20 +18,20 @@ export class AddrepositoryComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly repositoryService: RepositoryService
-  ) { }
+    private readonly repositoryService: RepositoryService,
+    private readonly authService: AuthService,
+    private readonly snack: MatSnackBar
+  ) {}
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
   isEditMode: boolean = false;
 
   gitRepository: Repository = {
-    project_id: '',
-    user_id: '',
+    projectId: undefined,
+    user: '',
     name: '',
-    project_type: undefined,
-    repository_url: '',
-    branch: 'main',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    projectType: undefined,
+    repositoryUrl: '',
+    sonarProjectKey: '',
   };
 
   sonarConfig = {
@@ -37,77 +39,124 @@ export class AddrepositoryComponent implements OnInit {
     projectName: '',
     projectVersion: '',
     sources: 'src',
-    serverUrl: 'https://code.pccth.com',
+    serverUrl: 'https://code.pccth.com', //http://localhost:9000
     token: '',
     enableAutoScan: true,
     enableQualityGate: true
   };
 
+
+
   ngOnInit(): void {
-    const project_id = this.route.snapshot.paramMap.get('project_id');
-    if (project_id) {
+    const projectId = this.route.snapshot.paramMap.get('projectId');
+
+    if (projectId) {
       this.isEditMode = true;
-      this.loadRepository(project_id);
+      this.loadRepository(projectId);
     }
+
+    // ตรวจสอบ userId จาก AuthService
+    const userId = this.authService.userId;
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // ตั้งค่า userId ให้ repository ที่จะเพิ่ม
+    this.gitRepository.user = userId.toString();
   }
 
-  // loadRepository(project_id: string) {
-  //   const repo = this.repositoryService.getByIdRepo(project_id);
-  //   if (repo) {
-  //     this.gitRepository = { ...repo };
-  //   }
-  // }
-  
-  loadRepository(project_id: string) {
-    this.repositoryService.getById(project_id).subscribe(repo => {
-      if (repo) {
-        this.gitRepository = { ...repo };
-      }
-
-    this.repositoryService.getByIdRepo(project_id).subscribe({
+  /** โหลด repo สำหรับแก้ไข */
+  loadRepository(projectId: string) {
+    this.repositoryService.getByIdRepo(projectId).subscribe({
       next: (repo) => {
         if (!repo) {
           console.error('Repository not found');
-          // ถ้า repo ไม่มีค่า ให้ reset form หรือ handle ตามต้องการ
-          this.clearForm();
           return;
         }
-  
-        // แปลง object ให้ตรงกับ interface Repository
+
+         const rawType = (repo.projectType || '').toLowerCase().trim();
+      let normalizedType: 'Angular' | 'Spring Boot' | undefined;
+
+      if (rawType.includes('angular')) {
+        normalizedType = 'Angular';
+      } else if (rawType.includes('spring')) {
+        normalizedType = 'Spring Boot';
+      } else {
+        normalizedType = undefined;
+      }
+
         this.gitRepository = {
-          project_id: repo.project_id || '',   // ให้ default ''
-          user_id: repo.user_id || '',
+          projectId: repo.projectId || '',
+          user: repo.user || '',
           name: repo.name || '',
-          repository_url: repo.repository_url || '',
-          project_type: repo.project_type,
-          branch: repo.branch || 'main',
-          created_at: repo.created_at ? new Date(repo.created_at) : new Date(),
-          updated_at: repo.updated_at ? new Date(repo.updated_at) : new Date(),
-          scans: repo.scans,
-          issues: repo.issues
+          repositoryUrl: repo.repositoryUrl || '',
+          projectType: normalizedType,
+          //branch: repo.branch || 'main',
+          // createdAt: repo.createdAt ? new Date(repo.createdAt) : new Date(),
+          // updatedAt: repo.updatedAt ? new Date(repo.updatedAt) : new Date(),
+          sonarProjectKey: repo.sonarProjectKey || ''
+          
         };
+        console.log('Loaded projectType:',  normalizedType);
+
       },
       error: (err) => console.error('Failed to load repository', err)
     });
   }
-  
+
+
   
 
   onSubmit(form: NgForm) {
     if (form.valid) {
       if (this.isEditMode) {
-        this.repositoryService.update(this.gitRepository.project_id, this.gitRepository).subscribe(() => {
-          alert("Repository updated successfully!");
-        });
-        alert("Repository updated successfully!");
+        this.repositoryService.updateRepo(this.gitRepository.projectId!, this.gitRepository)
+          .subscribe({
+            next: () => {
+              this.snack.open("Repository updated successfully!", '', {
+                duration: 2500,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['app-snack', 'app-snack-blue'], 
+              });
+              this.router.navigate(['/repositories']);
+            },
+            error: (err) => {
+              console.error('Failed to update repository', err);
+              this.snack.open('Failed to update repository', '', {
+                duration: 2500,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['app-snack', 'app-snack-red'], 
+              });
+            }
+          });
       } else {
-        this.repositoryService.create(this.gitRepository).subscribe(() => {
-          alert("Repository added successfully!");
-        });
+        this.repositoryService.addRepo(this.gitRepository)
+          .subscribe({
+            next: () => {
+              this.snack.open("Repository added successfully!", '', {
+                duration: 2500,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['app-snack', 'app-snack-blue'], 
+              });
+              this.router.navigate(['/repositories']);
+            },
+            error: (err) => {
+              console.error('Failed to add repository', err);
+              this.snack.open('Failed to add repository', '', {
+                duration: 2500,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['app-snack', 'app-snack-red'], 
+              });
+            }
+          });
       }
-      this.router.navigate(['/repositories']);
     } else {
-      alert("Please fill all required fields correctly.");
+      alert('Please fill in all required fields');
     }
   }
 
@@ -122,8 +171,12 @@ export class AddrepositoryComponent implements OnInit {
 
   onDelete() {
     if (confirm('Are you sure to delete this repository?')) {
-      this.repositoryService.delete(this.gitRepository.project_id).subscribe(() => {
-        alert('Deleted successfully!');
+      this.repositoryService.deleteRepo(this.gitRepository.projectId!).subscribe(() => {        this.snack.open('Deleted successfully!', '', {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red'], 
+        });
         this.router.navigate(['/repositories']);
       });
       
@@ -132,15 +185,13 @@ export class AddrepositoryComponent implements OnInit {
 
   clearForm(form?: NgForm) {
     this.gitRepository = {
-      project_id: '',
-      user_id: '',
+      projectId: '',
+      user: '',
       name: '',
-      project_type: undefined,
-      repository_url: '',
-      branch: 'main',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-
+      projectType: undefined,
+      repositoryUrl: '',
+      // createdAt: new Date(),
+      // updatedAt: new Date()
     };
 
     this.sonarConfig = {
@@ -159,8 +210,8 @@ export class AddrepositoryComponent implements OnInit {
     if (form) {
       form.resetForm({
         name: '',
-        repository_url: '',
-        project_type: undefined,
+        repositoryUrl: '',
+        projectType: undefined,
         branch: 'main',
         serverUrl: 'https://code.pccth.com',
         projectKey: '',
@@ -169,4 +220,5 @@ export class AddrepositoryComponent implements OnInit {
       });
     }
   }
+
 }

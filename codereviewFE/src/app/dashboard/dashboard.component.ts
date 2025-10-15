@@ -291,7 +291,6 @@ export class DashboardComponent {
     pdf.setFontSize(11);
     pdf.setTextColor(0);
     pdf.text(`Passed: ${this.mockData.passedCount}`, margin, y); y += 5;
-    pdf.text(`Warning: ${this.mockData.warningCount}`, margin, y); y += 5;
     pdf.text(`Failed: ${this.mockData.failedCount}`, margin, y); y += 10;
   
     // =========================
@@ -369,8 +368,7 @@ export class DashboardComponent {
   // Mock data
   mockData = {
     passedCount: 15,
-    warningCount: 3,
-    failedCount: 0
+    failedCount: 10
   };
 
   /// Pie chart options
@@ -395,7 +393,7 @@ export class DashboardComponent {
 
   loadDashboardData() {
     // คำนวณรวมโปรเจกต์
-    this.totalProjects = this.mockData.passedCount + this.mockData.warningCount + this.mockData.failedCount;
+    this.totalProjects = this.mockData.passedCount + this.mockData.failedCount;
     const passPercent = this.mockData.passedCount / this.totalProjects;
 
     // คำนวณเกรดรวม
