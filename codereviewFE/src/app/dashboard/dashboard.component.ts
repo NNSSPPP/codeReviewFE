@@ -332,6 +332,132 @@ export class DashboardComponent {
     this.totalProjects = passed + failed;
   }
 
+  onExport() {
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const margin = 10;
+    let y = 15;
+  
+    // =========================
+    // 1. Header
+    // =========================
+    pdf.setFontSize(20);
+    pdf.setTextColor(40, 40, 40);
+    pdf.text('Dashboard Overview', pdf.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+    y += 10;
+  
+    // =========================
+    // 2. Date & Admin
+    // =========================
+    const today = new Date();
+    pdf.setFontSize(11);
+    pdf.setTextColor(80, 80, 80);
+    pdf.text(`Date: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`, margin, y);
+    pdf.text(`Role: Admin`, pdf.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+    y += 12;
+  
+    pdf.setDrawColor(200);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, y, pdf.internal.pageSize.getWidth() - margin, y); // separator line
+    y += 6;
+  
+    // =========================
+    // 3. Quality Gate Status
+    // =========================
+    pdf.setFontSize(14);
+    pdf.setTextColor(0, 123, 255); // blue header
+    pdf.text('Quality Gate Status', margin, y);
+    y += 7;
+    pdf.setFontSize(11);
+    pdf.setTextColor(0);
+    pdf.text(`Passed: ${this.mockData.passedCount}`, margin, y); y += 5;
+    pdf.text(`Failed: ${this.mockData.failedCount}`, margin, y); y += 10;
+  
+    // =========================
+    // 4. Recent Scans Table
+    // =========================
+    const scansColumns = ['Project', 'Status', 'Grade', 'Time'];
+    const scansRows = this.latestScans.map(s => [s.project, s.status, s.grade, s.time]);
+  
+    (autoTable as any)(pdf, {
+      head: [scansColumns],
+      body: scansRows,
+      startY: y,
+      theme: 'grid',
+      styles: { fontSize: 10, cellPadding: 2 },
+      headStyles: { fillColor: [0, 123, 255], textColor: 255 },
+      margin: { left: margin, right: margin },
+    });
+  
+    y = (pdf as any).lastAutoTable?.finalY + 8;
+  
+    // =========================
+    // 5. Metrics
+    // =========================
+    pdf.setFontSize(14);
+    pdf.setTextColor(0, 123, 255);
+    pdf.text('Metrics', margin, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setTextColor(0);
+    pdf.text(`Bugs: ${this.dashboardData.metrics.bugs}`, margin, y); y += 5;
+    pdf.text(`Security: ${this.dashboardData.metrics.vulnerabilities}`, margin, y); y += 5;
+    pdf.text(`Code Smells: ${this.dashboardData.metrics.codeSmells}`, margin, y); y += 5;
+    pdf.text(`Coverage: ${this.dashboardData.metrics.coverage}%`, margin, y); y += 10;
+  
+    // =========================
+    // 6. Top Issues
+    // =========================
+    pdf.setFontSize(14);
+    pdf.setTextColor(220, 53, 69); // red
+    pdf.text('Top Issues', margin, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setTextColor(0);
+    this.dashboardData.issues.forEach(i => {
+      pdf.text(`- [${i.severity}] ${i.type}: ${i.message}`, margin, y);
+      y += 5;
+    });
+    y += 5;
+  
+    // =========================
+    // 7. Project Distribution
+    // =========================
+    pdf.setFontSize(14);
+    pdf.setTextColor(0, 123, 255);
+    pdf.text('Project Distribution', margin, y);
+    y += 6;
+    pdf.setFontSize(11);
+    pdf.setTextColor(0);
+    this.projectDistribution.forEach(p => {
+      pdf.text(`${p.type}: ${p.percent}%`, margin, y);
+      pdf.setFillColor(0, 123, 255); // bar color
+      pdf.rect(margin, y + 2, p.percent * 1.2, 5, 'F'); // simple bar chart
+      y += 10;
+    });
+  
+    // =========================
+    // 8. Save PDF
+    // =========================
+    const fileName = `Dashboard_Report_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}.pdf`;
+    pdf.save(fileName);
+  }
+  
+
+
+  // Mock data
+  mockData = {
+    passedCount: 15,
+    failedCount: 10
+  };
+
+  /// Pie chart options
+  pieChartOptions!: ApexOptions;
+  totalProjects = 0;
+  grade = '';
+  gradePercent = 0;
+  loading = true;
+
+  // ฟังก์ชันคำนวณสีตามเกรด
   getGradeColor(grade: string): string {
     switch (grade) {
       case 'A': return '#10B981';
@@ -345,7 +471,17 @@ export class DashboardComponent {
   }
 
   loadDashboardData() {
-    this.recomputeStatusCountsFromHistory();
+    // คำนวณรวมโปรเจกต์
+    this.totalProjects = this.mockData.passedCount + this.mockData.failedCount;
+    const passPercent = this.mockData.passedCount / this.totalProjects;
+
+    // คำนวณเกรดรวม
+    if (passPercent >= 0.8) this.grade = 'A';
+    else if (passPercent >= 0.7) this.grade = 'B';
+    else if (passPercent >= 0.6) this.grade = 'C';
+    else if (passPercent >= 0.5) this.grade = 'D';
+    else if (passPercent >= 0.4) this.grade = 'E';
+    else this.grade = 'F';
 
     let passPercent: number;
     if (this.totalProjects > 0) {
