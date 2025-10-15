@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
 import { Router, RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
 import { AuthService } from '../services/authservice/auth.service';
 import { forkJoin } from 'rxjs';
+import { Component } from '@angular/core';
 
 interface Condition {
   metric: string;
@@ -55,7 +53,6 @@ interface Notification {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule, RouterModule],
   imports: [CommonModule, NgApexchartsModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
@@ -343,10 +340,9 @@ private normalizeOverviewArray(raw: Dashboard[]) {
   // นับจากข้อมูลจริง แต่คง property mockData ไว้เพื่อไม่ต้องแก้ HTML
   private recomputeStatusCountsFromHistory() {
     const passed  = this.dashboardData.history.filter(h => h.status === 'Passed').length;
-    const warning = this.dashboardData.history.filter(h => h.status === 'Warning').length;
     const failed  = this.dashboardData.history.filter(h => h.status === 'Failed').length;
     this.Data = { passedCount: passed, failedCount: failed };
-    this.totalProjects = passed + warning + failed;
+    this.totalProjects = passed + failed;
   }
 
   getGradeColor(grade: string): string {
@@ -444,4 +440,21 @@ private normalizeOverviewArray(raw: Dashboard[]) {
   onRefresh() { this.fetchFromServer(this.auth.userId!); }
   onExport()  { console.log('Exporting data...'); }
   onLogout()  { this.router.navigate(['/']); }
+
+
+
+  viewNotification(n: Notification) {
+    // 1. ทำเครื่องหมายว่าอ่านแล้ว
+    n.read = true;
+  
+    // 2. แสดงเนื้อหา notification แบบ modal หรือ alert
+    alert(`${n.title}\n\n${n.message}\n\nTime: ${n.timestamp.toLocaleString()}`);
+  
+    // 3. รีเฟรช list โดยเฉพาะถ้า tab เป็น Unread
+    if (this.activeTab === 'Unread') {
+      this.displayCount = Math.min(this.displayCount, this.totalFilteredCount);
+    }
+  }
+
 }
+
