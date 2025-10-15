@@ -5,6 +5,7 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
 import { AuthService } from '../services/authservice/auth.service';
 import { forkJoin } from 'rxjs';
+import { Component } from '@angular/core';
 
 interface Condition {
   metric: string;
@@ -424,3 +425,4 @@ export class DashboardComponent {
   onExport() { console.log('Exporting data...'); }
   onLogout() { this.router.navigate(['/']); }
 }
+
