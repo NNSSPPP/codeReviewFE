@@ -406,3 +406,62 @@
     }
   }
   
+  
+/* ===== Pagination: ให้เหมือนภาพ (Prev เทา ghost, Next น้ำเงิน, label ขาว) ===== */
+:host-context(body.dark-mode) .pagination .page-label {
+  color:#fff;
+  font-weight:600;
+}
+
+:host-context(body.dark-mode) .pagination .page-btn {
+  width:48px;height:48px;border-radius:16px;
+  background:#1f2937;            /* เทาเข้ม */
+  border:1px solid #111827;
+  color:#9ca3af;                  /* ไอคอนเทาอ่อน */
+  transition:background-color .25s,color .25s,transform .2s;
+}
+:host-context(body.dark-mode) .pagination .page-btn:hover {
+  background:#374151; color:#e5e7eb; transform:translateY(-2px);
+}
+
+/* Prev = ghost/มืด */
+:host-context(body.dark-mode) .pagination .page-btn:first-child {
+  background:#111827; border-color:#262a33; color:#6b7280;
+}
+/* Disabled look ที่ยังเห็นลูกศร */
+:host-context(body.dark-mode) .pagination .page-btn.disabled {
+  opacity:1; pointer-events:none; transform:none; box-shadow:none;
+  background:#111827; border-color:#262a33; color:#4b5563;
+}
+
+/* Next = ปุ่ม primary น้ำเงิน */
+:host-context(body.dark-mode) .pagination .page-btn:last-child {
+  background:#2563eb; border-color:#2563eb; color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.35);
+}
+:host-context(body.dark-mode) .pagination .page-btn:last-child:hover {
+  background:#1d4ed8; border-color:#1d4ed8; color:#fff; transform:translateY(-2px);
+}
+/* เผื่อมี .active กับปุ่มเลขหน้า */
+:host-context(body.dark-mode) .pagination .page-btn.active {
+  background:#2563eb; border-color:#2563eb; color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.35);
+}
+
+/* Fix muted text on dark mode (e.g., "Line 245 in UserService.java") */
+:host-context(body.dark-mode) .issues-container .text-muted,
+:host-context(body.dark-mode) .issues-container small,
+:host-context(body.dark-mode) .issues-table .text-muted {
+  color: #cbd5e1 !important;   /* slate-300: อ่านง่ายบนพื้นมืด */
+  opacity: 0.95;               /* ลดซีด */
+}
+
+/* เผื่อข้อความใน modal/log pane */
+:host-context(body.dark-mode) .modal-body-custom .text-muted,
+:host-context(body.dark-mode) .modal-body-custom small {
+  color: #cbd5e1 !important;
+  opacity: 0.95;
+}
+
+/* ให้ไอคอน bootstrap (.bi) ในบรรทัดนั้นรับสีตามตัวอักษร */
+.issues-container .bi { color: currentColor; }
