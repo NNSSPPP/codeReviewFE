@@ -5,7 +5,9 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
 import { AuthService } from '../services/authservice/auth.service';
 import { forkJoin } from 'rxjs';
-import { Component } from '@angular/core';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { IssueService } from '../services/issueservice/issue.service';
 
 interface Condition {
   metric: string;
@@ -62,7 +64,8 @@ export class DashboardComponent {
   constructor(
     private readonly router: Router,
     private readonly dash: DashboardService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly issueService: IssueService
   ) { }
 
   ngOnInit() {
@@ -451,11 +454,11 @@ export class DashboardComponent {
   };
 
   /// Pie chart options
-  pieChartOptions!: ApexOptions;
-  totalProjects = 0;
-  grade = '';
-  gradePercent = 0;
-  loading = true;
+  // pieChartOptions!: ApexOptions;
+  // totalProjects = 0;
+  // grade = '';
+  // gradePercent = 0;
+  // loading = tue;
 
   // ฟังก์ชันคำนวณสีตามเกรด
   getGradeColor(grade: string): string {
@@ -473,15 +476,7 @@ export class DashboardComponent {
   loadDashboardData() {
     // คำนวณรวมโปรเจกต์
     this.totalProjects = this.mockData.passedCount + this.mockData.failedCount;
-    const passPercent = this.mockData.passedCount / this.totalProjects;
-
-    // คำนวณเกรดรวม
-    if (passPercent >= 0.8) this.grade = 'A';
-    else if (passPercent >= 0.7) this.grade = 'B';
-    else if (passPercent >= 0.6) this.grade = 'C';
-    else if (passPercent >= 0.5) this.grade = 'D';
-    else if (passPercent >= 0.4) this.grade = 'E';
-    else this.grade = 'F';
+   
 
     let passPercent: number;
     if (this.totalProjects > 0) {
@@ -558,7 +553,7 @@ export class DashboardComponent {
   }
 
   onRefresh() { this.fetchFromServer(this.auth.userId!); }
-  onExport() { console.log('Exporting data...'); }
+  // onExport() { console.log('Exporting data...'); }
   onLogout() { this.router.navigate(['/']); }
 }
 
