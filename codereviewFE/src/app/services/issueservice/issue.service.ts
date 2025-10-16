@@ -40,13 +40,17 @@ export class IssueService {
   }
 
   /** GET /api/issues/user/{userId} — ดึง issues ทั้งหมดของผู้ใช้ */
-  getAll(userId: string): Observable<Issue[]> {
+  getAllIssue(userId: string): Observable<Issue[]> {
     return this.http.get<Issue[]>(`${this.base}/user/${userId}`, this.authOpts());
   }
 
   /** GET /api/issues/:issues_id — ดึง issue รายตัว */
   getById(issues_id: string): Observable<Issue> {
     return this.http.get<Issue>(`${this.base}/${issues_id}`, this.authOpts());
+  }
+
+  getIssueByProjectId(projectId: string): Observable<Issue[]> {
+    return this.http.get<Issue[]>(`${this.base}/project/${projectId}`, this.authOpts());
   }
 
   /** PUT /api/issues/:issues_id/assign?userId=... — กำหนด developer (user_id) */

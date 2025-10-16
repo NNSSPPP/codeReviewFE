@@ -63,7 +63,8 @@ export class DashboardComponent {
   constructor(
     private readonly router: Router,
     private readonly dash: DashboardService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly issueService: IssueService
   ) { }
 
   ngOnInit() {
@@ -466,7 +467,9 @@ export class DashboardComponent {
   }
 
   loadDashboardData() {
-    this.recomputeStatusCountsFromHistory();
+    // คำนวณรวมโปรเจกต์
+    this.totalProjects = this.mockData.passedCount + this.mockData.failedCount;
+   
 
     let passPercent: number;
     if (this.totalProjects > 0) {

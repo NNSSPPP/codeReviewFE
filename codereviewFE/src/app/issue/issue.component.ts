@@ -77,7 +77,7 @@ export class IssueComponent {
   // ---------- Fetch ----------
   private loadIssues(userId: string) {
     this.loading = true; this.errorMsg = '';
-    this.issueApi.getAll(userId).subscribe({
+    this.issueApi.getAllIssue(userId).subscribe({
       next: (rows) => {
         // map backend Issue -> UI Issue
         this.issues = (rows || []).map(r => this.mapApiIssueToUi(r));
