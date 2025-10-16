@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LandingpageComponent } from './landingpage/landingpage.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
@@ -21,13 +22,15 @@ import { ReporthistoryComponent } from './reporthistory/reporthistory.component'
 import { SonarqubeconfigComponent } from './sonarqubeconfig/sonarqubeconfig.component';
 import { NotificationsettingComponent } from './notificationsetting/notificationsetting.component';
 import { UsermanagementComponent } from './usermanagement/usermanagement.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 export const routes: Routes = [
 
   { path: '', component: LandingpageComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-
+  { path: 'resetpassword', component: ResetPasswordComponent },
+  { path: 'forgotpassword', component: ForgotPasswordComponent },
 
   {
     path: '',
