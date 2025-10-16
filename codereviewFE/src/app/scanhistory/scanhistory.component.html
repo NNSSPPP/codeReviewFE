@@ -82,10 +82,9 @@
       </tbody>
     </table>
   </div>  
-
   <div class="pagination">
     <!-- Prev -->
-    <button class="page-btn" [class.disabled]="currentPage === 1"
+    <button class="page-btn prev" [class.disabled]="currentPage === 1"
             (click)="goPage(currentPage - 1)">
       <i class="bi bi-chevron-left"></i>
     </button>
@@ -94,11 +93,12 @@
     <span class="page-label">Page {{currentPage}}</span>
   
     <!-- Next -->
-    <button class="page-btn" [class.disabled]="currentPage === totalPages"
-        (click)="goPage(currentPage + 1)">
-  <i class="bi bi-chevron-right"></i>
-</button>
+    <button class="page-btn next" [class.disabled]="currentPage === totalPages"
+            (click)="goPage(currentPage + 1)">
+      <i class="bi bi-chevron-right"></i>
+    </button>
   </div>
+  
   
 
   <!-- Actions -->
