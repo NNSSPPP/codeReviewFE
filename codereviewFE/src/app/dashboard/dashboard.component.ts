@@ -7,7 +7,6 @@ import { AuthService } from '../services/authservice/auth.service';
 import { forkJoin } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { IssueService } from '../services/issueservice/issue.service';
 
 interface Condition {
   metric: string;
@@ -443,6 +442,7 @@ export class DashboardComponent {
     // =========================
     const fileName = `Dashboard_Report_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}.pdf`;
     pdf.save(fileName);
+    console.log('Exporting data...'); 
   }
   
 
@@ -452,13 +452,6 @@ export class DashboardComponent {
     passedCount: 15,
     failedCount: 10
   };
-
-  /// Pie chart options
-  // pieChartOptions!: ApexOptions;
-  // totalProjects = 0;
-  // grade = '';
-  // gradePercent = 0;
-  // loading = tue;
 
   // ฟังก์ชันคำนวณสีตามเกรด
   getGradeColor(grade: string): string {
@@ -553,7 +546,6 @@ export class DashboardComponent {
   }
 
   onRefresh() { this.fetchFromServer(this.auth.userId!); }
-  // onExport() { console.log('Exporting data...'); }
   onLogout() { this.router.navigate(['/']); }
 }
 

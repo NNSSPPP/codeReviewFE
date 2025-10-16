@@ -7,61 +7,34 @@
 
   <!-- Header -->
   <div class="issue-header">
-    <button class="back-btn" type="button" (click)="goBack()" title="Go Back">
-      <i class="bi bi-arrow-left"></i>
-    </button>
-
-    <h2>
-      <i class="bi bi-shield-lock-fill"></i>
-      {{ issue.type }} issue : {{ issue.title }}
-    </h2>
-
-    <span class="priority" [ngClass]="(issue.priority || 'none').toLowerCase()">
+    <button title="Back to Issue" class="back-btn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
+    <h2><i class="bi bi-shield-lock-fill"></i> {{ issue.type }} issue : {{ issue.title }}</h2>
+    <span class="priority" [ngClass]="issue.priority.toLowerCase() || 'No priority'">
       {{ issue.priority || 'No priority' }}
     </span>
   </div>
 
-  <!-- Issue Info -->
-  <div class="issue-info">
-    <div class="info-row">
-      <div><strong>ID:</strong> {{ issue.id }}</div>
-      <div><strong>Type:</strong> {{ issue.type }}</div>
-    </div>
-
-    <div class="info-row">
-      <div>
-        <strong>Severity:</strong>
-        <span [ngClass]="['badge','severity',(issue.severity || '').toLowerCase()]">
-          {{ issue.severity }}
-        </span>
-      </div>
-      <div>
-        <strong>Status:</strong>
-        <span [ngClass]="['badge','status',(issue.status || '').toLowerCase()]">
-          {{ issue.status }}
-        </span>
-      </div>
-    </div>
-
-    <div class="info-row">
-      <div><strong>Project:</strong> {{ issue.project }}</div>
-      <div><strong>File:</strong> {{ issue.file }}</div>
-    </div>
-
-    <div class="info-row">
-      <div><strong>Line:</strong> {{ issue.line }}</div>
-      <div><strong>Created:</strong> {{ issue.created | date:'dd/MM/yyyy, hh:mm a' }}</div>
-    </div>
-
-    <div class="info-row">
-      <strong>Assigned:</strong>
-      {{ ((issue.assignedTo || []).length > 0) ? (issue.assignedTo || []).join(', ') : 'No assignee' }}
-
-      <div>
-        <strong>Due Date:</strong>
-        {{ issue.dueDate | date:'dd/MM/yyyy, hh:mm a' }}
-      </div>
-    </div>
+ <!-- Issue Info -->
+<div class="issue-info">
+  <div class="info-row">
+    <div><strong>ID:</strong> {{ issue.id }}</div>
+    <div><strong>Type:</strong> {{ issue.type }}</div>
+  </div>
+  <div class="info-row">
+    <div><strong>Severity:</strong> <span class="badge severity {{ issue.severity.toLowerCase() }}">{{ issue.severity }}</span></div>
+    <div><strong>Status:</strong> <span class="badge status {{ issue.status.toLowerCase() }}">{{ issue.status }}</span></div>
+  </div>
+  <div class="info-row">
+    <div><strong>Project:</strong> {{ issue.project }}</div>
+    <div><strong>File:</strong> {{ issue.file }}</div>
+  </div>
+  <div class="info-row">
+    <div><strong>Line:</strong> {{ issue.line }}</div>
+    <div><strong>Created:</strong> {{ issue.created | date:'dd/MM/yyyy, hh:mm a' }}</div>
+  </div>
+  <div class="info-row">
+    <div><strong>Assigned:</strong> {{ issue.assignedTo?.length ? issue.assignedTo?.join(', ') : issue.assignedTo || 'No assignee' }}</div>
+    <div><strong>Due Date:</strong> {{ issue.dueDate | date:'dd/MM/yyyy, hh:mm a' }}</div>
   </div>
 
   <!-- Description -->
