@@ -109,10 +109,10 @@
     color: #111;
   }
   /* Severity */
-  .badge.severity.critical { background: #e63946; }
-  .badge.severity.high     { background: #fd7e14; }
-  .badge.severity.medium   { background: #ffb703; color:#000; }
-  .badge.severity.low      { background: #43a047; }
+  .badge.severity.Blocker { background: #e63946; }
+  .badge.severity.critical { background: #fd7e14; }
+  .badge.severity.major { background: #ffb703; color:#000; }
+  .badge.severity.minor{ background: #43a047; }
   /* Status */
   .badge.status.open        { background: #f59e0b; }
   .badge.status.in-progress { background: #2563eb; }

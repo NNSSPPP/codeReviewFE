@@ -67,13 +67,13 @@
   
           <!-- ไม่มีการซ้อน <td> -->
           <td class="log-col sticky-col" (click)="$event.stopPropagation()">
-            <button class="btn btn-log btn-sm" (click)="viewLog(scan); $event.stopPropagation()">
+            <button title="View log" class="btn btn-log btn-sm" (click)="viewLog(scan); $event.stopPropagation()">
               <i class="bi bi-file-text"></i> 
             </button>
           </td>
   
           <td class="result-col sticky-col" (click)="$event.stopPropagation()">
-            <button class="btn btn-primary btn-sm" (click)="viewResult(scan); $event.stopPropagation()">
+            <button title="View Result Scan" class="btn btn-primary btn-sm" (click)="viewResult(scan); $event.stopPropagation()">
               <i class="bi bi-eye"></i> 
             </button>
           </td>
