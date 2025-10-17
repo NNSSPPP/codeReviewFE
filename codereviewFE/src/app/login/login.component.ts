@@ -25,9 +25,18 @@ export class LoginComponent {
   ) {}
 
   onSubmit(form: NgForm) {
-    if (!form.valid) return;
-    this.loading = true;
     this.submitted = true;
+    this.loading = true;
+    
+     if (form.invalid ) {
+      this.snack.open('Login Failed. Please fill in all fields.', '', {
+        duration: 2500,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['app-snack', 'app-snack-red'], 
+      });
+      return;
+    }
 
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
@@ -44,7 +53,7 @@ export class LoginComponent {
         this.loading = false;
         this.snack.open('Login Failed. Please try again.', '', {
           duration: 2500,
-          horizontalPosition: 'center',
+          horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['app-snack', 'app-snack-red'],
         });
