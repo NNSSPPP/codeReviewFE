@@ -29,8 +29,8 @@ export const routes: Routes = [
   { path: '', component: LandingpageComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'resetpassword', component: ResetPasswordComponent },
-  { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
 
   {
     path: '',
