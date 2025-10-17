@@ -1,7 +1,7 @@
 // src/app/pages/forgot-password/forgot-password.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ForgotPasswordComponent } from './forgot-password.component';
-import { AuthPasswordResetService } from '../../services/auth-password-reset.service';
+// import { AuthPasswordResetService } from '../../services/auth-password-reset.service';
 import { of } from 'rxjs';
 
 describe('ForgotPasswordComponent', () => {
@@ -17,7 +17,7 @@ describe('ForgotPasswordComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ForgotPasswordComponent], // standalone component
       providers: [
-        { provide: AuthPasswordResetService, useValue: svcMock }
+        // { provide: AuthPasswordResetService, useValue: svcMock }
       ]
     }).compileComponents();
 
