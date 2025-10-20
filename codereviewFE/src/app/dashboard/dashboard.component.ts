@@ -8,7 +8,6 @@ import { forkJoin } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-
 interface Condition {
   metric: string;
   status: 'OK' | 'ERROR';
@@ -446,6 +445,7 @@ export class DashboardComponent {
     // =========================
     const fileName = `Dashboard_Report_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}.pdf`;
     pdf.save(fileName);
+    console.log('Exporting data...'); 
   }
   
 

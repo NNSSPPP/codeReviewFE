@@ -73,13 +73,13 @@
   
           <!-- ไม่มีการซ้อน <td> -->
           <td class="log-col sticky-col" (click)="$event.stopPropagation()">
-            <button class="btn btn-log btn-sm" (click)="viewLog(scan); $event.stopPropagation()">
+            <button title="View log" class="btn btn-log btn-sm" (click)="viewLog(scan); $event.stopPropagation()">
               <i class="bi bi-file-text"></i> 
             </button>
           </td>
   
           <td class="result-col sticky-col" (click)="$event.stopPropagation()">
-            <button class="btn btn-primary btn-sm" (click)="viewResult(scan); $event.stopPropagation()">
+            <button title="View Result Scan" class="btn btn-primary btn-sm" (click)="viewResult(scan); $event.stopPropagation()">
               <i class="bi bi-eye"></i> 
             </button>
           </td>
@@ -88,10 +88,9 @@
       </tbody>
     </table>
   </div>  
-
   <div class="pagination">
     <!-- Prev -->
-    <button class="page-btn" [class.disabled]="currentPage === 1"
+    <button class="page-btn prev" [class.disabled]="currentPage === 1"
             (click)="goPage(currentPage - 1)">
       <i class="bi bi-chevron-left"></i>
     </button>
@@ -100,11 +99,12 @@
     <span class="page-label">Page {{currentPage}}</span>
   
     <!-- Next -->
-    <button class="page-btn" [class.disabled]="currentPage === totalPages"
-        (click)="goPage(currentPage + 1)">
-  <i class="bi bi-chevron-right"></i>
-</button>
+    <button class="page-btn next" [class.disabled]="currentPage === totalPages"
+            (click)="goPage(currentPage + 1)">
+      <i class="bi bi-chevron-right"></i>
+    </button>
   </div>
+  
   
 
   <!-- Actions -->
