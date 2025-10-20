@@ -1,0 +1,58 @@
+<!-- Assign Modal -->
+<div class="modal-backdrop-custom" *ngIf="showAssign" (click)="close()">
+  <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Assign Issue</h5>
+        <button class="btn-close" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+          <label for="assignTo">Assign To:</label>
+          <select id="assignTo" class="form-control" [(ngModel)]="issue.assignedTo">
+            <option *ngFor="let u of users" [value]="u">{{ u }}</option>
+          </select>
+        </div>
+        <div class="form-group mb-3">
+          <label for="dueDate">Due Date:</label>
+          <input id="dueDate" type="date" class="form-control" [(ngModel)]="issue.dueDate"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="submitAssign()">Save</button>
+        <button class="btn btn-secondary" (click)="close()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Status Modal -->
+<div class="modal-backdrop-custom" *ngIf="showStatus" (click)="close()">
+  <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Status</h5>
+        <button class="btn-close" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+          <label for="status">Status:</label>
+          <select id="status" class="form-control" [(ngModel)]="issue.status">
+            <option value="open">Open</option>
+            <option value="in-progress">In Progress</option>
+            <option value="done">Done</option>
+            <option value="reject">Reject</option>
+          </select>
+        </div>
+        <div class="form-group mb-3">
+          <label for="remark">Remark:</label>
+          <textarea id="remark" class="form-control" rows="3" [(ngModel)]="issue.annotation"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="submitStatus()">Save</button>
+        <button class="btn btn-secondary" (click)="close()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
