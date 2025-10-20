@@ -113,6 +113,16 @@ export class AuthService {
     this.setUsername(null);
   }
 
+  //resetpassword
+  request(email: string): Observable<any> {
+    return this.http.post(`${this.base}/auth/password-reset/request`, { email });
+  }
+
+  confirm(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.base}/auth/password-reset/confirm`, { token, newPassword });
+  }
+
+
   // ===== helper =====
   /** อ่าน username จาก JWT (พยายามดู username/preferred_username/sub/email) */
   private decodeJwtUsername(jwt: string | null): string | null {
