@@ -352,6 +352,8 @@ body.dark-mode .modal-footer .btn-primary:hover {
 
 
 
+
+
 /* Base container */
 .mat-mdc-snack-bar-container.app-snack {
   --bg: #2563eb;
@@ -436,7 +438,7 @@ body.dark-mode .modal-footer .btn-primary:hover {
   justify-content: center;
 }
 
-/* 👇 Mobile: Center + ขยายไม่ให้แคบเกินไป */
+/*  Mobile: Center + ขยายไม่ให้แคบเกินไป */
 @media (max-width: 600px) {
   .mat-mdc-snack-bar-container.app-snack {
     max-width: 90vw !important;   /* ใช้ % ของหน้าจอ */
