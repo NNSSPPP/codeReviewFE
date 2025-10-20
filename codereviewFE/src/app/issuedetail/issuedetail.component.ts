@@ -2,9 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import{IssuemodalComponent} from '../issuemodal/issuemodal.component';
 import { IssueService, Issue as ApiIssue, AddCommentPayload } from '../services/issueservice/issue.service';
 import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../services/authservice/auth.service';
+import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 
 interface Attachment { filename: string; url: string; }
 interface IssueComment {
@@ -12,9 +14,12 @@ interface IssueComment {
   attachments?: Attachment[]; mentions?: string[];
 }
 interface Issue {
-  id: string; type: string; title: string; severity: string;
+  id: string; 
+  type: string; 
+  title: string; 
+  severity: string;
   priority: 'Low' | 'Medium' | 'High' | 'Critical';
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
+  status: 'open' | 'in-progress' | 'done' | 'reject';
   project: string; file: string; line: number; created: string;
   assignedTo?: string[]; dueDate: string; description: string;
   vulnerableCode: string; recommendedFix: string; comments: IssueComment[];
@@ -25,7 +30,7 @@ const isUUID = (s: string) =>
 @Component({
   selector: 'app-issuedetail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,IssuemodalComponent],
   templateUrl: './issuedetail.component.html',
   styleUrl: './issuedetail.component.css',
 })
@@ -53,6 +58,7 @@ export class IssuedetailComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly issueApi: IssueService,
+    private readonly repositoryService: RepositoryService
   ) { }
 
   ngOnInit(): void {
@@ -75,6 +81,7 @@ export class IssuedetailComponent implements OnInit {
 
   /* ===================== Mapper (BE -> FE) ===================== */
   private toIssue(r: ApiIssue): Issue {
+    console.log('Raw API issue:', r);
     return {
       id: (r as any).id ?? r.issueId ?? '',
       type: (r as any).type ?? 'Issue',
@@ -98,19 +105,19 @@ export class IssuedetailComponent implements OnInit {
 
   private mapStatusBeToFe(s: ApiIssue['status'] | undefined): Issue['status'] {
     switch (s) {
-      case 'Open': return 'open';
-      case 'In Progress': return 'in-progress';
-      case 'Resolved': return 'resolved';
-      case 'Closed': return 'closed';
+      case 'OPEN': return 'open';
+      case 'IN PROGRESS': return 'in-progress';
+      case 'DONE': return 'done';
+      case 'REJECT': return 'reject';
       default: return 'open';
     }
   }
   private mapStatusFeToBe(s: Issue['status']): ApiIssue['status'] {
     switch (s) {
-      case 'open': return 'Open';
-      case 'in-progress': return 'In Progress';
-      case 'resolved': return 'Resolved';
-      case 'closed': return 'Closed';
+      case 'open': return 'OPEN';
+      case 'in-progress': return 'IN PROGRESS';
+      case 'done': return 'DONE';
+      case 'reject': return 'REJECT';
     }
   }
 
@@ -140,12 +147,12 @@ export class IssuedetailComponent implements OnInit {
 
 
   updateStatus() {
-    // open -> in-progress -> resolved (แล้วหยุด)
+    // open -> in-progress -> done (แล้วหยุด)
     let next: Issue['status'] | null = null;
     switch (this.issue.status) {
       case 'open': next = 'in-progress'; break;
-      case 'in-progress': next = 'resolved'; break;
-      case 'resolved': next = null; break;
+      case 'in-progress': next = 'done'; break;
+      case 'done': next = null; break;
     }
     if (!next) return;
 
@@ -185,15 +192,45 @@ export class IssuedetailComponent implements OnInit {
     }
   }
 
-  closeIssue() {
-    if (this.issue.status !== 'resolved') {
-      alert('You must resolve the issue before closing it.'); return;
-    }
-    const prev = this.issue.status;
-    this.issue.status = 'closed'; // optimistic
+  rejectIssue() {
+  // toggle: ถ้าเป็น reject แล้ว → กลับไป open
+  const next: Issue['status'] = this.issue.status === 'reject' ? 'open' : 'reject';
+  const prev = this.issue.status;
 
-    this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe('closed')).subscribe({
-      error: err => { console.error('closeIssue error', err); this.issue.status = prev; }
-    });
+  // เปลี่ยนใน FE ก่อน (optimistic update)
+  this.issue.status = next;
+
+  // เรียก API ไปอัปเดตสถานะใน backend
+  this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe(next)).subscribe({
+    next: () => console.log(`Status changed to ${next}`),
+    error: err => {
+      console.error('rejectIssue error', err);
+      this.issue.status = prev; // rollback ถ้า error
+    }
+  });
+}
+
+showAssignModal = false;
+showStatusModal = false;
+
+openAssignModal() { this.showAssignModal = true; }
+openStatusModal() { this.showStatusModal = true; }
+closeModal() {
+  this.showAssignModal = false;
+  this.showStatusModal = false;
+}
+
+ handleAssignSubmit(updated: Issue) {
+    console.log('Assigned issue:', updated);
+    this.issue.assignedTo = updated.assignedTo;
+    this.closeModal();
   }
+
+  handleStatusSubmit(updated: Issue) {
+    console.log('Status updated:', updated);
+    this.issue.status = updated.status;
+   // this.issue.remark = updated.remark;
+    this.closeModal();
+  }
+
 }
