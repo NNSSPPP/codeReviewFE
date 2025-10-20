@@ -91,12 +91,18 @@
         </div>
         <div class="status-summary">
           <div class="status-item passed">
-            <i class="bi bi-check-circle-fill"></i> Passed
-            <span>{{ Data.passedCount }}</span>
+            <i class="bi bi-check-circle-fill"></i>  
+            <div class="status-info">
+      <span class="label">Passed</span>
+      <span class="count">{{ Data.passedCount }}</span>
+    </div>
           </div>
           <div class="status-item failed">
-            <i class="bi bi-x-circle-fill"></i> Failed
-            <span>{{ Data.failedCount }}</span>
+            <i class="bi bi-x-circle-fill"></i> 
+            <div class="status-info">
+      <span class="label">Failed</span>
+      <span class="count">{{ Data.failedCount }}</span>
+    </div>
           </div>
         </div>
       </div>
@@ -134,7 +140,7 @@
             <td>{{ scan.time | date:'dd/MM/yyyy, hh:mm a' }}</td>
             <td>
               <button *ngIf="scan.status === 'Passed'" class="btn btn-primary btn-sm text-white" title="view scan"
-                type="button">
+                type="button" >
                 <i class="bi bi-eye"></i>
               </button>
 
@@ -170,28 +176,28 @@
     <div class="metric-icon"><i class="bi bi-bug-fill"></i></div>
     <div class="metric-title">Bugs</div>
     <div class="metric-value">{{ dashboardData.metrics.bugs }}</div>
-    <div class="metric-change decrease">↓ 5 today</div>
+    <!-- <div class="metric-change decrease">↓ 5 today</div> -->
   </div>
 
   <div class="metric-card security">
     <div class="metric-icon"><i class="bi bi-shield-lock"></i></div>
     <div class="metric-title">Security</div>
     <div class="metric-value">{{ dashboardData.metrics.vulnerabilities }}</div>
-    <div class="metric-change increase">↑ 1 today</div>
+    <!-- <div class="metric-change increase">↑ 1 today</div> -->
   </div>
 
   <div class="metric-card code-smells">
     <div class="metric-icon"><i class="bi bi-wind"></i></div>
     <div class="metric-title">Code Smells</div>
     <div class="metric-value">{{ dashboardData.metrics.codeSmells }}</div>
-    <div class="metric-change decrease">↓ 12 today</div>
+    <!-- <div class="metric-change decrease">↓ 12 today</div> -->
   </div>
 
   <div class="metric-card coverage">
     <div class="metric-icon"><i class="bi bi-check2-circle"></i></div>
     <div class="metric-title">Coverage</div>
     <div class="metric-value">{{ dashboardData.metrics.coverage }}%</div>
-    <div class="metric-change increase">↑ 2.3%</div>
+    <!-- <div class="metric-change increase">↑ 2.3%</div> -->
   </div>
 </div>
 

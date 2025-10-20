@@ -31,15 +31,18 @@
       <option>All Status</option>
       <option value="open">Open</option>
       <option value="in-progress">In Progress</option>
-      <option value="resolved">Resolved</option>
+      <option value="done">Done</option>
+      <option value="reject">Reject</option>
     </select>
 
-    <select class="form-select w-auto" [(ngModel)]="filterProject">
-      <option>All Projects</option>
-      <option>API-Service</option>
-      <option>Angular-App</option>
-      <option>Web-Portal</option>
-      <option>Auth-Service</option>
+    <select class="form-select w-auto"
+        [(ngModel)]="filterProject"
+        (change)="currentPage = 1">
+  <option value="All Projects">All Projects</option>
+  <option *ngFor="let project of projects"
+          [value]="project.name">
+    {{ project.name }}
+  </option>
     </select>
 
     <input class="form-control w-auto" type="text" placeholder="Search issues..." [(ngModel)]="searchText">

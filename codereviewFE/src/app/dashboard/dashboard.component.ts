@@ -28,6 +28,7 @@ interface SecurityHotspot {
   project: string;
 }
 interface ScanHistory {
+  scanId: string;
   projectId: string;
   project: string;
   typeproject: 'Angular' | 'SpringBoot';
@@ -64,7 +65,6 @@ export class DashboardComponent {
     private readonly router: Router,
     private readonly dash: DashboardService,
     private readonly auth: AuthService,
-    private readonly issueService: IssueService
   ) { }
 
   ngOnInit() {
@@ -75,6 +75,7 @@ export class DashboardComponent {
       next: data => console.log('Dashboard overview data:', data),
       error: err => console.error('Error fetching dashboard overview:', err)
     });
+
 
   }
 
@@ -114,6 +115,7 @@ export class DashboardComponent {
         this.applyOverview(overview);
         this.applyHistory(history);
         this.applyTrends(trends);
+         this.recomputeStatusCountsFromHistory();
         this.calculateProjectDistribution();
         this.loadDashboardData();
         this.loadCoverageChart();
@@ -174,6 +176,7 @@ export class DashboardComponent {
       const t = new Date(h.createdAt);
       const typeproject = this.normalizeProjectType((h as any).projectType);
       return {
+        scanId: (h as any).scanId,
         projectId: (h as any).projectId,
         project: (h as any).projectName,
         typeproject,
@@ -371,8 +374,8 @@ export class DashboardComponent {
     y += 7;
     pdf.setFontSize(11);
     pdf.setTextColor(0);
-    pdf.text(`Passed: ${this.mockData.passedCount}`, margin, y); y += 5;
-    pdf.text(`Failed: ${this.mockData.failedCount}`, margin, y); y += 10;
+    pdf.text(`Passed: ${this.Data.passedCount}`, margin, y); y += 5;
+    pdf.text(`Failed: ${this.Data.failedCount}`, margin, y); y += 10;
   
     // =========================
     // 4. Recent Scans Table
@@ -446,13 +449,6 @@ export class DashboardComponent {
   }
   
 
-
-  // Mock data
-  mockData = {
-    passedCount: 15,
-    failedCount: 10
-  };
-
   // ฟังก์ชันคำนวณสีตามเกรด
   getGradeColor(grade: string): string {
     switch (grade) {
@@ -468,7 +464,7 @@ export class DashboardComponent {
 
   loadDashboardData() {
     // คำนวณรวมโปรเจกต์
-    this.totalProjects = this.mockData.passedCount + this.mockData.failedCount;
+    this.totalProjects = this.Data.passedCount + this.Data.failedCount;
    
 
     let passPercent: number;
@@ -546,6 +542,10 @@ export class DashboardComponent {
   }
 
   onRefresh() { this.fetchFromServer(this.auth.userId!); }
-  onLogout() { this.router.navigate(['/']); }
+
+  viewScan(scanId: string) {
+    this.router.navigate(['/scanresult', scanId]);
+  }
+ 
 }
 
