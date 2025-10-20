@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { IssueService } from '../services/issueservice/issue.service';
 import { AuthService } from '../services/authservice/auth.service';
+import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 
 interface Issue {
   issuesId: string;
@@ -26,11 +27,15 @@ interface Issue {
 })
 export class IssueComponent {
   issueId: string | null = null;
+  repositories: Repository[] = [];
+  filteredRepositories: Repository[] = [];
+  projects: { name: string }[] = [];
 
   constructor(
     private readonly router: Router,
     private readonly issueApi: IssueService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly repositoryService: RepositoryService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +54,12 @@ export class IssueComponent {
 
     this.loadIssues(String(userId));
     console.log(`Issue ID: ${this.issueId}`);
+
+    this.repositoryService.getAllRepo().subscribe(repos => {
+  const uniqueNames = Array.from(new Set(repos.map(repo => repo.name)));
+  this.projects = uniqueNames.map(name => ({ name }));
+});
+
   }
 
   // ---------- Filters ----------
@@ -138,15 +149,19 @@ export class IssueComponent {
   }
 
   // ---------- Filter / Page ----------
-  filterIssues() {
-    return this.issues.filter(i =>
-      (this.filterType === 'All Types'     || i.type === this.filterType) &&
-      (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
-      (this.filterStatus === 'All Status'  || i.status === this.filterStatus) &&
-      (this.filterProject === 'All Projects' || i.projectName === this.filterProject) &&
-      (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
-    );
-  }
+ filterIssues() {
+  return this.issues.filter(i =>
+    (this.filterType === 'All Types'     || i.type === this.filterType) &&
+    (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
+    (this.filterStatus === 'All Status'  || i.status === this.filterStatus) &&
+    (
+      this.filterProject === 'All Projects' ||
+      i.projectName?.toLowerCase().trim() === this.filterProject.toLowerCase().trim()
+    ) &&
+    (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
+  );
+}
+
 
   get filteredIssues() {
     return this.filterIssues();
