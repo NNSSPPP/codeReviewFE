@@ -2,31 +2,40 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../services/authservice/auth.service';
+import {MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   standalone: true,
   selector: 'app-reset-password',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatSnackBarModule],
   templateUrl: './reset-password.html',
   styleUrls: ['./reset-password.scss']
 })
 export class ResetPasswordComponent implements OnInit {
   token: string | null = null;
   loading = false;
-  msg = '';
   form: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private svc: AuthService
+    private readonly fb: FormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly svc: AuthService,
+    private readonly snack: MatSnackBar
   ) {
     this.form = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
-    });
+      }, { validators: this.passwordMatchValidator });
+  }
+
+    // Custom validator for password match
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const newPassword = group.get('newPassword')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return newPassword === confirmPassword ? null : { mismatch: true };
   }
 
   ngOnInit(): void {
@@ -42,19 +51,46 @@ export class ResetPasswordComponent implements OnInit {
     }
   });
 }
+goBack() {
+  this.router.navigate(['/forgot-password']);
+}
 
   submit() {
-    // const { newPassword, confirmPassword } = this.form.value;
-    // if (!this.token) { this.msg = 'ลิงก์ไม่ถูกต้อง (ไม่มี token)'; return; }
-    // if (this.form.invalid || newPassword !== confirmPassword) {
-    //   this.msg = 'รหัสผ่านไม่ตรงกันหรือไม่ถูกต้อง';
-    //   return;
-    // }
-    // this.loading = true; this.msg = '';
-    // this.svc.confirm(this.token, newPassword!)
-    //   .subscribe({
-    //     next: () => { this.msg = 'ตั้งรหัสผ่านใหม่สำเร็จ!'; this.loading = false; setTimeout(() => this.router.navigateByUrl('/login'), 1200); },
-    //     error: (err: any) => { this.msg = err?.error?.message || 'โทเคนหมดอายุหรือไม่ถูกต้อง'; this.loading = false; }
-    //   });
+     if (!this.token) {
+      this.showToast('Cannot reset password: invalid or missing token');
+      return;
+    }
+    
+   if (this.form.invalid) {
+      if (this.form.errors?.['mismatch']) {
+        this.showToast('Passwords do not match');
+      } else if (this.form.get('newPassword')?.errors?.['minlength']) {
+        this.showToast('Password must be at least 8 characters');
+      } else {
+        this.showToast('Please fill in all required fields');
+      }
+      return;
+    }
+    const { newPassword } = this.form.value;
+    this.loading = true; 
+    this.svc.confirm(this.token, newPassword!)
+      .subscribe({
+        next: () => { 
+          this.loading = false; 
+          this.showToast('Password reset successfully!', 'blue');
+          setTimeout(() => this.router.navigateByUrl('/login'), 1200); },
+        error: (err: any) => {
+          this.loading = false; 
+          this.showToast(err?.error?.message ||  'Token expired or invalid'); }
+      });
+  }
+
+   private showToast(message: string, color: 'red' | 'blue' = 'red') {
+    this.snack.open(message, '', {
+      duration: 2500,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: ['app-snack', color === 'red' ? 'app-snack-red' : 'app-snack-blue']
+    });
   }
 }

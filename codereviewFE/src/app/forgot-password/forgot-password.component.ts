@@ -3,23 +3,24 @@ import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/authservice/auth.service';
 import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   standalone: true,
   selector: 'app-forgot-password',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatSnackBarModule],
   templateUrl: './forgot-password.html',
   styleUrls: ['./forgot-password.scss'],
 })
 export class ForgotPasswordComponent {
   form: FormGroup;
   loading = false;
-  msg = '';
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly snack: MatSnackBar
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -27,24 +28,40 @@ export class ForgotPasswordComponent {
   }
 
   submit(): void {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.snack.open('Please fill in a valid email.', '', {
+        duration: 2500,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['app-snack', 'app-snack-red'],
+      });
+      return;
+    }
 
     this.loading = true;
-    this.msg = '';
-
     const email = this.form.get('email')?.value;
 
-    // this.authService.request(email).subscribe({
-    //   next: (res) => {
-    //     this.msg = res?.message || 'ถ้ามีบัญชีนี้ เราได้ส่งลิงก์รีเซ็ตไปที่อีเมลแล้ว';
-    //     this.loading = false;
-    //     this.form.reset();
-    //   },
-    //   error: (err) => {
-    //     this.msg = err.error?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
-    //     this.loading = false;
-    //   },
-    // });
+    this.authService.request(email).subscribe({
+      next: (res) => {
+        this.loading = false;
+        this.form.reset();
+        this.snack.open(res?.message || 'If the account exists, a reset link has been sent.', '', {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-green'],
+        });
+      },
+      error: (err) => {
+        this.loading = false;
+        this.snack.open(err.error?.message || 'Something went wrong. Please try again.', '', {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red'],
+        });
+      },
+    });
   }
 
   goBack(): void {
