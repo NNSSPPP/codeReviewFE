@@ -381,7 +381,10 @@ body.dark-mode .modal-footer .btn-primary:hover {
   --bg: #ef4444; /* red-500 */
   --fg: #fff;
 }
-
+.mat-mdc-snack-bar-container.app-snack-green {
+  --bg: #27ae60; /* green-500 */
+  --fg: #fff;
+}
 /* Surface (ล้างค่า width:100% ของ Material ออก) */
 .mat-mdc-snack-bar-container.app-snack .mdc-snackbar__surface {
   background: transparent !important;
