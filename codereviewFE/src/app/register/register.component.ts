@@ -64,10 +64,16 @@ export class RegisterComponent {
 
 
   onSubmit(form: NgForm) {
-
-    this.submitted = true;
+  
+    this.submitted = true; 
 
     if (form.invalid || this.passwordsMismatch) {
+      this.snack.open('Registration failed', '', {
+        duration: 2500,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['app-snack', 'app-snack-red'], 
+      });
       return;
     }
 
@@ -81,11 +87,11 @@ export class RegisterComponent {
     }).subscribe({
       next: (res: any) => {
         this.loading = false;
-        this.snack.open('Registered Successfully!', '', {
+        this.snack.open('Successfully registered!', '', {
           duration: 2500,
-          horizontalPosition: 'center',
+          horizontalPosition: 'right',
           verticalPosition: 'top',
-          panelClass: ['app-snack', 'app-snack-blue'], // ฟ้า-ขาว รองรับ dark mode
+          panelClass: ['app-snack', 'app-snack-blue'], 
         });
         this.router.navigate(['/login']);
       },
@@ -109,6 +115,12 @@ export class RegisterComponent {
           if (msg.includes('email')) form.controls['email']?.setErrors({ ...(form.controls['email']?.errors || {}), duplicate: true });
           if (msg.includes('phone')) form.controls['phoneNumber']?.setErrors({ ...(form.controls['phoneNumber']?.errors || {}), duplicate: true });
         }
+        this.snack.open('Registration failed', '', {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red'], 
+        });
       }
     });
   }
