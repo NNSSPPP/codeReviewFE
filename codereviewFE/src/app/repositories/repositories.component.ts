@@ -124,53 +124,68 @@ export class RepositoriesComponent implements OnInit {
     ];
   }
 
-  runScan(repo: Repository) {
-    if (repo.status === 'Scanning') return;
-  
-    // ✅ ตรวจว่ามี Sonar Project Key
-    if (!repo.sonarProjectKey) {
-      console.error('Missing sonar_project_key for repository:', repo.name);
-      alert('Cannot start scan: Sonar project key is not configured');
-      return;
-    }
-  
-    repo.status = 'Scanning';
-    repo.scanningProgress = 0;
-    
-  
-    // ✅ ดึง token จาก AuthService
-    const token = this.authService.token || '';
-  
-    this.scanService.startScan({
-      repoUrl: repo.repositoryUrl,
-      projectKey: repo.sonarProjectKey,
-      // branchName: 'main', // ← เพิ่มค่า default
-      token: 'squ_b08ac6796e11f69b76072768c35e90b95d4ec49a'
-    })
-    .subscribe({
-      next: (res) => {
-        console.log('Scan started successfully:', res);
-  
-        const interval = setInterval(() => {
-          repo.scanningProgress = Math.min((repo.scanningProgress ?? 0) + 20, 100);
-          this.updateSummaryStats(); 
-  
-          if (repo.scanningProgress >= 100) {
-            repo.status = this.scanService.mapStatus(res.status);
-            repo.lastScan = new Date();
-            clearInterval(interval);
-            this.updateSummaryStats(); 
-          }
-        }, 500);
-      },
-      error: (err) => {
-        console.error('Scan failed:', err);
-        repo.status = 'Error';
-        repo.scanningProgress = 0;
-        this.updateSummaryStats(); // ✅ อัปเดต summary card
-      }
-    });
+ runScan(repo: Repository) {
+  if (repo.status === 'Scanning') return;
+
+  // ✅ ตรวจว่ามี Sonar Project Key
+  if (!repo.sonarProjectKey) {
+    console.error('Missing sonar_project_key for repository:', repo.name);
+    alert('Cannot start scan: Sonar project key is not configured');
+    return;
   }
+
+  // ✅ ตรวจว่ามี username/password หรือไม่
+  if (!repo.username || !repo.password) {
+    console.warn('Missing username or password for scan:', repo.name);
+    alert('Please provide repository credentials before scanning.');
+    return;
+  }
+
+  // ✅ อัปเดตสถานะก่อนเริ่มสแกน
+  repo.status = 'Scanning';
+  repo.scanningProgress = 0;
+
+  // ✅ เรียก service เริ่มสแกน
+ this.scanService.startScan(
+  repo.projectId!, // 👈 argument ตัวแรก
+  {
+    repoUrl: repo.repositoryUrl,
+    projectKey: repo.sonarProjectKey!,
+    username: repo.username,
+    password: repo.password,
+  }
+)
+  .subscribe({
+    next: (res) => {
+      console.log('Scan started successfully:', res);
+
+      const interval = setInterval(() => {
+        repo.scanningProgress = Math.min((repo.scanningProgress ?? 0) + 20, 100);
+        this.updateSummaryStats();
+
+        if (repo.scanningProgress >= 100) {
+          repo.status = this.scanService.mapStatus(res.status || 'DONE');
+          repo.lastScan = new Date();
+          clearInterval(interval);
+          this.updateSummaryStats();
+        }
+      }, 500);
+
+      // ✅ หลังจากสแกนเริ่มแล้ว ให้ล้าง username/password เพื่อไม่เก็บไว้
+      setTimeout(() => {
+        delete repo.username;
+        delete repo.password;
+      }, 1000);
+    },
+    error: (err) => {
+      console.error('Scan failed:', err);
+      repo.status = 'Error';
+      repo.scanningProgress = 0;
+      this.updateSummaryStats();
+    }
+  });
+}
+
   
 
   resumeScan(repo: Repository) {

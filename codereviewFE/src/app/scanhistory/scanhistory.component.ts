@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import{Scan , ScanService} from '../services/scanservice/scan.service';
 
-
-
 @Component({
   selector: 'app-scanhistory',
   standalone: true,
@@ -133,36 +131,36 @@ export class ScanhistoryComponent {
     return;
   }
 
-  // ✅ สร้าง CSV header + rows
+  //สร้าง CSV header + rows
   const header = Object.keys(flatData[0]).join(',');
   const rows = flatData.map(r => Object.values(r).join(',')).join('\n');
   const csv = header + '\n' + rows;
 
-  // ✅ สร้าง Blob สำหรับดาวน์โหลด
+  // สร้าง Blob สำหรับดาวน์โหลด
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
 
-  // ✅ ตั้งชื่อไฟล์แบบ meaningful
+  // ตั้งชื่อไฟล์แบบ meaningful
   const now = new Date();
   const dateStr = `${now.getFullYear()}-${(now.getMonth() + 1)
     .toString()
     .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
 
-  // 🧩 ดึงชื่อ project ของ scan แรกมาใส่ในชื่อไฟล์ (หรือใช้ "multiple" ถ้ามากกว่า 1 โครงการ)
+  // ดึงชื่อ project ของ scan แรกมาใส่ในชื่อไฟล์ (หรือใช้ "multiple" ถ้ามากกว่า 1 โครงการ)
   const uniqueProjects = [...new Set(this.selectedScans.map(s => s.projectId ?? 'Unknown'))];
   const projectName =
     uniqueProjects.length === 1
       ? uniqueProjects[0].replace(/\s+/g, '_') // เปลี่ยนช่องว่างเป็น "_"
       : 'multiple_projects';
 
-  // 🧩 ใส่จำนวนรายการที่เลือกไว้ในชื่อไฟล์ด้วย
+  // ใส่จำนวนรายการที่เลือกไว้ในชื่อไฟล์ด้วย
   const count = this.selectedScans.length;
 
-  // 🔥 สุดท้ายได้ชื่อไฟล์เช่น:
-  //    scan_export_ProjectA_2025-10-20_3items.csv
+  // สุดท้ายได้ชื่อไฟล์เช่น:
+  //  scan_export_ProjectA_2025-10-20_3items.csv
   const fileName = `scan_export_${projectName}_${dateStr}_${count}items.csv`;
 
-  // ✅ Trigger download
+  // Trigger download
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', fileName);

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { AuthService } from '../services/authservice/auth.service';
 
 interface SubmenuItem {
   label: string;
@@ -54,7 +55,7 @@ export class NavbarComponent {
     { label: 'Logout', icon: 'bi-box-arrow-right', link: '/' }
   ];
 
-  constructor(private readonly router: Router) {
+  constructor(private readonly router: Router, public readonly authService: AuthService) {
 
     
     // ตั้ง submenu ให้เปิดตาม URL ตอนโหลดและเปลี่ยน route
@@ -79,6 +80,10 @@ export class NavbarComponent {
 
   toggleSubmenu(key: string) {
     this.submenuOpen[key] = !this.submenuOpen[key];
+  }
+  
+   logout(): void {
+    this.authService.logout(); // เรียกใช้ฟังก์ชันจาก service
   }
 
   

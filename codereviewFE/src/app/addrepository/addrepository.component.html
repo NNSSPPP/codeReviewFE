@@ -12,8 +12,8 @@
         <div class="mb-3">
           <label for="name" class="form-label">Repository Name <span class="required">*</span></label>
           <input type="text" class="form-control" name="name"
-                 [(ngModel)]="gitRepository.name" required minlength="3" #name="ngModel">
-          <div class="error" *ngIf="name.invalid && name.touched">Name is required (min 3 chars).</div>
+                 [(ngModel)]="gitRepository.name" required minlength="5" #name="ngModel" (ngModelChange)="onNameChange($event)" >
+          <div class="error" *ngIf="name.invalid && name.touched">Name is required (min 5 chars).</div>
         </div>
 
         <div class="mb-3">
@@ -82,7 +82,12 @@
         <div class="mb-3">
           <label for="sonarProjectKey" class="form-label">Project Key <span class="required">*</span> </label>
           <input type="text" class="form-control" name="sonarProjectKey"
-                 [(ngModel)]="gitRepository.sonarProjectKey" required #sonarProjectKey="ngModel">
+       [(ngModel)]="sonarConfig.projectKey"
+       [disabled]="true"  
+       required #sonarProjectKey="ngModel">
+
+          <!-- <input type="text" class="form-control" name="sonarProjectKey"
+                 [(ngModel)]="gitRepository.sonarProjectKey" required #sonarProjectKey="ngModel" [disabled]="!isEditMode"> -->
           <div class="error" *ngIf="sonarProjectKey.invalid && sonarProjectKey.touched">Project key required.</div>
         </div>
 

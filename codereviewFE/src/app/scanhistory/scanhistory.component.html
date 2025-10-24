@@ -52,7 +52,7 @@
           </td>
   
           <td>
-            {{scan.projectId}} <br />
+            {{scan.projectName}} <br />
             <span [ngClass]="statusClass(scan.status)">
               <i [ngClass]="statusIcon(scan.status)"></i> {{scan.status}}
             </span>
@@ -133,7 +133,7 @@
         <thead>
           <tr>
             <th>Metric</th>
-            <th *ngFor="let scan of selectedScans">{{scan.projectId}} ({{scan.startedAt | date:'yyyy-MM-dd'}})</th>
+            <th *ngFor="let scan of selectedScans">{{scan.projectName}} ({{scan.startedAt | date:'yyyy-MM-dd'}})</th>
           </tr>
         </thead>
         <tbody>

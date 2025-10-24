@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { AuthService } from '../authservice/auth.service';
+import { environment } from '../../environments/environment';
 
 export type ScanStatus = 'Active' | 'Scanning' | 'Error' | 'Cancelled';
 export type YN = 'Y' | 'N';
@@ -10,6 +11,7 @@ export interface Scan {
 
   scanId: string;            // UUID
   projectId: string;          // UUID
+  projectName: string;
   qualityGate?: string;
   startedAt?: Date;
   completedAt?: Date;
@@ -22,9 +24,11 @@ export interface Scan {
   duplicationGate?: YN;
   // metrics?: Record<string, number>;
   metrics?: {
-    coverage?: number;
     bugs?: number;
     vulnerabilities?: number;
+    codeSmells?: number;
+    coverage?: number;   
+    duplications?: number; 
   };
 
 
@@ -40,7 +44,8 @@ export interface ScanRequest {
   repoUrl: string;
   projectKey: string;
   branchName?: string;
-  token: string;
+ username?: string;  // ✅ เพิ่ม
+  password?: string;  // ✅ เพิ่ม
 }
 
 // หมายเหตุ: ชนิดนี้ต้อง "ตรงกับของ Spring" จริง ๆ
@@ -54,9 +59,8 @@ export interface ScanLogModel {
 @Injectable({ providedIn: 'root' })
 export class ScanService {
   private readonly http = inject(HttpClient);
-  // แนะนำย้ายไป environment: `${environment.apiBaseUrl}/scans`
-  private readonly base = 'http://localhost:8080/api/scans';
   private readonly auth = inject(AuthService);
+  private readonly base = environment.apiUrl + '/scans';
 
   private authOpts() {
       const token = this.auth.token;
@@ -66,20 +70,22 @@ export class ScanService {
     }
 
   /** POST /api/scans — เริ่มสแกน */
-  startScan(req: ScanRequest): Observable<Scan> {
-    console.log('[ScanService] Starting scan for repository:', req);
-    return this.http.post<Scan>(this.base, req, this.authOpts());
-  }
+startScan(projectId: string, req: ScanRequest): Observable<Scan> {
+  console.log('[ScanService] Starting scan for repository:', req, 'projectId:', projectId);
+  return this.http.post<Scan>(`${this.base}/${projectId}`, req);
+}
+
 
   /** GET /api/scans — ดึงสแกนทั้งหมด */
   getAllScan(): Observable<Scan[]> {
     console.log('[ScanService] Fetching all scans...');
-    return this.http.get<Scan[]>(this.base, this.authOpts()).pipe(
+    return this.http.get<Scan[]>(`${this.base}/getProject`).pipe(
       map(scans => {
         console.log('[ScanService] Raw scans from backend:', scans);
         const mapped = scans.map(s => ({
           ...s,
-          status: this.mapStatus(s.status)
+          status: this.mapStatus(s.status),
+          qualityGate: this.mapQualityStatus(s.qualityGate ?? '')
         }));
         console.log('[ScanService] Mapped scans:', mapped);
         return mapped;
@@ -87,23 +93,23 @@ export class ScanService {
     );
   }
 
-  /** GET /api/scans/{id} — รายละเอียดสแกน */
+  /** GET /api/scans/{scanid} — รายละเอียดสแกน */
   getByScanId(id: string): Observable<Scan> {
-    return this.http.get<Scan>(`${this.base}/${id}`, this.authOpts()).pipe(
+    return this.http.get<Scan>(`${this.base}/${id}`).pipe(
       map(s => ({ ...s, status: this.mapStatus(s.status) }))
     );
   }
 
   /** GET /api/scans/{id}/log — log ของสแกน */
   getLog(id: string): Observable<ScanLogModel> {
-    return this.http.get<ScanLogModel>(`${this.base}/${id}/log`, this.authOpts());
+    return this.http.get<ScanLogModel>(`${this.base}/${id}/log`);
   }
 
   /** POST /api/scans/{id}/cancel — ยกเลิกสแกน */
   cancelScan(id: string): Observable<Scan> {
     // *** ระวัง: ใน Controller ใช้ @PostMapping("/{id}/cancel") แต่พารามิเตอร์ชื่อ scanId
     // ให้แก้ที่ฝั่ง Spring เป็น @PathVariable("id") UUID scanId
-    return this.http.post<Scan>(`${this.base}/${id}/cancel`, null, this.authOpts());
+    return this.http.post<Scan>(`${this.base}/${id}/cancel`, null);
   }
 
   /** ดึงสแกนตาม project_id (ถ้า backend ยังไม่มี endpoint แยก ใช้วิธี filter ฝั่ง client ชั่วคราว) */
@@ -131,6 +137,13 @@ export class ScanService {
         return 'Error'; // fallback
     }
   }
+
+   public mapQualityStatus(status: 'OK' | 'ERROR' | string): 'Passed' | 'Failed' {
+    const s = String(status ?? '').trim().toUpperCase();
+    return s === 'OK' ? 'Passed' : 'Failed';
+  }
+
+  
   
 
 

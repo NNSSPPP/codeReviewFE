@@ -125,9 +125,11 @@ export class IssueComponent {
     // status mapping: 'Open' | 'In Progress' | 'Resolved' | 'Closed' -> 'open' | 'in-progress' | 'resolved' | 'closed'
     const st = (r.status || '').toLowerCase();
     const uiStatus =
+    st.includes('open')      ? 'open':
       st.includes('in progress') ? 'in-progress' :
-      st.includes('resolved')    ? 'resolved' :
-      st.includes('closed')      ? 'closed'   : 'open';
+      st.includes('done')    ? 'done' :
+      st.includes('reject')      ? 'reject':
+      'open';
 
     // assignee: ใช้ user_id/assignedTo ถ้ามี
     const rawAssignee = r.assignedTo || r.userId || '';
@@ -200,50 +202,50 @@ export class IssueComponent {
   }
 
   // ---------- Actions (ยังคงเค้าโครงเดิม) ----------
-  assignDeveloper() {
-    const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
+   assignDeveloper() {
+  //   const selectedIssues = this.issues.filter(i => i.selected);
+  //   if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
 
-    const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
-    const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
-    if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
+  //   const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
+  //   const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
+  //   if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
 
-    // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
-    let ok = 0;
-    selectedIssues.forEach(row => {
-      this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
-        next: () => {
-          row.assignee = `@${dev}`;
-          ok++;
-        },
-        error: (e) => console.error('assign failed', e)
-      });
-    });
+  //   // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
+  //   let ok = 0;
+  //   selectedIssues.forEach(row => {
+  //     this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
+  //       next: () => {
+  //         row.assignee = `@${dev}`;
+  //         ok++;
+  //       },
+  //       error: (e) => console.error('assign failed', e)
+  //     });
+  //   });
 
-    alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
-  }
+  //   alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
+   }
 
   changeStatus() {
-    const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
+    // const selectedIssues = this.issues.filter(i => i.selected);
+    // if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
 
-    const statusSteps = ['open', 'in-progress', 'resolved', 'closed'];
-    selectedIssues.forEach(row => {
-      const idx = statusSteps.indexOf(row.status);
-      const next = statusSteps[Math.min(idx + 1, statusSteps.length - 1)];
-      // แปลงกลับเป็นรูปแบบ API
-      const apiStatus =
-        next === 'in-progress' ? 'In Progress' :
-        next === 'resolved'    ? 'Resolved' :
-        next === 'closed'      ? 'Closed' : 'Open';
+    // const statusSteps = ['open', 'in-progress', 'resolved', 'closed'];
+    // selectedIssues.forEach(row => {
+    //   const idx = statusSteps.indexOf(row.status);
+    //   const next = statusSteps[Math.min(idx + 1, statusSteps.length - 1)];
+    //   // แปลงกลับเป็นรูปแบบ API
+    //   const apiStatus =
+    //     next === 'in-progress' ? 'In Progress' :
+    //     next === 'resolved'    ? 'Resolved' :
+    //     next === 'closed'      ? 'Closed' : 'Open';
 
-      this.issueApi.updateStatus(row.issuesId, apiStatus as any).subscribe({
-        next: () => row.status = next,
-        error: (e) => console.error('update status failed', e)
-      });
-    });
+    //   this.issueApi.updateStatus(row.issuesId, apiStatus as any).subscribe({
+    //     next: () => row.status = next,
+    //     error: (e) => console.error('update status failed', e)
+    //   });
+    // });
 
-    alert(`Requested status change for ${selectedIssues.length} issue(s).`);
+    // alert(`Requested status change for ${selectedIssues.length} issue(s).`);
   }
 
   exportData() {
@@ -308,8 +310,8 @@ export class IssueComponent {
     switch (status.toLowerCase()) {
       case 'open': return 'text-danger';
       case 'in-progress': return 'text-warning';
-      case 'resolved': return 'text-success';
-      case 'closed': return 'text-secondary';
+      case 'done': return 'text-success';
+      case 'reject': return 'text-secondary';
       default: return '';
     }
   }

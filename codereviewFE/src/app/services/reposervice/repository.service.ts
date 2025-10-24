@@ -17,15 +17,20 @@ export interface Repository {
   createdAt?: Date;
   updatedAt?: Date;
 
+  username?: string;
+  password? : string;
+
   scans?: Scan[];
   status?: 'Active' | 'Scanning' | 'Error';
   lastScan?: Date;
   scanningProgress?: number;
   qualityGate?: string;
   metrics?: {
-    coverage?: number;
     bugs?: number;
     vulnerabilities?: number;
+    codeSmells?: number;
+    coverage?: number;   
+    duplications?: number; 
   };
   issues?: Issue[];
 }
@@ -52,12 +57,12 @@ export class RepositoryService {
 
   /** POST /api/repositories */
   addRepo(repo: Partial<Repository>): Observable<Repository> {
-    return this.http.post<Repository>(this.base, repo, this.authOpts());
+    return this.http.post<Repository>(`${this.base}/add`, repo);
   }
 
   /** GET /api/repositories */
   getAllRepo(): Observable<Repository[]> {
-    return this.http.get<Repository[]>(this.base, this.authOpts()).pipe(
+    return this.http.get<Repository[]>(`${this.base}/getAll`).pipe(
       map(repos =>
         repos
           .map(r => ({
@@ -78,8 +83,8 @@ export class RepositoryService {
   }
 
   /** GET /api/repositories/{id} */
-  getByIdRepo(id: string): Observable<Repository> {
-    return this.http.get<Repository>(`${this.base}/${id}`, this.authOpts()).pipe(
+  getByIdRepo(projectId: string): Observable<Repository> {
+    return this.http.get<Repository>(`${this.base}/detail/${projectId}`).pipe(
       map(r => ({
         ...r,
         createdAt: r.createdAt ? new Date(r.createdAt) : undefined,
@@ -90,13 +95,13 @@ export class RepositoryService {
   }
 
   /** PUT /api/repositories/{id} */
-  updateRepo(id: string, repo: Partial<Repository>): Observable<Repository> {
-    return this.http.put<Repository>(`${this.base}/${id}`, repo, this.authOpts());
+  updateRepo(projectId: string, repo: Partial<Repository>): Observable<Repository> {
+    return this.http.put<Repository>(`${this.base}/${projectId}`, repo);
   }
 
   /** DELETE /api/repositories/{id} */
-  deleteRepo(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.base}/${id}`, this.authOpts());
+  deleteRepo(projectId: string): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${projectId}`);
   }
 
   /** POST /api/repositories/clone?projectId=UUID  (backend คืน text) */
@@ -105,26 +110,11 @@ export class RepositoryService {
     return this.http.post(`${this.base}/clone`, null, {
       params,
       responseType: 'text',
-      ...this.authOpts(),
     });
   }
 
-  testGitHubConnection(repositoryUrl: string): Observable<boolean> {
-    if (!repositoryUrl) return of(false);
+  
 
-    // ตัด .git ออกหากมี เพื่อให้เรียกผ่าน browser ได้
-    const cleanUrl = repositoryUrl.endsWith('.git')
-      ? repositoryUrl.replace(/\.git$/, '')
-      : repositoryUrl;
-
-    return this.http.get(cleanUrl, { responseType: 'text' }).pipe(
-      map(() => true),
-      catchError(err => {
-        console.error('GitHub connection failed:', err);
-        return of(false);
-      })
-    );
-  }
 
 
   /** ---------------- Enrich ด้วย Scan/Issue ---------------- */
@@ -169,6 +159,7 @@ export class RepositoryService {
       })
     );
   }
+  
   getFullRepository(projectId: string): Observable<Repository | undefined> {
     return this.getByIdRepo(projectId).pipe(
       switchMap(repo => {

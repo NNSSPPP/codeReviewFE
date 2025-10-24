@@ -1,43 +1,50 @@
 <div class="container mt-4 assignment-wrapper">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <div class="d-flex align-items-center gap-2">
-        <button class="back-btn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
-        <h3 class="mb-0"><i class="bi bi-list-task"></i> My Assignments</h3>
-      </div>
-    
-      <button class="btn btn-outline-primary" (click)="openAssignModal()">
-        <i class="bi bi-person-check"></i> Assign Issue
-      </button>
-      </div>
-      
-  
-    <table class="table table-bordered assignment-table">
-      <thead>
-        <tr>
-          <th>Assigned To</th>
-          <th>Priority</th>
-          <th>Due Date</th>
-          <th>Status</th>
-          <th>Resolution</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let a of assignments">
-          <td>{{ a.assignedTo }}</td>
-          <td><span class="badge bg-{{getPriorityColor(a.priority)}}">{{ a.priority }}</span></td>
-          <td>{{ a.dueDate | date }}</td>
-          <td>{{ a.status }}</td>
-          <td>{{ a.resolution || '-' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  
-    
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <button class="back-btn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
+      <h3 class="mb-0"><i class="bi bi-list-task"></i> My Assignments</h3>
+    </div>
+
+    <button type="button" class="btn btn-outline-primary" (click)="openAssignModal()" title="Change Assignee">
+      <i class="bi bi-person-check"></i> Assign Issue
+    </button>
   </div>
+ <app-issuemodal
+  #assignModal
+  (assignSubmit)="handleAssignSubmit($event)"
+  (closed)="{}">
+</app-issuemodal>
+
+
+  <table class="table table-bordered assignment-table">
+    <thead>
+      <tr>
+        <th>Assigned To</th>
+        <th>Issue</th>
+        <th>Severity</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <!-- <th>Resolution</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of Assign">
+        <td>{{ a.assignedToName }}</td>
+        <td>{{ a.message }}</td>
+        <td><span class="badge bg-{{getPriorityColor(a.severity)}}">{{ a.severity }}</span></td>
+        <td>{{ a.dueDate | date }}</td>
+        <td>{{ a.status }}</td>
+        <!-- <td>{{ a.resolution || '-' }}</td> -->
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
 
 
 <!-- Modal -->
-<div class="modal modal-backdrop-custom" 
+<!-- <div class="modal modal-backdrop-custom" 
      [ngClass]="showAssignModal ? 'modal-show' : 'modal-hide'" 
      (click)="closeAssignModal()">
   <div class="modal-dialog modal-dialog-custom" (click)="$event.stopPropagation()">
@@ -49,8 +56,15 @@
 
       <div class="modal-body">
         <form #assignmentForm="ngForm" (ngSubmit)="onSubmit(assignmentForm)" novalidate>
+          <div class="mb-3">
+            <label for="issueId" class="form-label">Issue ID</label>
+            <input type="text" class="form-control" [(ngModel)]="assignment.issueId" 
+                   name="issueId" #issueId="ngModel" required>
+            <div *ngIf="issueId.invalid && (issueId.dirty || issueId.touched)" class="text-danger small">
+              Please enter an issue ID.
+            </div>
+          </div>
 
-          <!-- Assign To -->
           <div class="mb-3">
             <label for="assignedTo" class="form-label">Assign To</label>
             <select class="form-select" [(ngModel)]="assignment.assignedTo" 
@@ -63,23 +77,7 @@
             </div>
           </div>
 
-          <!-- Priority -->
-          <div class="mb-3">
-            <label for="priority" class="form-label">Priority</label>
-            <select class="form-select" [(ngModel)]="assignment.priority" 
-                    name="priority" #priority="ngModel" required>
-              <option value="" disabled selected>-- Select Priority --</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="critical">Critical</option>
-            </select>
-            <div *ngIf="priority.invalid && (priority.dirty || priority.touched)" class="text-danger small">
-              Please select a priority.
-            </div>
-          </div>
-
-          <!-- Due Date -->
+       
           <div class="mb-3">
             <label for="dueDate" class="form-label">Due Date</label>
             <input type="date" class="form-control" [(ngModel)]="assignment.dueDate" 
@@ -89,33 +87,6 @@
             </div>
           </div>
 
-          <!-- Status -->
-          <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select class="form-select" [(ngModel)]="assignment.status" 
-                    name="status" #status="ngModel" required>
-              <option value="" disabled selected>-- Select Status --</option>
-              <option value="open">Open</option>
-              <option value="in-progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-              <option value="closed">Closed</option>
-            </select>
-            <div *ngIf="status.invalid && (status.dirty || status.touched)" class="text-danger small">
-              Please select a status.
-            </div>
-          </div>
-
-          <!-- Resolution -->
-          <div class="mb-3" *ngIf="assignment.status === 'resolved' || assignment.status === 'closed'">
-            <label for="resolution" class="form-label">Resolution</label>
-            <textarea class="form-control" [(ngModel)]="assignment.resolution" 
-                      name="resolution" #resolution="ngModel" required></textarea>
-            <div *ngIf="resolution?.invalid && (resolution?.dirty || resolution?.touched)" class="text-danger small">
-              Resolution is required when status is Resolved/Closed.
-            </div>
-          </div>
-
-          <!-- Footer -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeAssignModal()">Cancel</button>
             <button type="submit" class="btn btn-primary" [disabled]="assignmentForm.invalid">
@@ -126,5 +97,4 @@
       </div>
     </div>
   </div>
-</div>
-
+</div> -->

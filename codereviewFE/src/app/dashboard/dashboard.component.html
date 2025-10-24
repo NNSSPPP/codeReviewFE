@@ -83,11 +83,19 @@
       <!-- Chart & Status -->
       <div *ngIf="!loading">
         <div class="chart-container">
-          <apx-chart [series]="pieChartOptions.series!" [chart]="pieChartOptions.chart!"
-            [labels]="pieChartOptions.labels!" [colors]="pieChartOptions.colors!"
-            [plotOptions]="pieChartOptions.plotOptions!" [dataLabels]="pieChartOptions.dataLabels!"
-            [legend]="pieChartOptions.legend!" [tooltip]="pieChartOptions.tooltip!">
-          </apx-chart>
+          <div *ngIf="pieChartOptions">
+  <apx-chart
+    [series]="pieChartOptions.series!"
+    [chart]="pieChartOptions.chart!"
+    [labels]="pieChartOptions.labels!"
+    [plotOptions]="pieChartOptions.plotOptions!"
+    [colors]="pieChartOptions.colors!"
+    [dataLabels]="pieChartOptions.dataLabels!"
+    [legend]="pieChartOptions.legend!"
+    [tooltip]="pieChartOptions.tooltip!">
+  </apx-chart>
+</div>
+
         </div>
         <div class="status-summary">
           <div class="status-item passed">
@@ -120,33 +128,33 @@
           <tr>
             <th>Project</th>
             <th>Status</th>
-            <th>Grade</th>
+            <!-- <th>Grade</th> -->
             <th>Time</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let scan of latestScans">
-            <td>{{ scan.project }}</td>
+          <tr *ngFor="let scan of recentScans">
+            <td>{{ scan.projectName }}</td>
             <td [ngClass]="{
-              'status-cell status--passed':  scan.status === 'Passed',
-              'status-cell status--failed':  scan.status === 'Failed'
-            }">{{ scan.status }}</td>
-            <td [ngClass]="{
+              'status-cell status--passed':  scan.qualityGate === 'Passed',
+              'status-cell status--failed':  scan.qualityGate === 'Failed'
+            }">{{ scan.qualityGate }}</td>
+            <!-- <td [ngClass]="{
               'grade-cell grade--a': scan.grade === 'A',
               'grade-cell grade--b': scan.grade === 'B',
               'grade-cell grade--c': scan.grade === 'C',
               'grade-cell grade--d': scan.grade === 'D',
               'grade-cell grade--e': scan.grade === 'E'
-            }">{{ scan.grade }}</td>
-            <td>{{ scan.time | date:'dd/MM/yyyy, hh:mm a' }}</td>
+            }">{{ scan.grade }}</td> -->
+            <td>{{ scan.completedAt | date:'dd/MM/yyyy, hh:mm a' }}</td>
             <td>
-              <button *ngIf="scan.status === 'Passed'" class="btn btn-primary btn-sm text-white" title="view scan"
+              <button *ngIf="scan.qualityGate === 'Passed'" class="btn btn-primary btn-sm text-white" title="view scan"
                 type="button" >
                 <i class="bi bi-eye"></i>
               </button>
 
-              <button *ngIf="scan.status === 'Failed'" class="btn btn-warning btn-sm text-white" title="retry scan"
+              <button *ngIf="scan.qualityGate === 'Failed'" class="btn btn-warning btn-sm text-white" title="retry scan"
                 type="button">
                 <i class="bi bi-arrow-clockwise"></i>
               </button>
@@ -199,10 +207,10 @@
 <!-- Quality Trend -->
 <div class="quality-trend">
   <h4><i class="bi bi-graph-up"></i> Quality Trend (Last 30 Days)</h4>
-  <apx-chart [series]="coverageChartSeries!" [chart]="coverageChartOptions.chart!" [xaxis]="coverageChartOptions.xaxis!"
+  <!-- <apx-chart [series]="coverageChartSeries!" [chart]="coverageChartOptions.chart!" [xaxis]="coverageChartOptions.xaxis!"
     [stroke]="coverageChartOptions.stroke!" [markers]="coverageChartOptions.markers!"
     [colors]="coverageChartOptions.colors!" [yaxis]="coverageChartOptions.yaxis!">
-  </apx-chart>
+  </apx-chart> -->
 </div>
 
 <!-- Top Issues & Project Distribution -->
@@ -212,8 +220,9 @@
     <h4><i class="bi bi-exclamation-circle"></i> Top Issues</h4>
     <ul>
       <li *ngFor="let i of dashboardData.issues">
-        {{ i.type }} - {{ i.message }}
-      </li>
+  {{ i?.type || 'N/A' }} - {{ i?.message || '' }}
+</li>
+
     </ul>
     <a [routerLink]="['/issue']" class="view-all-link">
       Manage Issues<i class="bi bi-arrow-right"></i>
