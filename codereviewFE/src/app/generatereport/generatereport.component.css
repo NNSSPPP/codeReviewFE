@@ -383,6 +383,8 @@
     border: 1px solid #1e40af !important;
   }
   
+
+
   /* ===============================
      📱 Responsive Design
      =============================== */
@@ -477,47 +479,5 @@
       box-sizing: border-box;
     }
   }
-  
-  /* 📱 Tablet + Mobile Edge Fix */
-  @media (max-width: 1024px) {
-    .report-wrapper {
-      padding: 0 20px !important;
-      margin: 25px auto !important;
-      max-width: 95% !important;
-      box-sizing: border-box;
-    }
-  
-    .report-box {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 20px 22px !important;
-    }
-  
-    .main-content {
-      padding-left: 20px !important;
-      padding-right: 20px !important;
-      box-sizing: border-box;
-    }
-  
-    .report-title,
-    .report-container h2 {
-      margin: 0 4px;
-      font-size: 1.3rem;
-    }
-  
-    .report-actions button {
-      font-size: 0.95rem;
-    }
-  }
-  
-  /* 📱 Very Small Mobile (<480px) */
-  @media (max-width: 480px) {
-    .report-wrapper {
-      padding: 0 !important;
-    }
-  
-    .report-box {
-      padding: 12px 6px !important;
-    }
-  }
+
   
