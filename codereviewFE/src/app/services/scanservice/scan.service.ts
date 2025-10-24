@@ -94,8 +94,8 @@ startScan(projectId: string, req: ScanRequest): Observable<Scan> {
   }
 
   /** GET /api/scans/{scanid} — รายละเอียดสแกน */
-  getByScanId(id: string): Observable<Scan> {
-    return this.http.get<Scan>(`${this.base}/${id}`).pipe(
+  getByScanId(scanId: string): Observable<Scan> {
+    return this.http.get<Scan>(`${this.base}/${scanId}`).pipe(
       map(s => ({ ...s, status: this.mapStatus(s.status) }))
     );
   }
