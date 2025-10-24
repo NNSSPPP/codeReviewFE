@@ -113,7 +113,9 @@
       <h4 class="title">
         <i class="bi bi-clock-history"></i> Recent Scans
       </h4>
-      <table>
+
+       <div class="table-wrapper">
+      <table >
         <thead>
           <tr>
             <th>Project</th>
@@ -152,6 +154,7 @@
           </tr>
         </tbody>
       </table>
+       </div>
       <!-- View All -->
       <div class="button-container">
         <a [routerLink]="['/scanhistory']" class="view-all-link">
@@ -160,14 +163,6 @@
       </div>
     </div>
   </div>
-
-  <!-- View All -->
-  <div class="button-container">
-    <a [routerLink]="['/scanhistory']" class="view-all-link">
-      View All <i class="bi bi-arrow-right"></i>
-    </a>
-  </div>
-</div>
 
 
 <!-- Metrics -->

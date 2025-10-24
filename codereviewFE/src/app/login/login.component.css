@@ -1,6 +1,6 @@
-/* =========================
+/* ==========================================================
    LAYOUT / CONTAINER
-========================= */
+========================================================== */
 .login-container {
   display: flex;
   justify-content: center;
@@ -10,7 +10,6 @@
   font-family: Arial, sans-serif;
 }
 
-/* ครอบสองฝั่ง (Welcome + Form) */
 .login-wrapper {
   display: flex;
   background: #fff;
@@ -21,9 +20,9 @@
   width: 100%;
 }
 
-/* =========================
+/* ==========================================================
    LEFT: WELCOME SECTION
-========================= */
+========================================================== */
 .welcome-section {
   flex: 1;
   background: #1a73e8;
@@ -51,9 +50,9 @@
   margin: 0;
 }
 
-/* =========================
+/* ==========================================================
    RIGHT: LOGIN BOX / FORM
-========================= */
+========================================================== */
 .login-box {
   position: relative;
   padding: 3rem 3.5rem;
@@ -66,21 +65,20 @@
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* เมื่อ .login-box อยู่ภายใน .login-wrapper ให้ยอมวางคู่กับซ้าย */
 .login-wrapper .login-box {
   flex: 1;
   padding: 3rem 3.5rem;
-  max-width: none;   /* ยกเลิก 650px เดิม */
-  width: auto;       /* แชร์พื้นที่กับซ้าย */
-  margin: 0;         /* ไม่ให้ดันไปกลาง */
+  max-width: none;
+  width: auto;
+  margin: 0;
   min-height: auto;
-  border-radius: 0;  /* ใช้มุมจาก wrapper */
-  box-shadow: none;  /* ใช้เงาจาก wrapper */
+  border-radius: 0;
+  box-shadow: none;
 }
 
-/* =========================
+/* ==========================================================
    HEADER
-========================= */
+========================================================== */
 .login-header {
   text-align: center;
   position: relative;
@@ -108,9 +106,9 @@
   color: #0056b3;
 }
 
-/* =========================
+/* ==========================================================
    INPUTS / VALIDATION
-========================= */
+========================================================== */
 .input-group {
   margin-bottom: 1.2rem;
   text-align: left;
@@ -136,9 +134,9 @@
   font-size: 0.8rem;
 }
 
-/* =========================
+/* ==========================================================
    BUTTONS / LINKS
-========================= */
+========================================================== */
 button {
   width: 100%;
   padding: 1rem;
@@ -170,139 +168,333 @@ button:hover {
   text-decoration: underline;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+
+/* ==========================================================
+   RESPONSIVE — MOBILE (max 768px)
+========================================================== */
 @media (max-width: 768px) {
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #cce7ff, #99d1ff);
+    padding: 1.5rem;
+  }
+
   .login-wrapper {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 380px; /* ✅ กำหนดขนาดกล่องไม่ให้เต็มจอ */
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    padding: 0; /* ล้าง padding เดิม */
   }
 
   .welcome-section {
     align-items: center;
     text-align: center;
-    padding: 2rem;
+    background: #1a73e8;
+    color: #fff;
+    padding: 2.5rem 1rem 2rem;
+    width: 100%;
   }
 
-  .login-wrapper .login-box {
-    padding: 2rem;
+  .welcome-section h1 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .welcome-section p {
+    font-size: 0.9rem;
+    opacity: 0.9;
   }
 
   .login-box {
-    padding: 2rem 2.5rem;
-    max-width: 90%;
-    min-height: auto;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    background: #fff;
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
   }
 
   .login-header h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+    color: #1a73e8;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .login-header .back-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1a73e8;
+    font-size: 1.4rem;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  .input-group label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background: #1a73e8;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    padding: 0.9rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  button[type="submit"]:hover {
+    background: #1667cf;
+    transform: translateY(-2px);
+  }
+
+  .extra-links {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .extra-links a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .extra-links a:hover {
+    text-decoration: underline;
   }
 }
-/* =========================
+
+/* ==========================================================
+   RESPONSIVE — TABLET (768px–1024px)
+========================================================== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #cce7ff, #99d1ff);
+    padding: 2rem;
+  }
+
+  .login-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    max-width: 720px;
+    width: 100%;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .welcome-section {
+    flex: 1;
+    background: #1a73e8;
+    color: #fff;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .welcome-section h1 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  .welcome-section p {
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+
+  .login-box {
+    flex: 1;
+    padding: 2.5rem 2rem;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .login-header h2 {
+    font-size: 1.6rem;
+    color: #1a73e8;
+  }
+
+  .input-group input {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  button[type="submit"] {
+    padding: 0.9rem;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  .extra-links {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+
+/* ==========================================================
    DARK MODE OVERRIDES
-========================= */
+========================================================== */
 :host-context(.dark-mode) .login-container {
-  background: linear-gradient(135deg, #0f172a, #1e293b); /* ไล่ดำเข้ม */
-  color: #f9fafb; /* ฟอนต์สีอ่อน */
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f9fafb;
 }
 
 :host-context(.dark-mode) .login-wrapper {
-  background: #1f2937; /* กล่องเข้ม */
+  background: #1f2937;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
 :host-context(.dark-mode) .welcome-section {
-  background: #2563eb; /* น้ำเงินสด */
-  color: #fff; 
+  background: #2563eb;
+  color: #fff;
 }
 
 :host-context(.dark-mode) .login-box {
-  background: #111827; /* เทาดำ */
-  color: #f3f4f6;      /* ฟอนต์อ่อน */
+  background: #111827;
+  color: #f3f4f6;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
 }
 
 :host-context(.dark-mode) .login-header h2 {
-  color: #3b82f6; /* ฟ้าอ่อน */
+  color: #3b82f6;
 }
 
 :host-context(.dark-mode) .back-btn {
-  color: #60a5fa; /* ฟ้า */
-}
-:host-context(.dark-mode) .back-btn:hover {
-  color: #93c5fd; /* ฟ้าอ่อน */
+  color: #60a5fa;
 }
 
-/* Inputs */
+:host-context(.dark-mode) .back-btn:hover {
+  color: #93c5fd;
+}
+
 :host-context(.dark-mode) .input-group label {
   color: #e5e7eb;
 }
+
 :host-context(.dark-mode) .input-group input {
-  background: #1f2937;
-  border: 1px solid #374151;
-  color: #f9fafb;
+  background: #1f2937 !important;
+  border: 1px solid #1f2937 !important;
+  color: #f9fafb !important;
+  outline: none !important;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
+
+:host-context(.dark-mode) .input-group input:focus {
+  border: 1px solid #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+  outline: none;
+}
+
 :host-context(.dark-mode) .input-group input::placeholder {
   color: #9ca3af;
 }
 
-/* Error text */
 :host-context(.dark-mode) .error-message {
   color: #f87171;
 }
 
-/* Buttons */
 :host-context(.dark-mode) button {
   background-color: #2563eb;
   color: #fff;
+  border: none;
 }
+
 :host-context(.dark-mode) button:hover {
   background-color: #1e40af;
 }
 
-/* Links */
 :host-context(.dark-mode) .extra-links a {
   color: #60a5fa;
 }
+
 :host-context(.dark-mode) .extra-links a:hover {
-  text-decoration: underline;
   color: #93c5fd;
 }
-/* ===============================
-   Tablet Responsive (768px–1024px)
-   =============================== */
-   @media (min-width: 768px) and (max-width: 1024px) {
-    .login-wrapper {
-      max-width: 700px;   /* ลดความกว้างทั้งกรอบ */
-      border-radius: 20px;
-    }
-  
-    .welcome-section {
-      padding: 2rem;      /* ลด padding ฝั่ง welcome */
-    }
-  
-    .welcome-section h1 {
-      font-size: 1.8rem;  /* ลดหัวข้อ Welcome */
-    }
-  
-    .login-box {
-      padding: 2rem;      /* ลด padding form */
-      min-height: auto;
-    }
-  
-    .login-header h2 {
-      font-size: 1.5rem;  /* หัวข้อ Login เล็กลง */
-    }
-  
-    .input-group input {
-      padding: 0.7rem;
-      font-size: 0.95rem;
-    }
-  
-    button {
-      padding: 0.8rem;
-      font-size: 1rem;
-    }
-  }
-  
 
+/* ==========================================================
+   OVERRIDE ::ng-deep INPUTS
+========================================================== */
+::ng-deep .input-group input {
+  border-radius: 16px !important;
+  border: 1px solid #ccc !important;
+  padding: 0.8rem 1rem !important;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .input-group input:focus {
+  border-color: #1a73e8 !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+}
+
+/* Dark mode ::ng-deep override */
+:host-context(.dark-mode) ::ng-deep .input-group input {
+  background: #1f2937 !important;
+  border: 1px solid #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+:host-context(.dark-mode) ::ng-deep .input-group input:focus {
+  border: 1px solid #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
+  outline: none !important;
+}
