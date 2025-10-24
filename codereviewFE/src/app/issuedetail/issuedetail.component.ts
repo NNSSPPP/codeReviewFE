@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,7 @@ interface Issue {
   priority: 'Low' | 'Medium' | 'High' | 'Critical';
   status: 'open' | 'in-progress' | 'done' | 'reject';
   project: string; file: string; line: number; created: string;
-  assignedTo?: string[]; dueDate: string; description: string;
+  assignedTo?: string; dueDate: string; description: string;
   vulnerableCode: string; recommendedFix: string; comments: IssueComment[];
 }
 const isUUID = (s: string) =>
@@ -35,13 +35,13 @@ const isUUID = (s: string) =>
   styleUrl: './issuedetail.component.css',
 })
 export class IssuedetailComponent implements OnInit {
+  @ViewChild(IssuemodalComponent) assignModal!: IssuemodalComponent;
   trackByComment = (_: number, c: any) => c?.id || c?.timestamp || _;
 
   // FE options (เดิม)
   priorityLevels: Array<'Low' | 'Medium' | 'High' | 'Critical'> = ['Low', 'Medium', 'High', 'Critical'];
 
-  /** สมมติรายการนี้เก็บเป็น userId โดยตรง (เช่น UUID หรือ username ในระบบ) */
-  developers: string[] = ['user-1', 'user-2', 'user-3'];
+
 
   loading = true;
   error: string | null = null;
@@ -71,7 +71,7 @@ export class IssuedetailComponent implements OnInit {
       .subscribe(id => {
         this.loading = true; this.issueApi.getById(id).pipe(map(raw => this.toIssue(raw)))
           .subscribe({
-            next: issue => { this.issue = issue; this.issue.assignedTo ||= []; this.loading = false; },
+            next: issue => { this.issue = issue; this.issue.assignedTo ||= ''; this.loading = false; },
             error: err => { console.error('getById error', err); this.error = 'โหลดข้อมูลไม่สำเร็จ'; this.loading = false; }
           });
       });
@@ -94,7 +94,7 @@ export class IssuedetailComponent implements OnInit {
       file: r.component ?? '',
       line: 0, // ถ้า BE มี lineNumber ให้แทนด้วย Number(r.lineNumber)
       created: (r.createdAt as any) ?? '',
-      assignedTo: r.assignedTo ? [r.assignedTo] : [],
+      assignedTo: r.assignedTo ?? '',
       dueDate: '', // ถ้า BE มี dueDate ให้ map มา
       description: (r as any).description ?? '',
       vulnerableCode: (r as any).vulnerableCode ?? '',
@@ -103,15 +103,18 @@ export class IssuedetailComponent implements OnInit {
     };
   }
 
-  private mapStatusBeToFe(s: ApiIssue['status'] | undefined): Issue['status'] {
-    switch (s) {
-      case 'OPEN': return 'open';
-      case 'IN PROGRESS': return 'in-progress';
-      case 'DONE': return 'done';
-      case 'REJECT': return 'reject';
-      default: return 'open';
-    }
+private mapStatusBeToFe(s: ApiIssue['status'] | undefined): Issue['status'] {
+  if (!s) return 'open';
+  const clean = s.toString().trim().toUpperCase();
+  switch (clean) {
+    case 'OPEN': return 'open';
+    case 'IN PROGRESS': return 'in-progress';
+    case 'DONE': return 'done';
+    case 'REJECT': return 'reject';
+    default: return 'open';
   }
+}
+
   private mapStatusFeToBe(s: Issue['status']): ApiIssue['status'] {
     switch (s) {
       case 'open': return 'OPEN';
@@ -125,65 +128,78 @@ export class IssuedetailComponent implements OnInit {
 
   goBack() { window.history.back(); }
 
-  postComment() {
-    const text = this.newComment.comment.trim();
-    if (!text) return;
-    const user = this.auth.username ?? this.currentUserId; // อะไรก็ได้ที่เป็น string
-    if (!user) {
-      this.error = 'กรุณาเข้าสู่ระบบก่อนแสดงความคิดเห็น';
-      return;
-    }
+  showAssignModal = false;
+showStatusModal = false;
 
-    const local: IssueComment = {
-      issueId: this.issue.id,
-      userId: user,             // <- ตอนนี้เป็น string แน่นอน
-      comment: text,
-      timestamp: new Date(),
-      attachments: [],
-      mentions: this.newComment.mention ? [this.newComment.mention] : []
-    };
-    // ...
+ openAssignModal() {
+    const isEdit = !!(this.issue.assignedTo && this.issue.assignedTo.length > 0);
+    if (isEdit) {
+      this.assignModal.openEditAssign({
+        issueId: this.issue.id,
+        assignedTo: this.issue.assignedTo,
+        dueDate: this.issue.dueDate ? new Date(this.issue.dueDate) : new Date()
+      });
+    } else {
+      this.assignModal.openAddAssign();
+    }
+  }
+
+  openStatusModal() { this.assignModal.openStatusModal(); }
+  
+closeModal() {
+  this.showAssignModal = false;
+  this.showStatusModal = false;
+}
+
+ handleAssignSubmit(event: { issue: Partial<Issue>, isEdit: boolean }) {
+    const updated = event.issue;
+    if (updated.assignedTo) this.issue.assignedTo = updated.assignedTo;
+    if (updated.dueDate) this.issue.dueDate = updated.dueDate;
+    this.assignModal.close();
   }
 
 
-  updateStatus() {
-    // open -> in-progress -> done (แล้วหยุด)
-    let next: Issue['status'] | null = null;
-    switch (this.issue.status) {
-      case 'open': next = 'in-progress'; break;
-      case 'in-progress': next = 'done'; break;
-      case 'done': next = null; break;
-    }
-    if (!next) return;
 
+
+ handleStatusSubmit(updated: Partial<Issue>) {
+  if (updated.status) {
     const prev = this.issue.status;
-    this.issue.status = next; // optimistic
+    this.issue.status = updated.status; // optimistic update
 
-    this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe(next)).subscribe({
-      error: err => { console.error('updateStatus error', err); this.issue.status = prev; }
-    });
+    // this.issueApi.updateStatus(this.issue.id, updated.status as any).subscribe({
+    //   next: () => console.log('Status updated to', updated.status),
+    //   error: err => {
+    //     console.error('Failed to update status', err);
+    //     this.issue.status = prev; // rollback
+    //   }
+    // });
   }
+  this.closeModal();
+}
 
-  changeAssignee() {
-    // dev ควรเป็น userId ตรง ๆ
-    const dev = prompt('ใส่ userId ของ Developer:\n' + this.developers.join(', '));
-    if (!dev) return;
 
-    const exists = this.issue.assignedTo?.includes(dev);
-    const updated = exists
-      ? (this.issue.assignedTo ?? []).filter(a => a !== dev)
-      : [...(this.issue.assignedTo ?? []), dev];
+  // postComment() {
+  //   const text = this.newComment.comment.trim();
+  //   if (!text) return;
+  //   const user = this.auth.username ?? this.currentUserId; // อะไรก็ได้ที่เป็น string
+  //   if (!user) {
+  //     this.error = 'กรุณาเข้าสู่ระบบก่อนแสดงความคิดเห็น';
+  //     return;
+  //   }
 
-    const prev = this.issue.assignedTo ?? [];
-    this.issue.assignedTo = updated; // optimistic
+  //   const local: IssueComment = {
+  //     issueId: this.issue.id,
+  //     userId: user,             // <- ตอนนี้เป็น string แน่นอน
+  //     comment: text,
+  //     timestamp: new Date(),
+  //     attachments: [],
+  //     mentions: this.newComment.mention ? [this.newComment.mention] : []
+  //   };
+  //   // ...
+  // }
 
-    // ถ้าให้ “กำหนดคนเดียว” ตาม API /assign (ส่วนใหญ่ overwrite คนเดิม)
-    this.issueApi.assignDeveloper(this.issue.id, dev).subscribe({
-      next: () => console.log('Assigned:', dev),
-      error: err => { console.error('assignDeveloper error', err); this.issue.assignedTo = prev; }
-    });
-  }
 
+  
   setPriority() {
     const p = prompt(`Set Priority (${this.priorityLevels.join(', ')})`);
     if (p && this.priorityLevels.includes(p as any)) {
@@ -201,36 +217,15 @@ export class IssuedetailComponent implements OnInit {
   this.issue.status = next;
 
   // เรียก API ไปอัปเดตสถานะใน backend
-  this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe(next)).subscribe({
-    next: () => console.log(`Status changed to ${next}`),
-    error: err => {
-      console.error('rejectIssue error', err);
-      this.issue.status = prev; // rollback ถ้า error
-    }
-  });
+  // this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe(next)).subscribe({
+  //   next: () => console.log(`Status changed to ${next}`),
+  //   error: err => {
+  //     console.error('rejectIssue error', err);
+  //     this.issue.status = prev; // rollback ถ้า error
+  //   }
+  // });
 }
 
-showAssignModal = false;
-showStatusModal = false;
 
-openAssignModal() { this.showAssignModal = true; }
-openStatusModal() { this.showStatusModal = true; }
-closeModal() {
-  this.showAssignModal = false;
-  this.showStatusModal = false;
-}
-
- handleAssignSubmit(updated: Issue) {
-    console.log('Assigned issue:', updated);
-    this.issue.assignedTo = updated.assignedTo;
-    this.closeModal();
-  }
-
-  handleStatusSubmit(updated: Issue) {
-    console.log('Status updated:', updated);
-    this.issue.status = updated.status;
-   // this.issue.remark = updated.remark;
-    this.closeModal();
-  }
 
 }

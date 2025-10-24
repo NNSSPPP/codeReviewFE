@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 export interface LoginRequest {
   email: string;
@@ -33,6 +34,16 @@ const USERNAME_KEY    = 'username';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly base = environment.apiUrl;
+
+    constructor() {
+    // ✅ โหลด token/user จาก localStorage ทันทีที่เปิดแอป
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    const userId = localStorage.getItem(USER_ID_KEY);
+    const username = localStorage.getItem(USERNAME_KEY);
+    if (token) this.setToken(token);
+    if (userId) this.setUserId(userId);
+    if (username) this.setUsername(username);
+  }
 
   // -------- getters ----------
   get token(): string | null {
@@ -72,23 +83,51 @@ export class AuthService {
   }
 
   // -------- auth APIs ----------
-  login(payload: LoginRequest): Observable<AuthResponse> {
+  // login(payload: LoginRequest): Observable<AuthResponse> {
+  //   return this.http.post<AuthResponse>(`${this.base}/auth/login`, payload).pipe(
+  //     tap(res => {
+  //       if (res?.token)         this.setToken(res.token);
+  //       if (res?.refreshToken)  this.setRefreshToken(res.refreshToken);
+
+  //       if (res?.user?.id)       this.setUserId(res.user.id);
+  //       if (res?.user?.username) this.setUsername(res.user.username);
+
+  //       // เผื่อ BE ไม่ส่ง user/username → ลองดึงจาก JWT
+  //       if (!this.username && this.token) {
+  //         const fromJwt = this.decodeJwtUsername(this.token);
+  //         if (fromJwt) this.setUsername(fromJwt);
+  //       }
+  //     })
+  //   );
+  // }
+
+   login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.base}/auth/login`, payload).pipe(
       tap(res => {
-        if (res?.token)         this.setToken(res.token);
-        if (res?.refreshToken)  this.setRefreshToken(res.refreshToken);
-
-        if (res?.user?.id)       this.setUserId(res.user.id);
+        if (res?.token) this.setToken(res.token);
+        if (res?.refreshToken) this.setRefreshToken(res.refreshToken);
+        if (res?.user?.id) this.setUserId(res.user.id);
         if (res?.user?.username) this.setUsername(res.user.username);
 
-        // เผื่อ BE ไม่ส่ง user/username → ลองดึงจาก JWT
-        if (!this.username && this.token) {
-          const fromJwt = this.decodeJwtUsername(this.token);
-          if (fromJwt) this.setUsername(fromJwt);
+        // ถ้า backend ไม่ส่ง user → decode จาก JWT
+        if (!this.userId && this.token) {
+          const fromJwtId = this.decodeJwtUserId(this.token);
+          if (fromJwtId) this.setUserId(fromJwtId);
         }
+        if (!this.username && this.token) {
+          const fromJwtName = this.decodeJwtUsername(this.token);
+          if (fromJwtName) this.setUsername(fromJwtName);
+        }
+
+        // ✅ debug log ช่วยตรวจสอบตอน login
+        console.log('Login success!');
+        console.log('Token:', this.token);
+        console.log('User ID:', this.userId);
+        console.log('Username:', this.username);
       })
     );
   }
+
 
   register(payload: RegisterRequest): Observable<AuthResponse | string> {
     // ถ้า BE คืน text/plain ให้ใช้:
@@ -106,12 +145,19 @@ export class AuthService {
       ) as unknown as Observable<string | null>;
   }
 
-  logout(): void {
-    this.setToken(null);
-    this.setRefreshToken(null);
-    this.setUserId(null);
-    this.setUsername(null);
-  }
+ //logout
+  logout(): Observable<any> {
+  // ล้าง localStorage ก่อน
+  this.setToken(null);
+  this.setRefreshToken(null);
+  this.setUserId(null);
+  this.setUsername(null);
+
+  // ส่ง request logout ไป backend
+  return this.http.post(`${this.base}/auth/logout`, {});
+}
+
+  
 
   //resetpassword
   request(email: string): Observable<any> {
@@ -125,13 +171,41 @@ export class AuthService {
 
   // ===== helper =====
   /** อ่าน username จาก JWT (พยายามดู username/preferred_username/sub/email) */
-  private decodeJwtUsername(jwt: string | null): string | null {
-    if (!jwt) return null;
-    try {
-      const payload = JSON.parse(atob(jwt.split('.')[1] || ''));
-      return payload.username || payload.preferred_username || payload.sub || payload.email || null;
-    } catch {
-      return null;
-    }
+ private decodeJwtUsername(token: string | null): string | null {
+  if (!token) return null;
+  try {
+    const payload: any = jwtDecode(token);
+    return payload.username || payload.preferred_username || payload.sub || payload.email || null;
+  } catch {
+    return null;
   }
 }
+
+private decodeJwtUserId(token: string | null): string | null {
+  if (!token) return null;
+  try {
+    const payload: any = jwtDecode(token);
+    return payload.user_id || null;
+  } catch {
+    return null;
+  }
+}
+
+getRoleFromToken(): string | null {
+  const token = this.token;
+  if (!token) return null;
+
+  try {
+    const payload: any = jwtDecode(token);
+
+    // ดึงค่า roles ที่เป็น string ออกมาโดยตรง
+    return payload.roles ? String(payload.roles) : null;
+  } catch (error) {
+    console.error('Error decoding token for role:', error);
+    return null;
+  }
+}
+
+}
+
+

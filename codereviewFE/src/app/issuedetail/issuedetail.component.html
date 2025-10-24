@@ -9,9 +9,9 @@
   <div class="issue-header">
     <button title="Back to Issue" class="back-btn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
     <h2><i class="bi bi-shield-lock-fill"></i> {{ issue.type }} issue : {{ issue.title }}</h2>
-    <span class="priority" [ngClass]="issue.priority.toLowerCase() || 'No priority'">
+    <!-- <span class="priority" [ngClass]="issue.priority.toLowerCase() || 'No priority'">
       {{ issue.priority || 'No priority' }}
-    </span>
+    </span> -->
   </div>
 
   <!-- Issue Info -->
@@ -48,7 +48,7 @@
 
     <div class="info-row">
       <strong>Assigned:</strong>
-      {{ ((issue.assignedTo || []).length > 0) ? (issue.assignedTo || []).join(', ') : 'No assignee' }}
+      {{ issue.assignedTo || 'No assignee' }}
 
       <div>
         <strong>Due Date:</strong>
@@ -114,11 +114,10 @@
     </button> -->
 
     <app-issuemodal
-  [showAssign]="showAssignModal"
-  [showStatus]="showStatusModal"
+  #assignModal
   (assignSubmit)="handleAssignSubmit($event)"
   (statusSubmit)="handleStatusSubmit($event)"
-  (closed)="closeModal()">
+  (closed)="{}">
 </app-issuemodal>
   
 

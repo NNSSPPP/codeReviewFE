@@ -38,25 +38,24 @@ export class DashboardService {
 
   private authOpts() {
     const token = this.auth.token;
+     console.log('DashboardService: current token ->', token);
     return token
       ? { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
       : {};
   }
   getOverview(userId: string | number): Observable<Dashboard[]> {
-    return this.http.get<Dashboard[]>(`${this.base}/${userId}`, this.authOpts());
+    return this.http.get<Dashboard[]>(`${this.base}/${userId}`);
   }
 
   /** GET /api/dashboard/{userId}/history */ 
   getHistory(userId: string | number): Observable<History[]> {
-    return this.http.get<History[]>(`${this.base}/${userId}/history`, this.authOpts());
+    return this.http.get<History[]>(`${this.base}/${userId}/history`);
   }
 
   /** GET /api/dashboard/{userId}/trends */
   getTrends(userId: string | number): Observable<Trends[]> {
-    return this.http.get<Trends[]>(`${this.base}/${userId}/trends`, this.authOpts());
+    return this.http.get<Trends[]>(`${this.base}/${userId}/trends`);
   }
 }
 
-function toDashboard(value: Dashboard, index: number, array: Dashboard[]): Dashboard {
-  throw new Error('Function not implemented.');
-}
+

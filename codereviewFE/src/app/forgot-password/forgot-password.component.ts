@@ -15,6 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class ForgotPasswordComponent {
   form: FormGroup;
   loading = false;
+  submitted = false;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -28,6 +29,7 @@ export class ForgotPasswordComponent {
   }
 
   submit(): void {
+     this.submitted = true;
     if (this.form.invalid) {
       this.snack.open('Please fill in a valid email.', '', {
         duration: 2500,

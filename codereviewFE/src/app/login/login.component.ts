@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/authservice/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +39,7 @@ export class LoginComponent {
       return;
     }
 
+     this.loading = true;
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
@@ -47,6 +49,13 @@ export class LoginComponent {
           verticalPosition: 'top',
           panelClass: ['app-snack', 'app-snack-blue'],
         });
+        console.log('Decoded Token:', jwtDecode(this.auth.token!));
+
+        console.log('Token:', this.auth.token);
+      console.log('Username:', this.auth.username);
+      console.log('User ID:', this.auth.userId);
+
+      console.log('Role:', this.auth.getRoleFromToken());
         this.router.navigate(['/dashboard']);
       },
       error: () => {

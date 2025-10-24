@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
 import { AuthService } from '../services/authservice/auth.service';
+import { ScanService, Scan } from '../services/scanservice/scan.service';
 import { forkJoin } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -65,19 +66,31 @@ export class DashboardComponent {
     private readonly router: Router,
     private readonly dash: DashboardService,
     private readonly auth: AuthService,
+    private readonly scanService: ScanService
   ) { }
 
   ngOnInit() {
-    const userId = this.auth.userId;
-    if (!userId) { this.router.navigate(['/login']); return; }
-    this.fetchFromServer(userId);
+  if (!this.auth.token) {
+    console.warn('No token found, redirecting to login');
+    this.router.navigate(['/login']);
+    return;
+  }
+  
+  const userId = this.auth.userId;
+  this.fetchFromServer(userId!);
+
     this.dash.getOverview(this.auth.userId || '').subscribe({
       next: data => console.log('Dashboard overview data:', data),
       error: err => console.error('Error fetching dashboard overview:', err)
     });
 
+    this.loadDashboardData();
+    console.log('Dashboard data:', this.dashboardData);
+
 
   }
+
+  
 
   loading = true;
 
@@ -102,6 +115,7 @@ export class DashboardComponent {
 
   coverageChartSeries: any[] = [];
   coverageChartOptions: ApexOptions = {};
+  recentScans: Scan[] = [];
 
   // ---------- Fetch real data ----------
   fetchFromServer(userId: string | number) {
@@ -110,15 +124,21 @@ export class DashboardComponent {
       overview: this.dash.getOverview(userId),
       history: this.dash.getHistory(userId),
       trends: this.dash.getTrends(userId),
+      scans: this.scanService.getAllScan()
     }).subscribe({
-      next: ({ overview, history, trends }) => {
+      next: ({ overview, history, trends, scans }) => {
         this.applyOverview(overview);
         this.applyHistory(history);
         this.applyTrends(trends);
          this.recomputeStatusCountsFromHistory();
         this.calculateProjectDistribution();
         this.loadDashboardData();
-        this.loadCoverageChart();
+       // this.loadCoverageChart();
+          this.recentScans = scans.sort((a, b) => {
+          const dateA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+          const dateB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+          return dateB - dateA;
+        }).slice(0, 5);
         this.loading = false;
       },
       error: (err) => {
@@ -381,7 +401,7 @@ export class DashboardComponent {
     // 4. Recent Scans Table
     // =========================
     const scansColumns = ['Project', 'Status', 'Grade', 'Time'];
-    const scansRows = this.latestScans.map(s => [s.project, s.status, s.grade, s.time]);
+    const scansRows = this.recentScans.map(s => [s.projectId, s.status, s.completedAt]);
   
     (autoTable as any)(pdf, {
       head: [scansColumns],
@@ -462,84 +482,100 @@ export class DashboardComponent {
     }
   }
 
-  loadDashboardData() {
-    // คำนวณรวมโปรเจกต์
-    this.totalProjects = this.Data.passedCount + this.Data.failedCount;
-   
-
-    let passPercent: number;
-    if (this.totalProjects > 0) {
-      passPercent = this.Data.passedCount / this.totalProjects;
-    } else {
-      passPercent = Math.max(0, Math.min(1, (this.dashboardData.metrics.coverage || 0) / 100));
+loadDashboardData() {
+  // 1️⃣ จัดกลุ่ม scan ล่าสุดต่อ project
+  const latestScanPerProject: Record<string, Scan> = {};
+  this.recentScans.forEach(scan => {
+    const prev = latestScanPerProject[scan.projectId];
+    const scanTime = scan.completedAt ? new Date(scan.completedAt).getTime() : 0;
+    if (!prev || scanTime > (prev.completedAt ? new Date(prev.completedAt).getTime() : 0)) {
+      latestScanPerProject[scan.projectId] = scan;
     }
+  });
 
-    this.grade =
-      passPercent >= 0.8 ? 'A' :
-        passPercent >= 0.7 ? 'B' :
-          passPercent >= 0.6 ? 'C' :
-            passPercent >= 0.5 ? 'D' :
-              passPercent >= 0.4 ? 'E' : 'F';
+  // 2️⃣ เอา scan ล่าสุดแต่ละโปรเจกต์
+  const latestScans = Object.values(latestScanPerProject);
 
-    this.gradePercent = Math.round(passPercent * 100);
-    const gradePercentSeries = this.gradePercent;
-    const remainingPercent = 100 - this.gradePercent;
+  // 3️⃣ นับ pass/fail จาก qualityGate.status โดยตรง
+  // แทนที่จะใช้ s.qualityGate.status
+const passedCount = latestScans.filter(s => s.qualityGate === 'Passed').length;
+const failedCount = latestScans.filter(s => s.qualityGate !== 'Passed').length;
 
-    this.pieChartOptions = {
-      chart: { type: 'donut', height: 300 },
-      series: [gradePercentSeries, remainingPercent],
-      labels: ['', ''],
-      colors: [this.getGradeColor(this.grade), '#E5E7EB'],
-      plotOptions: {
-        pie: {
-          donut: {
-            labels: {
+
+  // 4️⃣ อัปเดต Data ให้ template ใช้ได้เลย
+  this.Data = { passedCount, failedCount };
+  this.totalProjects = passedCount + failedCount;
+
+  // 5️⃣ คำนวณเกรดรวม
+  const avg = this.totalProjects > 0 ? passedCount / this.totalProjects : 0;
+  this.grade = 
+    avg >= 0.8 ? 'A' :
+    avg >= 0.7 ? 'B' :
+    avg >= 0.6 ? 'C' :
+    avg >= 0.5 ? 'D' :
+    avg >= 0.4 ? 'E' : 'F';
+  this.gradePercent = Math.round(avg * 100);
+
+  // 6️⃣ ตั้งค่า donut chart
+  this.pieChartOptions = {
+    chart: { type: 'donut', height: 300 },
+    series: [this.gradePercent, 100 - this.gradePercent],
+    labels: ['', ''],
+    colors: [this.getGradeColor(this.grade), '#E5E7EB'],
+    plotOptions: {
+      pie: {
+        donut: {
+          labels: {
+            show: true,
+            total: {
               show: true,
-              value: { color: 'var(--text-main)' },
-              total: {
-                show: true,
-                showAlways: true,
-                label: this.grade,
-                fontSize: '24px',
-                color: 'var(--text-main)',
-                formatter: () => this.gradePercent + '%'
-              }
+              showAlways: true,
+              label: this.grade,
+              fontSize: '24px',
+              formatter: () => this.gradePercent + '%'
             }
           }
         }
-      },
-      dataLabels: { enabled: false },
-      legend: { show: false },
-      tooltip: { enabled: false }
-    };
-    this.loading = false;
-  }
+      }
+    },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    tooltip: { enabled: false }
+  };
 
-  loadCoverageChart() {
-    const data = this.dashboardData.coverageHistory?.length
-      ? this.dashboardData.coverageHistory
-      : [this.dashboardData.metrics.coverage];
-    const cats = (this.dashboardData.days?.length === data.length && this.dashboardData.days.length)
-      ? this.dashboardData.days
-      : data.map((_, i) => i + 1);
+  console.log('Pass count:', passedCount, 'Fail count:', failedCount);
+  console.log('Grade percent:', this.gradePercent, 'Grade:', this.grade);
+}
 
-    this.coverageChartSeries = [{ name: 'Coverage', data }];
-    this.coverageChartOptions = {
-      chart: { type: 'line', height: 200, foreColor: 'var(--apexcharts-text)' },
-      stroke: { curve: 'smooth', width: 3 },
-      markers: { size: 4 },
-      colors: ['#2563eb'],
-      xaxis: { categories: cats },
-      yaxis: { labels: { formatter: (val) => val + '%' } }
-    };
-  }
 
-  // ---------- Misc ----------
-  get latestScans(): ScanHistory[] {
-    return [...this.dashboardData.history]
-      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-      .slice(0, 5);
-  }
+
+
+
+  // loadCoverageChart() {
+  //   const data = this.dashboardData.coverageHistory?.length
+  //     ? this.dashboardData.coverageHistory
+  //     : [this.dashboardData.metrics.coverage];
+  //   const cats = (this.dashboardData.days?.length === data.length && this.dashboardData.days.length)
+  //     ? this.dashboardData.days
+  //     : data.map((_, i) => i + 1);
+
+  //   this.coverageChartSeries = [{ name: 'Coverage', data }];
+  //   this.coverageChartOptions = {
+  //     chart: { type: 'line', height: 200, foreColor: 'var(--apexcharts-text)' },
+  //     stroke: { curve: 'smooth', width: 3 },
+  //     markers: { size: 4 },
+  //     colors: ['#2563eb'],
+  //     xaxis: { categories: cats },
+  //     yaxis: { labels: { formatter: (val) => val + '%' } }
+  //   };
+  // }
+
+  // // ---------- Misc ----------
+  // get latestScans(): ScanHistory[] {
+  //   return [...this.dashboardData.history]
+  //     .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+  //     .slice(0, 5);
+  // }
 
   onRefresh() { this.fetchFromServer(this.auth.userId!); }
 
