@@ -31,9 +31,24 @@
       <tr *ngFor="let a of Assign">
         <td>{{ a.assignedToName }}</td>
         <td>{{ a.message }}</td>
-        <td><span class="badge bg-{{getPriorityColor(a.severity)}}">{{ a.severity }}</span></td>
+       <td>
+  <span class="badge severity-badge"
+        [ngStyle]="{
+          'background-color': getPriorityColor(a.severity),
+          'font-weight': '500'
+        }">
+    {{ a.severity }}
+  </span>
+</td>
+
+
         <td>{{ a.dueDate | date }}</td>
-        <td>{{ a.status }}</td>
+       <td>
+  <span class="status-box" [ngClass]="statusClass(a.status)">
+    {{ a.status }}
+  </span>
+</td>
+
         <!-- <td>{{ a.resolution || '-' }}</td> -->
       </tr>
     </tbody>

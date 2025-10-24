@@ -375,3 +375,72 @@
   background: rgba(255,255,255,0.15) !important; /* เทาเข้มกว่า */
   transform: scale(0.95);
 }
+
+/* ===============================
+   🟢 Status Box Styles
+   =============================== */
+.status-box {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1.5px solid transparent;
+  min-width: 90px;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+/* 🎯 สีตามสถานะ */
+.status-open {
+  color: #dc2626;             /* แดง */
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+.status-in-progress {
+  color: #b45309;             /* ส้มทอง */
+  background: #fef3c7;
+  border-color: #fcd34d;
+}
+.status-done {
+  color: #15803d;             /* เขียว */
+  background: #dcfce7;
+  border-color: #86efac;
+}
+.status-reject {
+  color: #374151;             /* เทา */
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+.status-unknown {
+  color: #1e3a8a;             /* น้ำเงิน */
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+/* 🌙 Dark Mode Support */
+:host-context(.dark-mode) .status-open {
+  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+:host-context(.dark-mode) .status-in-progress {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+:host-context(.dark-mode) .status-done {
+  color: #86efac;
+  background: rgba(22, 163, 74, 0.15);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+:host-context(.dark-mode) .status-reject {
+  color: #d1d5db;
+  background: rgba(107, 114, 128, 0.15);
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+
+
