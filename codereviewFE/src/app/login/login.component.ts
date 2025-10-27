@@ -49,13 +49,12 @@ export class LoginComponent {
           verticalPosition: 'top',
           panelClass: ['app-snack', 'app-snack-blue'],
         });
-        console.log('Decoded Token:', jwtDecode(this.auth.token!));
+      console.log('Token:',this.auth.token)
+     console.log('Username:', this.auth.username);
+console.log('User ID:', this.auth.userId);
+console.log('Role:', this.auth.role);
+console.log('Email:', this.auth.email);
 
-        console.log('Token:', this.auth.token);
-      console.log('Username:', this.auth.username);
-      console.log('User ID:', this.auth.userId);
-
-      console.log('Role:', this.auth.getRoleFromToken());
         this.router.navigate(['/dashboard']);
       },
       error: () => {

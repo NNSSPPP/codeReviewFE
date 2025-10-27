@@ -3,6 +3,8 @@ import { LandingpageComponent } from './landingpage/landingpage.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { VerifySuccessComponent } from './verify-success/verify-success.component';
+import { VerifyFailedComponent } from './verify-failed/verify-failed.component';
 import { LayoutComponent } from './layout/layout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
@@ -23,6 +25,7 @@ import { SonarqubeconfigComponent } from './sonarqubeconfig/sonarqubeconfig.comp
 import { NotificationsettingComponent } from './notificationsetting/notificationsetting.component';
 import { UsermanagementComponent } from './usermanagement/usermanagement.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { Component } from '@angular/core';
 
 export const routes: Routes = [
 
@@ -31,6 +34,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path:'verify-success',component:VerifySuccessComponent}, 
+  { path:'verify-failed',component:VerifyFailedComponent}, 
 
   {
     path: '',

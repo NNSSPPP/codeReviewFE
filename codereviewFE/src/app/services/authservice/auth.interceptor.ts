@@ -11,14 +11,14 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
-    tap(evt => {
-      if (evt instanceof HttpResponse) {
-        const newAuth = evt.headers.get('Authorization');
-        if (newAuth?.startsWith('Bearer ')) {
-          auth.setToken(newAuth.substring(7));
-        }
-      }
-    }),
+    // tap(evt => {
+    //   if (evt instanceof HttpResponse) {
+    //     const newAuth = evt.headers.get('Authorization');
+    //     if (newAuth?.startsWith('Bearer ')) {
+    //       auth.setToken(newAuth.substring(7));
+    //     }
+    //   }
+    // }),
     catchError((err: HttpErrorResponse) => {
       if (err.status === 401 && auth.refreshToken) {
         return auth.refresh().pipe(

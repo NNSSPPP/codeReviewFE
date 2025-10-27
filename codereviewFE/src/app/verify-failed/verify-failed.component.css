@@ -1,0 +1,38 @@
+.failed-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #dc3545; /* สีแดงแสดงความล้มเหลว */
+  margin-bottom: 16px;
+}
+
+p {
+  margin-bottom: 24px;
+  font-size: 16px;
+}
+
+
+
+.dashboard-btn {
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dashboard-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.dashboard-btn:hover {
+  background-color: #0056b3;
+}

@@ -52,7 +52,7 @@
       <ul *ngIf="submenuOpen['Setting']">
         <li><a routerLink="/sonarqubeconfig" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()"> <i class="bi bi-gear"></i>Sonarqube Config</a></li>
         <li><a routerLink="/notificationsetting" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()"><i class="bi bi-bell"></i> Notification Setting</a></li>
-        <li *ngIf="authService.getRoleFromToken() === 'ADMIN'"><a routerLink="/usermanagement" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()"><i class="bi bi-people"></i>User Management</a></li>
+        <li *ngIf="this.authService.role === 'ADMIN'"><a routerLink="/usermanagement" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()"><i class="bi bi-people"></i>User Management</a></li>
       </ul>
 
       <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="logout(); closeNavbar()">

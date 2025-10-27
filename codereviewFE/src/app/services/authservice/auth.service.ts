@@ -19,16 +19,15 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string;
   refreshToken?: string;
-  user?: {
-    id?: string,
-    username: string
-  };
+
 }
 
 const ACCESS_TOKEN_KEY = 'token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const USER_ID_KEY     = 'userId';
 const USERNAME_KEY    = 'username';
+const USER_ROLE_KEY   = 'role';
+const USER_EMAIL_KEY  = 'email';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -36,13 +35,8 @@ export class AuthService {
   private readonly base = environment.apiUrl;
 
     constructor() {
-    // ✅ โหลด token/user จาก localStorage ทันทีที่เปิดแอป
-    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-    const userId = localStorage.getItem(USER_ID_KEY);
-    const username = localStorage.getItem(USERNAME_KEY);
-    if (token) this.setToken(token);
-    if (userId) this.setUserId(userId);
-    if (username) this.setUsername(username);
+   const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (token) this.decodeAndStoreClaims(token);
   }
 
   // -------- getters ----------
@@ -58,6 +52,9 @@ export class AuthService {
   get username(): string | null {
     return localStorage.getItem(USERNAME_KEY);
   }
+
+   get role(): string | null { return localStorage.getItem(USER_ROLE_KEY); }
+  get email(): string | null { return localStorage.getItem(USER_EMAIL_KEY); }
   get isLoggedIn(): boolean {
     return !!this.token;
   }
@@ -82,6 +79,15 @@ export class AuthService {
     else localStorage.removeItem(USERNAME_KEY);
   }
 
+  setRole(role: string | null) {
+    if (role) localStorage.setItem(USER_ROLE_KEY, role);
+    else localStorage.removeItem(USER_ROLE_KEY);
+  }
+  setEmail(email: string | null) {
+    if (email) localStorage.setItem(USER_EMAIL_KEY, email);
+    else localStorage.removeItem(USER_EMAIL_KEY);
+  }
+
   // -------- auth APIs ----------
   // login(payload: LoginRequest): Observable<AuthResponse> {
   //   return this.http.post<AuthResponse>(`${this.base}/auth/login`, payload).pipe(
@@ -100,33 +106,19 @@ export class AuthService {
   //     })
   //   );
   // }
-
-   login(payload: LoginRequest): Observable<AuthResponse> {
+  login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.base}/auth/login`, payload).pipe(
       tap(res => {
-        if (res?.token) this.setToken(res.token);
-        if (res?.refreshToken) this.setRefreshToken(res.refreshToken);
-        if (res?.user?.id) this.setUserId(res.user.id);
-        if (res?.user?.username) this.setUsername(res.user.username);
-
-        // ถ้า backend ไม่ส่ง user → decode จาก JWT
-        if (!this.userId && this.token) {
-          const fromJwtId = this.decodeJwtUserId(this.token);
-          if (fromJwtId) this.setUserId(fromJwtId);
+        if (res?.token) {
+          this.setToken(res.token);
+          this.decodeAndStoreClaims(res.token); // ✅ decode & save claims ทั้งหมด
+          console.log('✅ Login success!');
         }
-        if (!this.username && this.token) {
-          const fromJwtName = this.decodeJwtUsername(this.token);
-          if (fromJwtName) this.setUsername(fromJwtName);
-        }
-
-        // ✅ debug log ช่วยตรวจสอบตอน login
-        console.log('Login success!');
-        console.log('Token:', this.token);
-        console.log('User ID:', this.userId);
-        console.log('Username:', this.username);
       })
     );
   }
+
+
 
 
   register(payload: RegisterRequest): Observable<AuthResponse | string> {
@@ -147,15 +139,14 @@ export class AuthService {
 
  //logout
   logout(): Observable<any> {
-  // ล้าง localStorage ก่อน
-  this.setToken(null);
-  this.setRefreshToken(null);
-  this.setUserId(null);
-  this.setUsername(null);
-
-  // ส่ง request logout ไป backend
-  return this.http.post(`${this.base}/auth/logout`, {});
-}
+    this.setToken(null);
+    this.setRefreshToken(null);
+    this.setUserId(null);
+    this.setUsername(null);
+    this.setRole(null);
+    this.setEmail(null);
+    return this.http.post(`${this.base}/auth/logout`, {});
+  }
 
   
 
@@ -171,41 +162,30 @@ export class AuthService {
 
   // ===== helper =====
   /** อ่าน username จาก JWT (พยายามดู username/preferred_username/sub/email) */
- private decodeJwtUsername(token: string | null): string | null {
-  if (!token) return null;
+ 
+
+private decodeAndStoreClaims(token: string) {
   try {
-    const payload: any = jwtDecode(token);
-    return payload.username || payload.preferred_username || payload.sub || payload.email || null;
-  } catch {
-    return null;
-  }
-}
+    const decoded: any = jwtDecode(token); // ✅ ใช้ named import
+    console.log('Decoded JWT:', decoded);
 
-private decodeJwtUserId(token: string | null): string | null {
-  if (!token) return null;
-  try {
-    const payload: any = jwtDecode(token);
-    return payload.user_id || null;
-  } catch {
-    return null;
-  }
-}
+    const userId = decoded.user_id || null;
+    const username = decoded.username || decoded.email || null;
+    const role = decoded.roles || decoded.role || null;
+    const email = decoded.email || null;
 
-getRoleFromToken(): string | null {
-  const token = this.token;
-  if (!token) return null;
-
-  try {
-    const payload: any = jwtDecode(token);
-
-    // ดึงค่า roles ที่เป็น string ออกมาโดยตรง
-    return payload.roles ? String(payload.roles) : null;
+    this.setUserId(userId);
+    this.setUsername(username);
+    this.setRole(role);
+    this.setEmail(email);
   } catch (error) {
-    console.error('Error decoding token for role:', error);
-    return null;
+    console.error('Error decoding token:', error);
   }
 }
 
 }
+
+
+
 
 
