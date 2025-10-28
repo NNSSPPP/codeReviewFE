@@ -75,3 +75,9 @@
   from { transform: translateY(-30px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+:host-context(.dark-mode) .modal-header,
+:host-context(.dark-mode) .modal-footer {
+  border: none !important;
+  background: transparent !important;
+}

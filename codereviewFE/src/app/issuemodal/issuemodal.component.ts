@@ -6,6 +6,8 @@ import { Issue } from '../services/issueservice/issue.service';
 import {User, UserService } from '../services/userservice/user.service';
 import { AuthService } from '../services/authservice/auth.service';
 
+
+
 @Component({
   selector: 'app-issuemodal',
   standalone: true,
@@ -22,6 +24,7 @@ export class IssuemodalComponent {
   showAssign = false;
   showStatus = false;
   isEdit = false;
+  today: string = '';
 currentAssigneeId: string | null = null;
 
   // @Input() showAssign = false;
@@ -30,8 +33,7 @@ currentAssigneeId: string | null = null;
   @Input() issue: Partial<Issue> = {
   issueId: '',
   assignedTo: '',
-  dueDate: new Date(),
-  status: 'OPEN'
+  dueDate: '',
 };
 
   @Output() assignSubmit = new EventEmitter<any>();
@@ -48,6 +50,11 @@ currentAssigneeId: string | null = null;
       return;
     }
     this.loadUsers();
+    
+    const now = new Date();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    this.today = `${now.getFullYear()}-${month}-${day}`;
   }
 
   loadUsers() {
@@ -63,11 +70,16 @@ currentAssigneeId: string | null = null;
   }
 
    /** เปิด modal สำหรับเพิ่ม assign */
-  openAddAssign() {
-    this.isEdit = false;
-    this.issue = { issueId: '', assignedTo: '', dueDate: new Date(), status: 'OPEN' };
-    this.showAssign = true;
-  }
+openAddAssign(existingIssueId?: string) {
+  this.isEdit = false;
+  this.issue = {
+    issueId: existingIssueId ?? '',  // ถ้ามี issueId ให้ใช้
+    assignedTo: '',
+    dueDate: ''
+  };
+  this.showAssign = true;
+}
+
 
   /** เปิด modal สำหรับแก้ไข assign */
   openEditAssign(existingIssue: Partial<Issue>) {
@@ -77,15 +89,12 @@ currentAssigneeId: string | null = null;
     this.showAssign = true;
   }
 
-  openStatusModal() {
-  const nextStatuses = this.statusFlow[this.issue.status!] || [];
-
-  if (nextStatuses.length > 0) {
-    this.issue.status = nextStatuses[0]; // ตั้ง default เป็นตัวแรก
-  }
-
+  openStatus(assign: any, status: string) {
+  this.isEdit = true;
+  this.issue = { ...assign, status }; // ตั้งค่าจาก parent
   this.showStatus = true;
 }
+
 
 
   close() {
@@ -102,26 +111,26 @@ currentAssigneeId: string | null = null;
   this.close();
 }
 
- statusFlow: { [key in Issue['status']]: Issue['status'][] } = {
-    'OPEN': [],  
-    'IN PROGRESS': ['DONE'],
-    'DONE': [],
-    'REJECT': []
-  };
+ 
 
  submitStatus(form: NgForm) {
   if (form.invalid) return;
 
-  const validNextStatuses = this.statusFlow[this.issue.status!] || [];
-  if (validNextStatuses.length === 0) {
-    console.warn('Cannot update this status');
-    return;
+  if (this.issue.status === 'REJECT' && !this.issue.annotation) return;
+
+  const payload: any = {
+    issueId: this.issue.issueId,
+    status: this.issue.status
+  };
+
+  if (this.issue.annotation) {
+    payload.annotation = this.issue.annotation;
   }
 
-  // ส่งข้อมูลกลับ parent component
-  this.statusSubmit.emit({ ...this.issue }); 
+  this.statusSubmit.emit(payload);
   this.close();
 }
+
 
 
 

@@ -30,6 +30,7 @@
     <select class="form-select w-auto" [(ngModel)]="filterStatus">
       <option>All Status</option>
       <option value="open">Open</option>
+      <option value="pending">Pending</option>
       <option value="in-progress">In Progress</option>
       <option value="done">Done</option>
       <option value="reject">Reject</option>
@@ -119,12 +120,12 @@
   </div>
 
   <div class="bottom-action-buttons">
-    <button class="action-btn assign" (click)="assignDeveloper()" title="Assign Developer">
+    <!-- <button class="action-btn assign" (click)="assignDeveloper()" title="Assign Developer">
       <i class="bi bi-person-plus"></i>
     </button>
-    <button class="action-btn status" (click)="changeStatus()" title="Change Status">
+    <button class="action-btn status" (click)="changeStatus()" title="Update Status">
       <i class="bi bi-arrow-repeat"></i>
-    </button>
+    </button> -->
     <button class="action-btn export" (click)="exportData()" title="Export">
       <i class="bi bi-download"></i>
     </button>

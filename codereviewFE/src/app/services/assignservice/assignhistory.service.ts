@@ -7,19 +7,20 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 export interface AssignHistory {
+  userId: string;
   assignedTo: string;
   assignedToName: string;
   issueId: string;
   severity: string;
   message: string;
   status: string;
-  dueDate: Date | null; // <-- เพิ่ม | null
+  dueDate: string | null;
   annotation: string;
 
 }
 export interface UpdateStatusRequest {
   status: string;
-  annotation: string;
+  annotation?: string | null;
 }
 
 
@@ -40,23 +41,16 @@ export class AssignhistoryService {
       : {};
   }
 
-  addassign(newassign: Partial<Issue>): Observable<Issue> {
-  if (!newassign.issueId || !newassign.assignedTo || !newassign.dueDate) {
-    throw new Error("issueId, assignedTo, and dueDate are required");
-  }
 
-  const url = `${this.baseissue}/assign/${newassign.issueId}`;
-
-  // แปลง date → yyyy-MM-dd เพื่อให้ Spring Boot map เป็น LocalDate ได้
+addassign(issueId: string, assignedTo: string, dueDate: string) {
   const body = {
-    assignTo: newassign.assignedTo,
-    dueDate: newassign.dueDate instanceof Date
-      ? newassign.dueDate.toISOString().split('T')[0]
-      : newassign.dueDate
+    assignTo: assignedTo,
+    dueDate: dueDate
   };
-
-  return this.http.put<Issue>(url, body);
+  return this.http.put(`${this.baseissue}/assign/${issueId}`, body);
 }
+
+
 
 
 
@@ -69,10 +63,10 @@ export class AssignhistoryService {
 }
 
 updateStatus(userId: string, issueId: string, body: UpdateStatusRequest) {
+  console.log(body);
   return this.http.put<AssignHistory[]>(
-    `${this.baseassign}/update/${userId}/${issueId}`, // ลบ "assign" เพราะ backend ของคุณเป็น /update/{userId}/{issueId}
+    `${this.baseassign}/update/${userId}/${issueId}`, 
     body,
-    this.authOpts() // เพิ่ม headers ถ้าต้องใช้ Authorization
   );
 }
 

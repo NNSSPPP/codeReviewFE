@@ -2,11 +2,12 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import{IssuemodalComponent} from '../issuemodal/issuemodal.component';
+import { IssuemodalComponent } from '../issuemodal/issuemodal.component';
 import { IssueService, Issue as ApiIssue, AddCommentPayload } from '../services/issueservice/issue.service';
 import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../services/authservice/auth.service';
 import { Repository, RepositoryService } from '../services/reposervice/repository.service';
+import { AssignHistory, AssignhistoryService } from '../services/assignservice/assignhistory.service';
 
 interface Attachment { filename: string; url: string; }
 interface IssueComment {
@@ -14,28 +15,38 @@ interface IssueComment {
   attachments?: Attachment[]; mentions?: string[];
 }
 interface Issue {
-  id: string; 
-  type: string; 
-  title: string; 
+  id: string;
+  type: string;
+  title: string;
   severity: string;
   priority: 'Low' | 'Medium' | 'High' | 'Critical';
-  status: 'open' | 'in-progress' | 'done' | 'reject';
+  status: 'open' | 'in-progress' | 'done' | 'reject' | 'pending';
   project: string; file: string; line: number; created: string;
   assignedTo?: string; dueDate: string; description: string;
   vulnerableCode: string; recommendedFix: string; comments: IssueComment[];
 }
+
+interface StatusUpdate {
+  id: string;                  // Issue ID
+  status: Issue['status'];      // New status
+  annotation?: string;          // Optional remark
+}
+
+
 const isUUID = (s: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 
 @Component({
   selector: 'app-issuedetail',
   standalone: true,
-  imports: [CommonModule, FormsModule,IssuemodalComponent],
+  imports: [CommonModule, FormsModule, IssuemodalComponent],
   templateUrl: './issuedetail.component.html',
   styleUrl: './issuedetail.component.css',
 })
 export class IssuedetailComponent implements OnInit {
+
   @ViewChild(IssuemodalComponent) assignModal!: IssuemodalComponent;
+
   trackByComment = (_: number, c: any) => c?.id || c?.timestamp || _;
 
   // FE options (เดิม)
@@ -46,11 +57,10 @@ export class IssuedetailComponent implements OnInit {
   loading = true;
   error: string | null = null;
   issue!: Issue;
+  nextStatus: Issue['status'] | undefined;
   private readonly auth = inject(AuthService);
-  /** ใช้ id ของผู้ใช้ปัจจุบันจาก AuthService */
-  currentUserId = this.auth.userId ?? '';
 
-  /** (optional) ชื่อผู้ใช้สำหรับแสดงผล */
+  currentUserId = this.auth.userId ?? '';
   currentUserName = this.auth.username;
 
   newComment = { mention: '', comment: '' };
@@ -58,7 +68,8 @@ export class IssuedetailComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly issueApi: IssueService,
-    private readonly repositoryService: RepositoryService
+    private readonly repositoryService: RepositoryService,
+    private readonly assignService: AssignhistoryService
   ) { }
 
   ngOnInit(): void {
@@ -101,80 +112,145 @@ export class IssuedetailComponent implements OnInit {
       recommendedFix: (r as any).recommendedFix ?? '',
       comments: [] // คุณอาจจะโหลดผ่าน /comments แยกก็ได้
     };
+
   }
 
-private mapStatusBeToFe(s: ApiIssue['status'] | undefined): Issue['status'] {
-  if (!s) return 'open';
-  const clean = s.toString().trim().toUpperCase();
-  switch (clean) {
-    case 'OPEN': return 'open';
-    case 'IN PROGRESS': return 'in-progress';
-    case 'DONE': return 'done';
-    case 'REJECT': return 'reject';
-    default: return 'open';
+  private mapStatusBeToFe(s: ApiIssue['status'] | undefined): Issue['status'] {
+    if (!s) return 'open';
+    const clean = s.toString().trim().toUpperCase();
+    switch (clean) {
+      case 'OPEN': return 'open';
+      case 'PENDING': return 'pending';
+      case 'IN PROGRESS': return 'in-progress';
+      case 'DONE': return 'done';
+      case 'REJECT': return 'reject';
+      default: return 'open';
+    }
+  }
+
+ private mapStatusFeToBe(s: Issue['status']): ApiIssue['status'] {
+  switch (s) {
+    case 'open': return 'OPEN';
+    case 'pending': return 'PENDING';
+    case 'in-progress': return 'IN PROGRESS';
+    case 'done': return 'DONE';
+    case 'reject': return 'REJECT';
+    default: return 'OPEN'; // ✅ เพิ่ม default return
   }
 }
 
-  private mapStatusFeToBe(s: Issue['status']): ApiIssue['status'] {
-    switch (s) {
-      case 'open': return 'OPEN';
-      case 'in-progress': return 'IN PROGRESS';
-      case 'done': return 'DONE';
-      case 'reject': return 'REJECT';
-    }
-  }
 
   /* ===================== UI actions (เดิม) ===================== */
 
   goBack() { window.history.back(); }
 
   showAssignModal = false;
-showStatusModal = false;
+  showStatusModal = false;
 
- openAssignModal() {
-    const isEdit = !!(this.issue.assignedTo && this.issue.assignedTo.length > 0);
-    if (isEdit) {
+  openAssignModal() {
+    if (this.issue.assignedTo) {
       this.assignModal.openEditAssign({
         issueId: this.issue.id,
         assignedTo: this.issue.assignedTo,
-        dueDate: this.issue.dueDate ? new Date(this.issue.dueDate) : new Date()
+        dueDate: this.issue.dueDate
       });
     } else {
-      this.assignModal.openAddAssign();
+      this.assignModal.openAddAssign(this.issue.id);
     }
   }
 
-  openStatusModal() { this.assignModal.openStatusModal(); }
-  
-closeModal() {
-  this.showAssignModal = false;
-  this.showStatusModal = false;
+
+
+ openStatusModal() {
+  this.autoUpdateStatus(this.issue);
 }
+
+  closeModal() {
+    this.showAssignModal = false;
+    this.showStatusModal = false;
+  }
 
  handleAssignSubmit(event: { issue: Partial<Issue>, isEdit: boolean }) {
     const updated = event.issue;
     if (updated.assignedTo) this.issue.assignedTo = updated.assignedTo;
     if (updated.dueDate) this.issue.dueDate = updated.dueDate;
     this.assignModal.close();
+
+   this.assignService.addassign(
+  this.issue.id,
+  this.issue.assignedTo ?? '', // ✅ ใช้ ?? ป้องกัน undefined
+  this.issue.dueDate
+)
+.subscribe({
+      next: (res) => {
+        console.log('Assigned successfully:', res);
+      },
+      error: (err) => console.error('Error:', err),
+    });
   }
 
+  // auto-update status ตาม logic
+  autoUpdateStatus(issue: Issue) {
+  let nextStatus: string;
 
-
-
- handleStatusSubmit(updated: Partial<Issue>) {
-  if (updated.status) {
-    const prev = this.issue.status;
-    this.issue.status = updated.status; // optimistic update
-
-    // this.issueApi.updateStatus(this.issue.id, updated.status as any).subscribe({
-    //   next: () => console.log('Status updated to', updated.status),
-    //   error: err => {
-    //     console.error('Failed to update status', err);
-    //     this.issue.status = prev; // rollback
-    //   }
-    // });
+  switch(issue.status) {
+    case 'open':
+      alert('กรุณา Assign ก่อนเปลี่ยนสถานะ');
+      return;
+    case 'pending':
+      alert('กรุณายืนยัน assignment ก่อนเปลี่ยนสถานะ');
+      return;
+    case 'in-progress': nextStatus = 'DONE'; break;
+   case 'done':
+  alert('ยินดีด้วยค่ะ งานมอบหมายนี้ของคุณเสร็จสมบูรณ์เรียบร้อยแล้ว');
+      return;
+    default: nextStatus = issue.status;
   }
-  this.closeModal();
+
+  this.assignModal.openStatus(issue, nextStatus);
+  console.log('🟩 openStatus called with:', issue.status, '->', nextStatus);
+}
+
+handleStatusSubmit(updated: { id?: string, issueId?: string, status: Issue['status'], annotation?: string }) {
+  const issueId = updated.id || updated.issueId;
+  if (!updated.status || !issueId) return;
+
+  const prevStatus = this.issue.status;
+
+  const userId = this.auth.userId;
+  if (!userId) {
+    console.error('Missing userId');
+    return;
+  }
+
+  // Mapping FE → BE
+  const body: any = {
+    status: this.mapStatusFeToBe(updated.status),
+    annotation: updated.annotation || ''
+  };
+
+  // ✅ เพิ่ม assignedTo & dueDate เผื่อ BE ต้องการ
+  if (this.issue.assignedTo) body.assignedTo = this.issue.assignedTo;
+  if (this.issue.dueDate) body.dueDate = this.issue.dueDate;
+
+  this.assignService.updateStatus(userId, issueId, body).subscribe({
+    next: (res: any) => {
+      // update FE จาก response backend
+      this.issue = { 
+        ...this.issue, 
+        status: res.status ? this.mapStatusBeToFe(res.status) : updated.status,
+        assignedTo: res.assignedTo ?? this.issue.assignedTo,
+        dueDate: res.dueDate ?? this.issue.dueDate
+      };
+      console.log('Status updated successfully:', this.issue.status);
+      this.assignModal.close();
+    },
+    error: (err) => {
+      console.error('Error updating status:', err);
+      // rollback FE
+      this.issue = { ...this.issue, status: prevStatus };
+    }
+  });
 }
 
 
@@ -199,33 +275,33 @@ closeModal() {
   // }
 
 
-  
-  setPriority() {
-    const p = prompt(`Set Priority (${this.priorityLevels.join(', ')})`);
-    if (p && this.priorityLevels.includes(p as any)) {
-      this.issue.priority = p as Issue['priority'];
-      // TODO: ถ้าต้องบันทึกจริง เพิ่ม endpoint /priority ใน service
-    }
-  }
 
-  rejectIssue() {
-  // toggle: ถ้าเป็น reject แล้ว → กลับไป open
-  const next: Issue['status'] = this.issue.status === 'reject' ? 'open' : 'reject';
-  const prev = this.issue.status;
+  // setPriority() {
+  //         const p = prompt(`Set Priority (${this.priorityLevels.join(', ')})`);
+  //         if (p && this.priorityLevels.includes(p as any)) {
+  //           this.issue.priority = p as Issue['priority'];
+  //           // TODO: ถ้าต้องบันทึกจริง เพิ่ม endpoint /priority ใน service
+  //         }
+  //       }
 
-  // เปลี่ยนใน FE ก่อน (optimistic update)
-  this.issue.status = next;
+  // rejectIssue() {
+  //         // toggle: ถ้าเป็น reject แล้ว → กลับไป open
+  //         const next: Issue['status'] = this.issue.status === 'reject' ? 'open' : 'reject';
+  //         const prev = this.issue.status;
 
-  // เรียก API ไปอัปเดตสถานะใน backend
-  // this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe(next)).subscribe({
-  //   next: () => console.log(`Status changed to ${next}`),
-  //   error: err => {
-  //     console.error('rejectIssue error', err);
-  //     this.issue.status = prev; // rollback ถ้า error
-  //   }
-  // });
-}
+  //         // เปลี่ยนใน FE ก่อน (optimistic update)
+  //         this.issue.status = next;
+
+  //         // เรียก API ไปอัปเดตสถานะใน backend
+  //         // this.issueApi.updateStatus(this.issue.id, this.mapStatusFeToBe(next)).subscribe({
+  //         //   next: () => console.log(`Status changed to ${next}`),
+  //         //   error: err => {
+  //         //     console.error('rejectIssue error', err);
+  //         //     this.issue.status = prev; // rollback ถ้า error
+  //         //   }
+  //         // });
+  //       }
 
 
 
-}
+      }
