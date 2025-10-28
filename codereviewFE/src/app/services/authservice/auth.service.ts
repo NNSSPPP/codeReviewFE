@@ -28,6 +28,7 @@ const USER_ID_KEY     = 'userId';
 const USERNAME_KEY    = 'username';
 const USER_ROLE_KEY   = 'role';
 const USER_EMAIL_KEY  = 'email';
+const USER_STATUS_KEY  = 'status';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -55,6 +56,7 @@ export class AuthService {
 
    get role(): string | null { return localStorage.getItem(USER_ROLE_KEY); }
   get email(): string | null { return localStorage.getItem(USER_EMAIL_KEY); }
+  get status(): string | null { return localStorage.getItem(USER_STATUS_KEY); }
   get isLoggedIn(): boolean {
     return !!this.token;
   }
@@ -86,6 +88,10 @@ export class AuthService {
   setEmail(email: string | null) {
     if (email) localStorage.setItem(USER_EMAIL_KEY, email);
     else localStorage.removeItem(USER_EMAIL_KEY);
+  }
+  setStatus(status: string | null) {
+    if (status) localStorage.setItem(USER_STATUS_KEY, status);
+    else localStorage.removeItem(USER_STATUS_KEY);
   }
 
   // -------- auth APIs ----------
@@ -145,6 +151,7 @@ export class AuthService {
     this.setUsername(null);
     this.setRole(null);
     this.setEmail(null);
+    this.setStatus(null);
     return this.http.post(`${this.base}/auth/logout`, {});
   }
 
@@ -173,11 +180,13 @@ private decodeAndStoreClaims(token: string) {
     const username = decoded.username || decoded.email || null;
     const role = decoded.roles || decoded.role || null;
     const email = decoded.email || null;
+    const status = decoded.token_type || null;
 
     this.setUserId(userId);
     this.setUsername(username);
     this.setRole(role);
     this.setEmail(email);
+    this.setStatus(status);
   } catch (error) {
     console.error('Error decoding token:', error);
   }

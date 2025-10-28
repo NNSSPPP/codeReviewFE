@@ -25,7 +25,7 @@ export class UserService {
   }
 
   getAllUser(): Observable< User[]> {
-      return this.http.get< User[]>(`${this.base}/users`, this.authOpts());
+      return this.http.get< User[]>(`${this.base}/get-users`, this.authOpts());
     }
 
 
