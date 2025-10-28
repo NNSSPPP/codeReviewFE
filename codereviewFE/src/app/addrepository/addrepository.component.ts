@@ -31,8 +31,7 @@ export class AddrepositoryComponent implements OnInit {
     user: '',
     name: '',
     projectType: undefined,
-    repositoryUrl: '',
-    sonarProjectKey: ''
+    repositoryUrl: ''
   };
 
   credentials= {
@@ -143,7 +142,11 @@ export class AddrepositoryComponent implements OnInit {
   // อัปเดต projectKey ก่อน submit
   this.updateProjectKey();
 
-  const payload = this.gitRepository;
+  const payload = {
+  ...this.gitRepository,
+  ...this.credentials
+};
+  console.log(payload)
 
   const saveOrUpdate$ = this.isEditMode
     ? this.repositoryService.updateRepo(this.gitRepository.projectId!, payload)
@@ -152,7 +155,7 @@ export class AddrepositoryComponent implements OnInit {
   saveOrUpdate$.subscribe({
     next: (savedRepo) => {
       // toast success save/update
-      const msg = this.isEditMode ? 'Repository updated successfully!' : 'Repository added successfully!';
+      const msg = this.isEditMode ? 'Repository updated successfully!' : 'Repository added successfully!'
       this.snack.open(msg, '', {
         duration: 2500,
         horizontalPosition: 'right',
@@ -163,14 +166,15 @@ export class AddrepositoryComponent implements OnInit {
       // กลับหน้า repository management ทันที
       this.router.navigate(['/repositories']);
 
+
+
       // เรียก scan หลัง 5 วินาที
-      setTimeout(() => {
-        this.scanService.startScan(savedRepo.projectId!, {
-  repoUrl: savedRepo.repositoryUrl || '',
-  projectKey: savedRepo.sonarProjectKey || '',
-  username: this.credentials.username || '',
-  password: this.credentials.password || ''
-})
+     if (savedRepo.projectId) {
+  setTimeout(() => {
+    this.scanService.startScan(savedRepo.projectId!, {
+      username: this.credentials.username || '',
+      password: this.credentials.password || ''
+    })
 .subscribe({
           next: () => {
             this.snack.open('Scan started successfully!', '', {
@@ -191,6 +195,7 @@ export class AddrepositoryComponent implements OnInit {
           }
         });
       }, 5000);
+    }
     },
     error: (err) => {
       console.error('Failed to save repository', err);

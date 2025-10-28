@@ -10,7 +10,6 @@
 
     <div class="dashboard-actions">
 
-      <span class="admin-name">Admin</span>
       <!-- ปุ่ม Export -->
       <button class="export-btn" (click)="onExport()" title="Export">
         <i class="bi bi-download"></i>
@@ -64,6 +63,26 @@
           </button>
         </div>
       </div>
+
+      <!-- Profile Dropdown -->
+      <div class="profile-dropdown" (click)="toggleProfileDropdown()">
+        <div class="profile-info">
+          <i class="bi bi-person-circle"></i>
+          <span>{{ user?.username }}</span>
+        </div>
+
+        <div class="profile-menu" *ngIf="showProfileDropdown">
+          <div class="profile-details">
+            <p><strong>Username:</strong> {{ user?.username }}</p>
+            <p><strong>Email:</strong> {{ user?.email }}</p>
+            <p><strong>Status:</strong> {{ user?.status }}</p>
+          </div>
+
+          <button class="btn-edit" (click)="openEditProfileModal(user)">
+            Edit Profile
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -84,33 +103,28 @@
       <div *ngIf="!loading">
         <div class="chart-container">
           <div *ngIf="pieChartOptions">
-  <apx-chart
-    [series]="pieChartOptions.series!"
-    [chart]="pieChartOptions.chart!"
-    [labels]="pieChartOptions.labels!"
-    [plotOptions]="pieChartOptions.plotOptions!"
-    [colors]="pieChartOptions.colors!"
-    [dataLabels]="pieChartOptions.dataLabels!"
-    [legend]="pieChartOptions.legend!"
-    [tooltip]="pieChartOptions.tooltip!">
-  </apx-chart>
-</div>
+            <apx-chart [series]="pieChartOptions.series!" [chart]="pieChartOptions.chart!"
+              [labels]="pieChartOptions.labels!" [plotOptions]="pieChartOptions.plotOptions!"
+              [colors]="pieChartOptions.colors!" [dataLabels]="pieChartOptions.dataLabels!"
+              [legend]="pieChartOptions.legend!" [tooltip]="pieChartOptions.tooltip!">
+            </apx-chart>
+          </div>
 
         </div>
         <div class="status-summary">
           <div class="status-item passed">
-            <i class="bi bi-check-circle-fill"></i>  
+            <i class="bi bi-check-circle-fill"></i>
             <div class="status-info">
-      <span class="label">Passed</span>
-      <span class="count">{{ Data.passedCount }}</span>
-    </div>
+              <span class="label">Passed</span>
+              <span class="count">{{ Data.passedCount }}</span>
+            </div>
           </div>
           <div class="status-item failed">
-            <i class="bi bi-x-circle-fill"></i> 
+            <i class="bi bi-x-circle-fill"></i>
             <div class="status-info">
-      <span class="label">Failed</span>
-      <span class="count">{{ Data.failedCount }}</span>
-    </div>
+              <span class="label">Failed</span>
+              <span class="count">{{ Data.failedCount }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -122,47 +136,44 @@
         <i class="bi bi-clock-history"></i> Recent Scans
       </h4>
 
-       <div class="table-wrapper">
-      <table >
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Status</th>
-            <!-- <th>Grade</th> -->
-            <th>Time</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let scan of recentScans">
-            <td>{{ scan.projectName }}</td>
-            <td [ngClass]="{
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Status</th>
+              <!-- <th>Grade</th> -->
+              <th>Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let scan of recentScans">
+              <td>{{ scan.projectName }}</td>
+              <td [ngClass]="{
               'status-cell status--passed':  scan.qualityGate === 'Passed',
               'status-cell status--failed':  scan.qualityGate === 'Failed'
             }">{{ scan.qualityGate }}</td>
-            <!-- <td [ngClass]="{
+              <!-- <td [ngClass]="{
               'grade-cell grade--a': scan.grade === 'A',
               'grade-cell grade--b': scan.grade === 'B',
               'grade-cell grade--c': scan.grade === 'C',
               'grade-cell grade--d': scan.grade === 'D',
               'grade-cell grade--e': scan.grade === 'E'
             }">{{ scan.grade }}</td> -->
-            <td>{{ scan.completedAt | date:'dd/MM/yyyy, hh:mm a' }}</td>
-            <td>
-              <button *ngIf="scan.qualityGate === 'Passed'" class="btn btn-primary btn-sm text-white" title="view scan"
-                type="button" >
-                <i class="bi bi-eye"></i>
-              </button>
+              <td>{{ scan.completedAt | date:'dd/MM/yyyy, hh:mm a' }}</td>
+              <td>
+                <button class="btn btn-primary btn-sm text-white" title="View scan detail" type="button"
+                  (click)="viewDetail(scan.scanId)">
+                  <i class="bi bi-eye"></i>
+                </button>
 
-              <button *ngIf="scan.qualityGate === 'Failed'" class="btn btn-warning btn-sm text-white" title="retry scan"
-                type="button">
-                <i class="bi bi-arrow-clockwise"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-       </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <!-- View All -->
       <div class="button-container">
         <a [routerLink]="['/scanhistory']" class="view-all-link">
@@ -173,79 +184,131 @@
   </div>
 
 
-<!-- Metrics -->
-<div class="metrics">
-  <div class="metric-card bugs">
-    <div class="metric-icon"><i class="bi bi-bug-fill"></i></div>
-    <div class="metric-title">Bugs</div>
-    <div class="metric-value">{{ dashboardData.metrics.bugs }}</div>
-    <!-- <div class="metric-change decrease">↓ 5 today</div> -->
-  </div>
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric-card bugs">
+      <div class="metric-icon"><i class="bi bi-bug-fill"></i></div>
+      <div class="metric-title">Bugs</div>
+      <div class="metric-value">{{ dashboardData.metrics.bugs }}</div>
+      <!-- <div class="metric-change decrease">↓ 5 today</div> -->
+    </div>
 
-  <div class="metric-card security">
-    <div class="metric-icon"><i class="bi bi-shield-lock"></i></div>
-    <div class="metric-title">Security</div>
-    <div class="metric-value">{{ dashboardData.metrics.vulnerabilities }}</div>
-    <!-- <div class="metric-change increase">↑ 1 today</div> -->
-  </div>
+    <div class="metric-card security">
+      <div class="metric-icon"><i class="bi bi-shield-lock"></i></div>
+      <div class="metric-title">Security</div>
+      <div class="metric-value">{{ dashboardData.metrics.vulnerabilities }}</div>
+      <!-- <div class="metric-change increase">↑ 1 today</div> -->
+    </div>
 
-  <div class="metric-card code-smells">
-    <div class="metric-icon"><i class="bi bi-wind"></i></div>
-    <div class="metric-title">Code Smells</div>
-    <div class="metric-value">{{ dashboardData.metrics.codeSmells }}</div>
-    <!-- <div class="metric-change decrease">↓ 12 today</div> -->
-  </div>
+    <div class="metric-card code-smells">
+      <div class="metric-icon"><i class="bi bi-wind"></i></div>
+      <div class="metric-title">Code Smells</div>
+      <div class="metric-value">{{ dashboardData.metrics.codeSmells }}</div>
+      <!-- <div class="metric-change decrease">↓ 12 today</div> -->
+    </div>
 
-  <div class="metric-card coverage">
-    <div class="metric-icon"><i class="bi bi-check2-circle"></i></div>
-    <div class="metric-title">Coverage</div>
-    <div class="metric-value">{{ dashboardData.metrics.coverage }}%</div>
-    <!-- <div class="metric-change increase">↑ 2.3%</div> -->
-  </div>
-</div>
-
-<!-- Quality Trend -->
-<div class="quality-trend">
-  <h4><i class="bi bi-graph-up"></i> Quality Trend (Last 30 Days)</h4>
-  <!-- <apx-chart [series]="coverageChartSeries!" [chart]="coverageChartOptions.chart!" [xaxis]="coverageChartOptions.xaxis!"
-    [stroke]="coverageChartOptions.stroke!" [markers]="coverageChartOptions.markers!"
-    [colors]="coverageChartOptions.colors!" [yaxis]="coverageChartOptions.yaxis!">
-  </apx-chart> -->
-</div>
-
-<!-- Top Issues & Project Distribution -->
-<div class="row mt-4">
-  <!-- Top Issues -->
-  <div class="col">
-    <h4><i class="bi bi-exclamation-circle"></i> Top Issues</h4>
-    <ul>
-      <li *ngFor="let i of dashboardData.issues">
-  {{ i?.type || 'N/A' }} - {{ i?.message || '' }}
-</li>
-
-    </ul>
-    <a [routerLink]="['/issue']" class="view-all-link">
-      Manage Issues<i class="bi bi-arrow-right"></i>
-    </a>
-  </div>
-
-  <!-- Project Distribution -->
-  <div class="col">
-    <h4><i class="bi bi-bar-chart"></i> Project Distribution</h4>
-
-    <div *ngFor="let p of projectDistribution" class="mb-2">
-      <div class="d-flex justify-content-between">
-        <span>{{ p.type }}</span>
-        <span>{{ p.percent }}%</span>
-      </div>
-      <div class="progress" style="height: 20px;">
-        <progress class="progress-bar" [value]="p.percent" max="100" [ngClass]="{
-            'bg-primary': p.type === 'Angular',
-            'bg-success': p.type === 'SpringBoot'
-          }">
-          {{ p.percent }}%
-        </progress>
-      </div>
+    <div class="metric-card coverage">
+      <div class="metric-icon"><i class="bi bi-check2-circle"></i></div>
+      <div class="metric-title">Coverage</div>
+      <div class="metric-value">{{ dashboardData.metrics.coverage }}%</div>
+      <!-- <div class="metric-change increase">↑ 2.3%</div> -->
     </div>
   </div>
 
+  <!-- Quality Trend -->
+  <div class="quality-trend">
+    <h4><i class="bi bi-graph-up"></i> Quality Trend (Last 30 Days)</h4>
+    <!-- <apx-chart [series]="coverageChartSeries!" [chart]="coverageChartOptions.chart!" [xaxis]="coverageChartOptions.xaxis!"
+    [stroke]="coverageChartOptions.stroke!" [markers]="coverageChartOptions.markers!"
+    [colors]="coverageChartOptions.colors!" [yaxis]="coverageChartOptions.yaxis!">
+  </apx-chart> -->
+  </div>
+
+  <!-- Top Issues & Project Distribution -->
+  <div class="row mt-4">
+    <!-- Top Issues -->
+    <div class="col">
+      <h4><i class="bi bi-exclamation-circle"></i> Top Issues</h4>
+      <ul>
+        <li *ngFor="let i of dashboardData.issues">
+          {{ i?.type || 'N/A' }} - {{ i?.message || '' }}
+        </li>
+
+      </ul>
+      <a [routerLink]="['/issue']" class="view-all-link">
+        Manage Issues<i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Project Distribution -->
+    <div class="col">
+      <h4><i class="bi bi-bar-chart"></i> Project Distribution</h4>
+
+      <div *ngFor="let p of projectDistribution" class="mb-2">
+        <div class="d-flex justify-content-between">
+          <span>{{ p.type }}</span>
+          <span>{{ p.percent }}%</span>
+        </div>
+        <div class="progress" style="height: 20px;">
+          <progress class="progress-bar" [value]="p.percent" max="100" [ngClass]="{
+            'bg-primary': p.type === 'Angular',
+            'bg-success': p.type === 'SpringBoot'
+          }">
+            {{ p.percent }}%
+          </progress>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Profile Modal -->
+<div class="modal-backdrop-custom" *ngIf="showEditModal" (click)="closeEditProfileModal()">
+  <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Profile</h5>
+        <button class="btn-close" (click)="closeEditProfileModal()"></button>
+      </div>
+
+      <form #profileForm="ngForm" (ngSubmit)="saveProfileChanges(profileForm)">
+        <div class="modal-body">
+          <!-- Username -->
+          <div class="form-group mb-3">
+            <label>Username</label>
+            <input [(ngModel)]="editedUser.username" name="username" type="text" class="form-control" required />
+            <div class="text-danger" *ngIf="profileForm.submitted && !editedUser.username">
+              Username is required
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group mb-3">
+            <label>Email</label>
+            <input [(ngModel)]="editedUser.email" name="email" type="email" class="form-control" required />
+            <div class="text-danger" *ngIf="profileForm.submitted && !editedUser.email">
+              Email is required
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="form-group mb-3">
+            <label>Status</label>
+            <select [(ngModel)]="editedUser.token_type" name="status" class="form-control" required>
+              <option value="Active">Active</option>
+              <option value="access">Access</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditProfileModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

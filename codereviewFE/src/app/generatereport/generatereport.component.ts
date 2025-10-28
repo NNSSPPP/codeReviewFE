@@ -41,10 +41,10 @@ export class GeneratereportComponent {
   sections = [
     { name: 'Quality Gate Summary', selected: true },
     { name: 'Issue Breakdown', selected: true },
-    { name: 'Security Analysis', selected: true },
-    { name: 'Technical Debt', selected: true },
-    { name: 'Trend Analysis', selected: true },
-    { name: 'Recommendations', selected: true }
+    // { name: 'Security Analysis', selected: true },
+    // { name: 'Technical Debt', selected: true },
+    // { name: 'Trend Analysis', selected: true },
+    // { name: 'Recommendations', selected: true }
   ];
 
   constructor(private readonly route: ActivatedRoute,private readonly repositoryService: RepositoryService) {} 

@@ -29,6 +29,9 @@ export interface Scan {
     codeSmells?: number;
     coverage?: number;   
     duplications?: number; 
+
+    code_smells?: number;               // สำหรับ backend legacy
+  duplicated_lines_density?: number;  // สำหรับ backend legacy
   };
 
 
@@ -40,13 +43,10 @@ export interface Scan {
 }
 
 export interface ScanRequest {
-  // ใส่ฟิลด์ตามที่ Spring รับ (คุณระบุไว้แบบนี้)
-  repoUrl: string;
-  projectKey: string;
-  branchName?: string;
- username?: string;  // ✅ เพิ่ม
-  password?: string;  // ✅ เพิ่ม
+  username?: string;
+  password?: string;
 }
+
 
 // หมายเหตุ: ชนิดนี้ต้อง "ตรงกับของ Spring" จริง ๆ
 // จากตัวอย่าง controller ก่อนหน้า ผมเคยเห็นหน้าตาประมาณ scanId/fileName/path/content
@@ -94,11 +94,23 @@ startScan(projectId: string, req: ScanRequest): Observable<Scan> {
   }
 
   /** GET /api/scans/{scanid} — รายละเอียดสแกน */
-  getByScanId(scanId: string): Observable<Scan> {
-    return this.http.get<Scan>(`${this.base}/${scanId}`).pipe(
-      map(s => ({ ...s, status: this.mapStatus(s.status) }))
-    );
-  }
+ getByScanId(scanId: string): Observable<Scan> {
+  return this.http.get<Scan>(`${this.base}/${scanId}`).pipe(
+    map(s => ({
+      ...s,
+      status: this.mapStatus(s.status),
+      qualityGate: this.mapQualityStatus(s.qualityGate ?? ''),
+      metrics: s.metrics ? {
+        bugs: s.metrics.bugs ?? 0,
+        vulnerabilities: s.metrics.vulnerabilities ?? 0,
+        codeSmells: s.metrics.codeSmells ?? s.metrics['code_smells'] ?? 0,
+        coverage: s.metrics.coverage ?? 0,
+        duplications: s.metrics.duplications ?? s.metrics['duplicated_lines_density'] ?? 0
+      } : undefined
+    }))
+  );
+}
+
 
   /** GET /api/scans/{id}/log — log ของสแกน */
   getLog(id: string): Observable<ScanLogModel> {
