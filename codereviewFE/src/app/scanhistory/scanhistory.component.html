@@ -32,9 +32,10 @@
           </th>
           <th>Date/Time</th>
           <th>Project</th>
+          <!-- <th>Owner Scan</th> -->
           <th>Grade</th>
           <th>Issues</th>
-          <th class="log-col sticky-col">Log</th>
+          <!-- <th class="log-col sticky-col">Log</th> -->
           <th class="result-col sticky-col">Result</th>
         </tr>
       </thead>
@@ -57,7 +58,7 @@
               <i [ngClass]="statusIcon(scan.status)"></i> {{scan.status}}
             </span>
           </td>
-  
+   <!-- <td>{{scan.ownerScan}}</td> -->
           <td>{{scan.qualityGate}}</td>
   
           <td>
@@ -72,11 +73,11 @@
           </td>
   
           <!-- ไม่มีการซ้อน <td> -->
-          <td class="log-col sticky-col" (click)="$event.stopPropagation()">
+          <!-- <td class="log-col sticky-col" (click)="$event.stopPropagation()">
             <button title="View log" class="btn btn-log btn-sm" (click)="viewLog(scan); $event.stopPropagation()">
               <i class="bi bi-file-text"></i> 
             </button>
-          </td>
+          </td> -->
   
           <td class="result-col sticky-col" (click)="$event.stopPropagation()">
             <button title="View Result Scan" class="btn btn-primary btn-sm" (click)="viewResult(scan); $event.stopPropagation()">

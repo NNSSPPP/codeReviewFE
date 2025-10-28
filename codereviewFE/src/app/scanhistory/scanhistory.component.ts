@@ -182,7 +182,7 @@ export class ScanhistoryComponent {
     } else if (this.selectedScans.length < 3) {
       this.selectedScans.push(scan);
     } else {
-      alert("เลือกได้สูงสุด 3 scans");
+      alert("เลือกได้สูงสุดได้ 3 รายการ");
       (event.target as HTMLInputElement).checked = false;
     }
   }
@@ -195,7 +195,7 @@ export class ScanhistoryComponent {
   
   compareScans() {
     if (this.selectedScans.length < 2) {
-      alert("กรุณาเลือกอย่างน้อย 2 scans เพื่อเปรียบเทียบ");
+      alert("กรุณาเลือกอย่างน้อย 2 รายการ เพื่อเปรียบเทียบ");
       return;
     }
     this.showCompareModal = true;
