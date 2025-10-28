@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
@@ -36,6 +37,7 @@ interface ScanHistory {
   status: 'Passed' | 'Failed';
   grade: string;
   time: string;
+  maintainabilityGate: string;
 }
 interface DashboardData {
   id: string;
@@ -46,6 +48,7 @@ interface DashboardData {
   securityHotspots: SecurityHotspot[];
   history: ScanHistory[];
   coverageHistory: number[];
+  maintainabilityGate: string;
   days: number[];
 }
 type NotificationTab = 'All' | 'Unread' | 'Scans' | 'Issues' | 'System';
@@ -54,14 +57,24 @@ interface Notification {
   timestamp: Date; read: boolean;
 }
 
+interface UserProfile {
+  userId: string | number | null;
+  username: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule, RouterModule],
+  imports: [CommonModule, NgApexchartsModule, RouterModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
+
   constructor(
     private readonly router: Router,
     private readonly dash: DashboardService,
@@ -78,6 +91,18 @@ export class DashboardComponent {
   
   const userId = this.auth.userId;
   this.fetchFromServer(userId!);
+
+  this.userProfile = {
+  userId: this.auth.userId,
+  username: this.auth.username || '',
+  email: this.auth.email || '',
+  role: this.auth.role || '',
+  status: this.auth.status || '' 
+};
+
+
+  // map userProfile ไป user
+  this.user = { ...this.userProfile };
 
     this.dash.getOverview(this.auth.userId || '').subscribe({
       next: data => console.log('Dashboard overview data:', data),
@@ -103,6 +128,7 @@ export class DashboardComponent {
     securityHotspots: [],
     history: [],
     coverageHistory: [],
+    maintainabilityGate: '',
     days: []
   };
 
@@ -116,6 +142,14 @@ export class DashboardComponent {
   coverageChartSeries: any[] = [];
   coverageChartOptions: ApexOptions = {};
   recentScans: Scan[] = [];
+
+  userProfile: UserProfile = { userId: null, username: '', email: '', role: '', status: '' };
+
+  user: any = {}; 
+
+  editedUser: any = {};
+  showEditModal: boolean = false;
+  showProfileDropdown: boolean = false;
 
   // ---------- Fetch real data ----------
   fetchFromServer(userId: string | number) {
@@ -147,6 +181,43 @@ export class DashboardComponent {
       }
     });
   }
+
+ toggleProfileDropdown() {
+  this.showProfileDropdown = !this.showProfileDropdown;
+}
+
+openEditProfileModal(user: any) {
+  this.editedUser = { ...user };
+  this.showEditModal = true;
+}
+
+closeEditProfileModal() {
+  this.showEditModal = false;
+}
+
+
+  saveProfileChanges(form: any) {
+    if (form.valid) {
+      console.log('Updated user:', this.editedUser);
+      // call service อัพเดตข้อมูล profile
+      this.showEditModal = false;
+    }
+  }
+
+   viewDetail(scanId: string) {
+    this.router.navigate(['/scanresult', scanId]);
+  }
+
+
+
+  // saveProfileChanges() {
+  //   // if (this.user && this.editedUser) {
+  //   //   this.user = { ...this.user, ...this.editedUser };
+  //     this.closeEditProfileModal();
+  //     // TODO: call backend API เพื่อ update โปรไฟล์จริง
+  //   //   console.log('Updated profile:', this.user);
+  //   // }
+  // }
 
   // ---------- Mapping helpers ----------
   private applyOverview(overview: any) {
@@ -201,8 +272,9 @@ export class DashboardComponent {
         project: (h as any).projectName,
         typeproject,
         status: (h as any).status ?? 'Passed',
-        grade: (h as any).grade ?? 'A',
-        time: t.toISOString().slice(0, 16).replace('T', ' ')
+        grade: (h as any).grade ?? 'F',
+        time: t.toISOString().slice(0, 16).replace('T', ' '),
+        maintainabilityGate: (h as any).maintainabilityGate ?? 'Y'
       };
     });
   }
@@ -243,6 +315,8 @@ export class DashboardComponent {
     };
   }
 
+  
+
   private normalizeOverviewArray(raw: Dashboard[]) {
     const perProject: DashboardData[] = (raw || []).map(o => ({
       id: o.id,
@@ -253,7 +327,8 @@ export class DashboardComponent {
       securityHotspots: [],
       history: [],
       coverageHistory: [],
-      days: []
+      days: [],
+      maintainabilityGate: ''
     }));
 
     const totalProjects = perProject.length || 1;
@@ -276,9 +351,6 @@ export class DashboardComponent {
 
     return { perProject, totals };
   }
-
-  private safeParse<T>(s: string): Partial<T> { try { return JSON.parse(s); } catch { return {}; } }
-  private toNum(v: any): number { const n = Number(v); return Number.isFinite(n) ? n : 0; }
 
   // ---------- Notifications ----------
   showNotifications = false;
@@ -358,116 +430,147 @@ export class DashboardComponent {
   }
 
   onExport() {
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const margin = 10;
-    let y = 15;
-  
-    // =========================
-    // 1. Header
-    // =========================
-    pdf.setFontSize(20);
-    pdf.setTextColor(40, 40, 40);
-    pdf.text('Dashboard Overview', pdf.internal.pageSize.getWidth() / 2, y, { align: 'center' });
-    y += 10;
-  
-    // =========================
-    // 2. Date & Admin
-    // =========================
-    const today = new Date();
-    pdf.setFontSize(11);
-    pdf.setTextColor(80, 80, 80);
-    pdf.text(`Date: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`, margin, y);
-    pdf.text(`Role: Admin`, pdf.internal.pageSize.getWidth() - margin, y, { align: 'right' });
-    y += 12;
-  
-    pdf.setDrawColor(200);
-    pdf.setLineWidth(0.5);
-    pdf.line(margin, y, pdf.internal.pageSize.getWidth() - margin, y); // separator line
-    y += 6;
-  
-    // =========================
-    // 3. Quality Gate Status
-    // =========================
-    pdf.setFontSize(14);
-    pdf.setTextColor(0, 123, 255); // blue header
-    pdf.text('Quality Gate Status', margin, y);
-    y += 7;
-    pdf.setFontSize(11);
-    pdf.setTextColor(0);
-    pdf.text(`Passed: ${this.Data.passedCount}`, margin, y); y += 5;
-    pdf.text(`Failed: ${this.Data.failedCount}`, margin, y); y += 10;
-  
-    // =========================
-    // 4. Recent Scans Table
-    // =========================
-    const scansColumns = ['Project', 'Status', 'Grade', 'Time'];
-    const scansRows = this.recentScans.map(s => [s.projectId, s.status, s.completedAt]);
-  
-    (autoTable as any)(pdf, {
-      head: [scansColumns],
-      body: scansRows,
-      startY: y,
-      theme: 'grid',
-      styles: { fontSize: 10, cellPadding: 2 },
-      headStyles: { fillColor: [0, 123, 255], textColor: 255 },
-      margin: { left: margin, right: margin },
-    });
-  
-    y = (pdf as any).lastAutoTable?.finalY + 8;
-  
-    // =========================
-    // 5. Metrics
-    // =========================
-    pdf.setFontSize(14);
-    pdf.setTextColor(0, 123, 255);
-    pdf.text('Metrics', margin, y);
-    y += 6;
-    pdf.setFontSize(11);
-    pdf.setTextColor(0);
-    pdf.text(`Bugs: ${this.dashboardData.metrics.bugs}`, margin, y); y += 5;
-    pdf.text(`Security: ${this.dashboardData.metrics.vulnerabilities}`, margin, y); y += 5;
-    pdf.text(`Code Smells: ${this.dashboardData.metrics.codeSmells}`, margin, y); y += 5;
-    pdf.text(`Coverage: ${this.dashboardData.metrics.coverage}%`, margin, y); y += 10;
-  
-    // =========================
-    // 6. Top Issues
-    // =========================
-    pdf.setFontSize(14);
-    pdf.setTextColor(220, 53, 69); // red
-    pdf.text('Top Issues', margin, y);
-    y += 6;
-    pdf.setFontSize(11);
-    pdf.setTextColor(0);
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const margin = 12;
+  let y = 15;
+
+  // =========================
+  // 1. Header
+  // =========================
+  pdf.setFontSize(20);
+  pdf.setTextColor(33, 37, 41);
+  pdf.text('Dashboard Overview Report', pdf.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+  y += 12;
+
+  // =========================
+  // 2. Date & Username
+  // =========================
+  const today = new Date();
+  const username = this.user?.username || 'Unknown User';
+  pdf.setFontSize(11);
+  pdf.setTextColor(85, 85, 85);
+  pdf.text(`Date: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`, margin, y);
+  pdf.text(`Username: ${username}`, pdf.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+  y += 10;
+
+  // =========================
+  // 3. Divider Line
+  // =========================
+  pdf.setDrawColor(180);
+  pdf.setLineWidth(0.5);
+  pdf.line(margin, y, pdf.internal.pageSize.getWidth() - margin, y);
+  y += 8;
+
+  // =========================
+  // 4. Quality Gate Status
+  // =========================
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 123, 255);
+  pdf.text('Quality Gate Status', margin, y);
+  y += 7;
+  pdf.setFontSize(11);
+  pdf.setTextColor(0);
+  pdf.text(`Passed: ${this.Data.passedCount}`, margin, y); y += 6;
+  pdf.text(`Failed: ${this.Data.failedCount}`, margin, y); y += 10;
+
+  // =========================
+  // 5. Recent Scans Table
+  // =========================
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 123, 255);
+  pdf.text('Recent Scans', margin, y);
+  y += 6;
+
+  const scansColumns = ['Project Name', 'Status', 'Completed At'];
+  const scansRows = this.recentScans.map(s => [
+    s.projectName || 'N/A',
+    s.qualityGate || 'N/A',
+    new Date(s.completedAt ?? '').toLocaleString()
+  ]);
+
+  (autoTable as any)(pdf, {
+    head: [scansColumns],
+    body: scansRows,
+    startY: y,
+    theme: 'grid',
+    styles: { fontSize: 10, cellPadding: 2 },
+    headStyles: { fillColor: [0, 123, 255], textColor: 255, halign: 'center' },
+    bodyStyles: { textColor: 50 },
+    margin: { left: margin, right: margin },
+  });
+
+  y = (pdf as any).lastAutoTable?.finalY + 8;
+
+  // =========================
+  // 6. Metrics
+  // =========================
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 123, 255);
+  pdf.text('Metrics Summary', margin, y);
+  y += 6;
+  pdf.setFontSize(11);
+  pdf.setTextColor(0);
+  pdf.text(`Bugs: ${this.dashboardData.metrics.bugs}`, margin, y); y += 5;
+  pdf.text(`Security: ${this.dashboardData.metrics.vulnerabilities}`, margin, y); y += 5;
+  pdf.text(`Code Smells: ${this.dashboardData.metrics.codeSmells}`, margin, y); y += 5;
+  pdf.text(`Coverage: ${this.dashboardData.metrics.coverage}%`, margin, y); y += 10;
+
+  // =========================
+  // 7. Top Issues
+  // =========================
+  pdf.setFontSize(14);
+  pdf.setTextColor(220, 53, 69);
+  pdf.text('Top Issues', margin, y);
+  y += 6;
+
+  pdf.setFontSize(11);
+  pdf.setTextColor(0);
+  if (this.dashboardData.issues?.length > 0) {
     this.dashboardData.issues.forEach(i => {
-      pdf.text(`- [${i.severity}] ${i.type}: ${i.message}`, margin, y);
+      pdf.text(`- [${i.severity || 'N/A'}] ${i.type || 'Unknown'}: ${i.message || ''}`, margin, y);
       y += 5;
     });
+  } else {
+    pdf.text('No critical issues found.', margin, y);
     y += 5;
-  
-    // =========================
-    // 7. Project Distribution
-    // =========================
-    pdf.setFontSize(14);
-    pdf.setTextColor(0, 123, 255);
-    pdf.text('Project Distribution', margin, y);
-    y += 6;
-    pdf.setFontSize(11);
-    pdf.setTextColor(0);
-    this.projectDistribution.forEach(p => {
-      pdf.text(`${p.type}: ${p.percent}%`, margin, y);
-      pdf.setFillColor(0, 123, 255); // bar color
-      pdf.rect(margin, y + 2, p.percent * 1.2, 5, 'F'); // simple bar chart
-      y += 10;
-    });
-  
-    // =========================
-    // 8. Save PDF
-    // =========================
-    const fileName = `Dashboard_Report_${today.getFullYear()}${today.getMonth() + 1}${today.getDate()}.pdf`;
-    pdf.save(fileName);
-    console.log('Exporting data...'); 
   }
-  
+  y += 5;
+
+  // =========================
+  // 8. Project Distribution (Mini Bar Chart)
+  // =========================
+  pdf.setFontSize(14);
+  pdf.setTextColor(0, 123, 255);
+  pdf.text('Project Distribution', margin, y);
+  y += 6;
+  pdf.setFontSize(11);
+  pdf.setTextColor(0);
+
+  this.projectDistribution.forEach(p => {
+    pdf.text(`${p.type}: ${p.percent}%`, margin, y);
+    pdf.setFillColor(0, 123, 255);
+    pdf.rect(margin + 40, y - 3, p.percent * 1.2, 5, 'F');
+    y += 8;
+  });
+
+  // =========================
+  // 9. Footer
+  // =========================
+  const pageHeight = pdf.internal.pageSize.height;
+  pdf.setFontSize(9);
+  pdf.setTextColor(150);
+  pdf.text('Generated automatically by PCCTH Automate Code Review', pdf.internal.pageSize.getWidth() / 2, pageHeight - 10, { align: 'center' });
+
+  // =========================
+  // 10. Save PDF
+  // =========================
+  const fileName = `Dashboard_Report_${today.getFullYear()}${(today.getMonth() + 1)
+    .toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}.pdf`;
+
+  pdf.save(fileName);
+  console.log('✅ PDF Export Successful:', fileName);
+}
+
 
   // ฟังก์ชันคำนวณสีตามเกรด
   getGradeColor(grade: string): string {
@@ -482,33 +585,48 @@ export class DashboardComponent {
     }
   }
 
-loadDashboardData() {
-  // 1️⃣ จัดกลุ่ม scan ล่าสุดต่อ project
-  const latestScanPerProject: Record<string, Scan> = {};
-  this.recentScans.forEach(scan => {
-    const prev = latestScanPerProject[scan.projectId];
-    const scanTime = scan.completedAt ? new Date(scan.completedAt).getTime() : 0;
-    if (!prev || scanTime > (prev.completedAt ? new Date(prev.completedAt).getTime() : 0)) {
-      latestScanPerProject[scan.projectId] = scan;
+ loadDashboardData() {
+  const latestPerProjectMap = new Map<string, ScanHistory>();
+
+  // -------------------------------
+  // 1️⃣ รวม scan ล่าสุดต่อ project
+  // -------------------------------
+  this.dashboardData.history.forEach(h => {
+    const projectKey = h.projectId;
+    const current = latestPerProjectMap.get(projectKey);
+    const scanTime = new Date(h.time).getTime();
+    const currentTime = current ? new Date(current.time).getTime() : 0;
+    if (!current || scanTime > currentTime) {
+      latestPerProjectMap.set(projectKey, h);
     }
   });
 
-  // 2️⃣ เอา scan ล่าสุดแต่ละโปรเจกต์
-  const latestScans = Object.values(latestScanPerProject);
+  // -------------------------------
+  // 2️⃣ ดึง scan ล่าสุดทุกโปรเจ็กต์
+  // -------------------------------
+  const latestScansAllProjects = Array.from(latestPerProjectMap.values());
 
-  // 3️⃣ นับ pass/fail จาก qualityGate.status โดยตรง
-  // แทนที่จะใช้ s.qualityGate.status
-const passedCount = latestScans.filter(s => s.qualityGate === 'Passed').length;
-const failedCount = latestScans.filter(s => s.qualityGate !== 'Passed').length;
+  // -------------------------------
+  // 3️⃣ คัดกรองเฉพาะ scan ที่มี maintainabilityGate (อาจเป็น A–F หรือ null)
+  // -------------------------------
+  const scansWithGate = latestScansAllProjects.filter(s => s.maintainabilityGate !== undefined);
 
+  // ✅ ผ่าน = maintainabilityGate มีค่าเป็น A–F (ไม่ใช่ null)
+  const passedCount = scansWithGate.filter(s => typeof s.maintainabilityGate === 'string' && s.maintainabilityGate !== '').length;
 
-  // 4️⃣ อัปเดต Data ให้ template ใช้ได้เลย
+  // ❌ ไม่ผ่าน = maintainabilityGate เป็น null หรือ undefined
+  const failedCount = scansWithGate.filter(s => !s.maintainabilityGate).length;
+
   this.Data = { passedCount, failedCount };
-  this.totalProjects = passedCount + failedCount;
+  this.totalProjects = scansWithGate.length;
 
-  // 5️⃣ คำนวณเกรดรวม
+  console.log('🟢 Passed:', passedCount, '🔴 Failed:', failedCount, 'จากทั้งหมด:', this.totalProjects);
+
+  // -------------------------------
+  // 4️⃣ คำนวณเกรดรวมจากสัดส่วน pass/fail
+  // -------------------------------
   const avg = this.totalProjects > 0 ? passedCount / this.totalProjects : 0;
-  this.grade = 
+  this.grade =
     avg >= 0.8 ? 'A' :
     avg >= 0.7 ? 'B' :
     avg >= 0.6 ? 'C' :
@@ -516,7 +634,9 @@ const failedCount = latestScans.filter(s => s.qualityGate !== 'Passed').length;
     avg >= 0.4 ? 'E' : 'F';
   this.gradePercent = Math.round(avg * 100);
 
-  // 6️⃣ ตั้งค่า donut chart
+  // -------------------------------
+  // 5️⃣ ตั้งค่า donut chart
+  // -------------------------------
   this.pieChartOptions = {
     chart: { type: 'donut', height: 300 },
     series: [this.gradePercent, 100 - this.gradePercent],
@@ -542,10 +662,10 @@ const failedCount = latestScans.filter(s => s.qualityGate !== 'Passed').length;
     legend: { show: false },
     tooltip: { enabled: false }
   };
-
-  console.log('Pass count:', passedCount, 'Fail count:', failedCount);
-  console.log('Grade percent:', this.gradePercent, 'Grade:', this.grade);
 }
+
+
+
 
 
 
