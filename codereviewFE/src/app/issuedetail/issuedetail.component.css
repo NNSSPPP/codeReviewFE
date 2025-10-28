@@ -116,6 +116,7 @@
 
   /* Status */
   .badge.status.open        { background: #f59e0b; }
+  .badge.status.pending     { background-color: #17a2b8;}
   .badge.status.in-progress { background: #2563eb; }
   .badge.status.done    { background: #10b981; }
   .badge.status.reject      { background: #e63946; }

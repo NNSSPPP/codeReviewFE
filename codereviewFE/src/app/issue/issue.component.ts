@@ -124,15 +124,17 @@ export class IssueComponent {
 
     // status mapping: 'Open' | 'In Progress' | 'Resolved' | 'Closed' -> 'open' | 'in-progress' | 'resolved' | 'closed'
     const st = (r.status || '').toLowerCase();
-    const uiStatus =
-    st.includes('open')      ? 'open':
-      st.includes('in progress') ? 'in-progress' :
-      st.includes('done')    ? 'done' :
-      st.includes('reject')      ? 'reject':
-      'open';
+const uiStatus =
+  st.includes('open')          ? 'open' :
+  st.includes('in progress')   ? 'in-progress' :
+  st.includes('done')          ? 'done' :
+  st.includes('reject')        ? 'reject' :
+  st.includes('pending')       ? 'pending' :  // <-- เพิ่มบรรทัดนี้
+  'open';
+
 
     // assignee: ใช้ user_id/assignedTo ถ้ามี
-    const rawAssignee = r.assignedTo || r.userId || '';
+    const rawAssignee = r.assignedName || '';
     const assignee = rawAssignee ? `@${rawAssignee}` : 'Unassigned';
 
     // project: ถ้าไม่มีชื่อให้ fallback เป็น project_id
@@ -306,13 +308,15 @@ export class IssueComponent {
     }
   }
 
-  statusClass(status: string) {
-    switch (status.toLowerCase()) {
-      case 'open': return 'text-danger';
-      case 'in-progress': return 'text-warning';
-      case 'done': return 'text-success';
-      case 'reject': return 'text-secondary';
-      default: return '';
-    }
+ statusClass(status: string) {
+  switch (status.toLowerCase()) {
+    case 'open': return 'text-danger';
+    case 'in-progress': return 'text-warning';
+    case 'done': return 'text-success';
+    case 'reject': return 'text-secondary';
+    case 'pending': return 'text-info';  // <-- เพิ่ม pending
+    default: return '';
   }
+}
+
 }

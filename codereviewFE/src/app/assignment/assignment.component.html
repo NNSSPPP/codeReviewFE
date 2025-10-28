@@ -2,13 +2,12 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center gap-2">
       <button class="back-btn" (click)="goBack()"><i class="bi bi-arrow-left"></i></button>
-     
+
       <h3 class="mb-0 text-primary dark:text-white"
-    style="font-size:2rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-  <i class="bi bi-list-task me-1 text-primary dark:text-info"
-     style="font-size:2rem;"></i>
-  My Assignments
-</h3>
+        style="font-size:2rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+        <i class="bi bi-list-task me-1 text-primary dark:text-info" style="font-size:2rem;"></i>
+        My Assignments
+      </h3>
 
 
 
@@ -17,11 +16,7 @@
       <i class="bi bi-person-check"></i> Assign Issue
     </button>
   </div>
- <app-issuemodal
-  #assignModal
-  (assignSubmit)="handleAssignSubmit($event)"
-  (closed)="{}">
-</app-issuemodal>
+
 
 
   <table class="table table-bordered assignment-table">
@@ -32,6 +27,8 @@
         <th>Severity</th>
         <th>Due Date</th>
         <th>Status</th>
+
+         <th *ngIf="hasActionColumn">Action</th>
         <!-- <th>Resolution</th> -->
       </tr>
     </thead>
@@ -39,29 +36,54 @@
       <tr *ngFor="let a of Assign">
         <td>{{ a.assignedToName }}</td>
         <td>{{ a.message }}</td>
-       <td>
-  <span class="badge severity-badge"
-        [ngStyle]="{
+        <td>
+          <span class="badge severity-badge" [ngStyle]="{
           'background-color': getPriorityColor(a.severity),
           'font-weight': '500'
         }">
-    {{ a.severity }}
-  </span>
-</td>
+            {{ a.severity }}
+          </span>
+        </td>
 
 
-        <td>{{ a.dueDate | date }}</td>
-       <td>
-  <span class="status-box" [ngClass]="statusClass(a.status)">
-    {{ a.status }}
-  </span>
-</td>
+        <td>{{ a.dueDate | date:'yyyy-MM-dd' }}</td>
+        <td>
+          <span class="status-box" [ngClass]="statusClass(a.status)">
+            {{ a.status }}
+          </span>
+        </td>
 
         <!-- <td>{{ a.resolution || '-' }}</td> -->
+
+       <td class="text-center">
+  <!-- สำหรับ PENDING -->
+  <!-- สำหรับ PENDING -->
+<ng-container *ngIf="a.status === 'PENDING'">
+  <button class="btn btn-success btn-sm me-1" (click)="updateStatus(a,'ACCEPT')">
+    <i class="bi bi-check-lg"></i>
+  </button>
+  <button class="btn btn-danger btn-sm" (click)="updateStatus(a,'REJECT')">
+    <i class="bi bi-x-lg"></i>
+  </button>
+</ng-container>
+
+<!-- สำหรับ IN PROGRESS -->
+<ng-container *ngIf="a.status === 'IN PROGRESS'">
+  <button class="btn btn-primary btn-sm" (click)="updateStatus(a,'DONE')">
+    <i class="bi bi-check2-square"></i> Done
+  </button>
+</ng-container>
+
+</td>
       </tr>
     </tbody>
   </table>
-
+  <app-issuemodal
+   #assignModal 
+   (assignSubmit)="handleAssignSubmit($event)" 
+   (statusSubmit)="handleStatusSubmit($event)"
+    (closed)="{}">
+  </app-issuemodal>
 
 </div>
 

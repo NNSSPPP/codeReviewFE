@@ -5,6 +5,7 @@ import { AuthService } from '../authservice/auth.service';
 import { environment } from '../../environments/environment';
 
 export interface Issue {
+  id: string;
   issueId: string;
   scanId: string;
   projectName: string;
@@ -15,7 +16,7 @@ export interface Issue {
   component: string;
   message: string;
 
-  status: 'OPEN' | 'IN PROGRESS' | 'DONE' | 'REJECT';
+  status: 'OPEN' |'PENDING'| 'IN PROGRESS' | 'DONE' | 'REJECT';
   annotation?: string; //remark status
 
   createdAt: Date | string;
@@ -23,7 +24,8 @@ export interface Issue {
 
   userId?: string;         // assigned developer user_id
   assignedTo?: string;     // user_id
-  dueDate?: Date;        // due date
+  assignedName?: string;   // user_name
+  dueDate: string;        // due date
  
 }
 
@@ -53,6 +55,7 @@ export class IssueService {
   /** GET /api/issues/:issues_id — ดึง issue รายตัว */
   getById(issues_id: string): Observable<Issue> {
     return this.http.get<Issue>(`${this.base}/${issues_id}`);
+    console.log('getById', issues_id);
   }
 
   getIssueByProjectId(projectId: string): Observable<Issue[]> {
