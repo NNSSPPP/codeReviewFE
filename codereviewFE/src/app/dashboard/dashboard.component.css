@@ -212,45 +212,51 @@
 
 .profile-menu {
   position: absolute;
-  top: 100%;      /* อยู่ด้านล่างของปุ่ม */
-  right: 0;       /* ชิดขวา */
-  margin-top: 8px; /* ระยะห่างเล็กน้อย */
-  
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
   background-color: var(--bg-card);
   color: var(--text-main);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  width: 260px;
+  width: 270px;
   padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   transition: all 0.3s ease;
   z-index: 1000;
 }
 
-/* Profile Details */
 .profile-details p {
   margin: 6px 0;
   font-size: 14px;
   line-height: 1.4;
 }
 
-.profile-details strong {
-  color: var(--text-heading);
+.status-pending {
+  color: #f59e0b;
+  font-weight: 600;
 }
 
-/* Edit Button */
-.btn-edit {
-  margin-top: 12px;
+.status-active {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.btn-edit, .btn-verify {
+  margin-top: 10px;
   padding: 8px 16px;
   width: 100%;
-  background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 14px;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-edit {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
 }
 
 .btn-edit:hover {
@@ -258,19 +264,16 @@
   transform: translateY(-1px);
 }
 
-/* Optional: Animation for dropdown */
-.profile-menu {
-  opacity: 0;
-  transform: translateY(-10px);
-  animation: fadeInDropdown 0.25s forwards;
+.btn-verify {
+  background-color: #3b82f6;
+  color: white;
 }
 
-@keyframes fadeInDropdown {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.btn-verify:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
 }
+
 
 
 

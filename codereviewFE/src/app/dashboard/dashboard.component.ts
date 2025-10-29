@@ -6,6 +6,7 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 import { DashboardService, Dashboard, History, Trends } from '../services/dashboardservice/dashboard.service';
 import { AuthService } from '../services/authservice/auth.service';
 import { ScanService, Scan } from '../services/scanservice/scan.service';
+import { UserService,ChangePasswordData } from '../services/userservice/user.service';
 import { forkJoin } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -58,12 +59,14 @@ interface Notification {
 }
 
 interface UserProfile {
-  userId: string | number | null;
   username: string;
   email: string;
-  role: string;
+  phoneNumber?: string;
   status: string;
 }
+
+
+
 
 
 @Component({
@@ -79,6 +82,7 @@ export class DashboardComponent {
     private readonly router: Router,
     private readonly dash: DashboardService,
     private readonly auth: AuthService,
+    private readonly userService: UserService,
     private readonly scanService: ScanService
   ) { }
 
@@ -90,24 +94,27 @@ export class DashboardComponent {
   }
   
   const userId = this.auth.userId;
+  if (!userId) {
+  console.error('User ID not found in auth');
+  return;
+}
   this.fetchFromServer(userId!);
 
-  this.userProfile = {
-  userId: this.auth.userId,
-  username: this.auth.username || '',
-  email: this.auth.email || '',
-  role: this.auth.role || '',
-  status: this.auth.status || '' 
-};
+  this.userService.getUserProfile(userId!).subscribe({
+  next: (user) => {
+    this.userProfile = {
+      username: user.username || '',
+      email: user.email || '',
+      phoneNumber: user.phoneNumber || '',
+      status: user.status || ''
+    };
+  },
+  error: (err) => {
+    console.error('Error fetching user profile:', err);
+  }
+});
 
 
-  // map userProfile ไป user
-  this.user = { ...this.userProfile };
-
-    this.dash.getOverview(this.auth.userId || '').subscribe({
-      next: data => console.log('Dashboard overview data:', data),
-      error: err => console.error('Error fetching dashboard overview:', err)
-    });
 
     this.loadDashboardData();
     console.log('Dashboard data:', this.dashboardData);
@@ -143,7 +150,7 @@ export class DashboardComponent {
   coverageChartOptions: ApexOptions = {};
   recentScans: Scan[] = [];
 
-  userProfile: UserProfile = { userId: null, username: '', email: '', role: '', status: '' };
+  userProfile: UserProfile = {  username: '', email: '', phoneNumber:'', status: '' };
 
   user: any = {}; 
 
@@ -186,23 +193,132 @@ export class DashboardComponent {
   this.showProfileDropdown = !this.showProfileDropdown;
 }
 
-openEditProfileModal(user: any) {
-  this.editedUser = { ...user };
-  this.showEditModal = true;
-}
+ showChangePasswordModal = false;
 
-closeEditProfileModal() {
-  this.showEditModal = false;
-}
+  passwordData: ChangePasswordData = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
+
+  submitted = false;
 
 
-  saveProfileChanges(form: any) {
-    if (form.valid) {
-      console.log('Updated user:', this.editedUser);
-      // call service อัพเดตข้อมูล profile
-      this.showEditModal = false;
-    }
+  openChangePasswordModal() {
+    this.showChangePasswordModal = true;
+    this.resetForm();
   }
+
+  closeChangePasswordModal() {
+    this.showChangePasswordModal = false;
+  }
+  
+
+  resetForm() {
+    this.passwordData = { oldPassword: '', newPassword: '', confirmPassword: '' };
+  }
+
+  submitChangePassword(form: any) {
+    this.submitted = true;
+    if (form.invalid || this.passwordData.newPassword !== this.passwordData.confirmPassword) {
+      return; // stop if form invalid or passwords do not match
+    }
+
+    this.userService.changePassword(this.passwordData).subscribe({
+      next: (user) => {
+        console.log('Password changed successfully', user);
+        alert('Password changed successfully');
+        this.closeChangePasswordModal();
+      },
+      error: (err) => {
+        console.error('Error changing password', err);
+        alert('Failed to change password: ' + err.error?.message || err.message);
+      }
+    });
+  }
+
+  verifyEmail() {
+  this.userService.verifyEmail(this.userProfile.email).subscribe({
+    next: () => {
+      alert('Verification email sent successfully!');
+    },
+    error: (err) => {
+      console.error('Error sending verification email:', err);
+      alert('Failed to send verification email.');
+    }
+  });
+}
+
+
+// // เปิด modal
+// openEditProfileModal() {
+//   // copy ข้อมูลปัจจุบันจาก userProfile
+//   this.editedUser = {
+//     username: this.userProfile.username,
+//     email: this.userProfile.email,
+//     phoneNumber: this.userProfile.phoneNumber
+//   };
+
+//   // this.editedStatus = this.userProfile.status;
+
+//   this.showEditModal = true;
+// }
+
+
+// closeEditProfileModal() {
+//   this.showEditModal = false;
+// }
+
+
+  // saveProfileChanges(form: any) {
+  //   if (form.valid) {
+  //     console.log('Updated user:', this.editedUser);
+  //     // call service อัพเดตข้อมูล profile
+  //     this.showEditModal = false;
+  //   }
+  // }
+
+//  saveProfileChanges(form: any) {
+//   if (form.invalid) {
+//     form.control.markAllAsTouched();
+//     console.log('Form invalid:', this.editedUser);
+//     return;
+//   }
+
+//   const payload: Partial<{ username: string; email: string; phoneNumber: string }> = {};
+
+//   if (this.editedUser.username !== this.userProfile.username) {
+//     payload.username = this.editedUser.username;
+//   }
+//   if (this.editedUser.email !== this.userProfile.email) {
+//     payload.email = this.editedUser.email;
+//   }
+//   if (this.editedUser.phoneNumber !== this.userProfile.phoneNumber) {
+//     payload.phoneNumber = this.editedUser.phoneNumber;
+//   }
+
+//    console.log('Payload to send:', payload);
+
+//   if (Object.keys(payload).length === 0) {
+//     alert('No changes to save');
+//     this.closeEditProfileModal();
+//     return;
+//   }
+
+//   this.userService.updateUserProfile(payload).subscribe({
+//     next: (res) => {
+//       alert('Profile updated successfully!');
+//       this.showEditModal = false;
+//       this.userProfile = { ...this.userProfile, ...payload };
+//     },
+//     error: (err) => {
+//       console.error(err);
+//       alert('Failed to update profile');
+//     }
+//   });
+// }
+
+
 
    viewDetail(scanId: string) {
     this.router.navigate(['/scanresult', scanId]);
