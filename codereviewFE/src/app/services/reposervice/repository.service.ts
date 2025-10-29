@@ -61,26 +61,32 @@ export class RepositoryService {
   }
 
   /** GET /api/repositories */
-  getAllRepo(): Observable<Repository[]> {
-    return this.http.get<Repository[]>(`${this.base}/getAll`).pipe(
-      map(repos =>
-        repos
-          .map(r => ({
-            ...r,
-            // แปลง createdAt/updatedAt เฉพาะตอนที่มีค่า
-            createdAt: r.createdAt ? new Date(r.createdAt) : undefined,
-            updatedAt: r.updatedAt ? new Date(r.updatedAt) : undefined,
-            userId: (r as any).userId || (r as any).user_id
-          }))
-          .sort((a, b) => {
-            // ถ้าไม่มี updatedAt ให้ fallback เป็น createdAt
-            const aTime = a.updatedAt?.getTime() ?? a.createdAt?.getTime() ?? 0;
-            const bTime = b.updatedAt?.getTime() ?? b.createdAt?.getTime() ?? 0;
-            return bTime - aTime; // เรียงจากใหม่ → เก่า
-          })
-      )
-    );
-  }
+/** GET /api/repositories?userId=<UUID> */
+getAllRepo(): Observable<Repository[]> {
+  const userId = this.auth.userId || '';
+  const opts = {
+    ...this.authOpts(),                             // ใส่ Authorization ถ้ามี
+    params: new HttpParams().set('userId', userId), // << ส่ง userId ไปด้วย
+  };
+
+  return this.http.get<Repository[]>(`${this.base}/getAll/${userId}`, opts).pipe(
+    map(repos =>
+      repos
+        .map(r => ({
+          ...r,
+          createdAt: r.createdAt ? new Date(r.createdAt) : undefined,
+          updatedAt: r.updatedAt ? new Date(r.updatedAt) : undefined,
+          userId: (r as any).userId || (r as any).user_id
+        }))
+        .sort((a, b) => {
+          const aTime = a.updatedAt?.getTime() ?? a.createdAt?.getTime() ?? 0;
+          const bTime = b.updatedAt?.getTime() ?? b.createdAt?.getTime() ?? 0;
+          return bTime - aTime;
+        })
+    )
+  );
+}
+
 
   /** GET /api/repositories/{id} */
   getByIdRepo(projectId: string): Observable<Repository> {

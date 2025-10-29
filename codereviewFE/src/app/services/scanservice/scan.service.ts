@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { AuthService } from '../authservice/auth.service';
 import { environment } from '../../environments/environment';
@@ -79,7 +79,12 @@ startScan(projectId: string, req: ScanRequest): Observable<Scan> {
   /** GET /api/scans — ดึงสแกนทั้งหมด */
   getAllScan(): Observable<Scan[]> {
     console.log('[ScanService] Fetching all scans...');
-    return this.http.get<Scan[]>(`${this.base}/getProject`).pipe(
+    const userId = this.auth.userId || '';
+      const opts = {
+        ...this.authOpts(),                             // ใส่ Authorization ถ้ามี
+        params: new HttpParams().set('userId', userId), // << ส่ง userId ไปด้วย
+      };
+    return this.http.get<Scan[]>(`${this.base}/getProject/${userId}`, opts).pipe(
       map(scans => {
         console.log('[ScanService] Raw scans from backend:', scans);
         const mapped = scans.map(s => ({
