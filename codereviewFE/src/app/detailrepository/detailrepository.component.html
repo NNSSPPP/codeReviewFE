@@ -8,7 +8,7 @@
       <h3 class="fw-bold">
         <i class="bi bi-folder2-open text-primary me-2"></i>{{ repo?.name }}
       </h3>
-      <p class="text-muted mb-0">Branch: {{ repo?.branch }}</p>
+      <!-- <p class="text-muted mb-0">Branch: {{ repo?.branch }}</p> -->
       <a [href]="repo?.repositoryUrl" target="_blank" class="repo-link">
         <i class="bi bi-link-45deg me-1"></i>{{ repo?.repositoryUrl }}
       </a>
@@ -65,7 +65,7 @@
           </progress>
         </div>
 
-        <p *ngIf="repo?.status === 'Active'"><i class="bi bi-clock me-1"></i> Last Scan: {{ repo?.lastScan }}</p>
+        <p *ngIf="repo?.status === 'Active'"><i class="bi bi-clock me-1"></i> Last Scan: {{ repo?.lastScan |date:'dd/MM/yyyy HH:mm'}}</p>
         <p *ngIf="repo?.qualityGate">Quality Gate: <span class="badge bg-success">{{ repo?.qualityGate }}</span></p>
 
 

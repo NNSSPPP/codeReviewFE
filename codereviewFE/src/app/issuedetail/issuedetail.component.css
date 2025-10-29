@@ -71,7 +71,7 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
   .priority.critical { color: #fff; background: linear-gradient(135deg,#e63946,#d90429); }
-  .priority.high     { color: #fff; background: linear-gradient(135deg,#fd7e14,#f3722c); }
+  /*.priority.high     { color: #fff; background: linear-gradient(135deg,#fd7e14,#f3722c); }*/
   .priority.medium   { color: #000; background: linear-gradient(135deg,#ffd54f,#ffb703); }
   .priority.low      { color: #000; background: linear-gradient(135deg,#8bc34a,#43a047); }
   
@@ -109,15 +109,17 @@
     color: #111;
   }
   /* Severity */
-  .badge.severity.Blocker { background: #e63946; }
-  .badge.severity.critical { background: #fd7e14; }
-  .badge.severity.major { background: #ffb703; color:#000; }
-  .badge.severity.minor{ background: #43a047; }
+  .badge.severity.blocker { background: #e63946; }
+  .badge.severity.critical     { background: #fd7e14; }
+  .badge.severity.major   { background: #ffb703; color:#000; } 
+  .badge.severity.minor      { background: #43a047; }
+
   /* Status */
   .badge.status.open        { background: #f59e0b; }
+  .badge.status.pending     { background-color: #17a2b8;}
   .badge.status.in-progress { background: #2563eb; }
-  .badge.status.resolved    { background: #10b981; }
-  .badge.status.closed      { background: #6b7280; }
+  .badge.status.done    { background: #10b981; }
+  .badge.status.reject      { background: #e63946; }
   
   /* ===============================
      Description

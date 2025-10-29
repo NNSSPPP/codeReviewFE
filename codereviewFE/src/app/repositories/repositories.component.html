@@ -78,7 +78,7 @@
             <a [href]="repo.repositoryUrl" target="_blank" class="repo-link">
               <i class="bi bi-link-45deg me-1"></i>{{ repo.repositoryUrl }}
             </a>
-            <p class="mb-1"><i class="bi bi-git me-1"></i> Branch: {{ repo.branch }}</p>
+            <!-- <p class="mb-1"><i class="bi bi-git me-1"></i> Branch: {{ repo.branch }}</p> -->
 
             <!-- Status / Scan Progress -->
             <div>
@@ -109,16 +109,12 @@
             <div>
               <div>
                 <span class="badge grade-badge" [ngClass]="{
-                    'grade-a': repo.qualityGate === 'A',
-                    'grade-b': repo.qualityGate === 'B',
-                    'grade-c': repo.qualityGate === 'C',
-                    'grade-d': repo.qualityGate === 'D',
-                    'grade-e': repo.qualityGate === 'E'
+                    'grade-a': repo.qualityGate === 'Passed',
+                    'grade-e': repo.qualityGate === 'Failed'
                   }">
                   <i class="bi me-1" [ngClass]="{
-                       'bi-check-circle': repo.qualityGate === 'A' || repo.qualityGate === 'B',
-                       'bi-exclamation-triangle': repo.qualityGate === 'C' || repo.qualityGate === 'D',
-                       'bi-x-circle': repo.qualityGate === 'E'
+                       'bi-check-circle': repo.qualityGate === 'Passed' ,
+                       'bi-x-circle': repo.qualityGate === 'Failed'
                      }"></i>
                   {{ repo.status === 'Scanning' ? 'Previous: ' : 'Quality Gate: ' }}{{ repo.qualityGate }}
                 </span>
@@ -185,6 +181,47 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scan Credentials Modal -->
+<div class="modal-backdrop-custom" *ngIf="showScanModal" (click)="closeScanModal()">
+  <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-shield-lock"></i> Run Scan
+        </h5>
+        <button class="btn-close" (click)="closeScanModal()"></button>
+      </div>
+
+      <form #scanForm="ngForm" (ngSubmit)="confirmScan(scanForm)">
+        <div class="modal-body">
+          <!-- Username -->
+          <div class="form-group mb-3">
+            <label>Username</label>
+            <input type="text" [(ngModel)]="scanUsername" name="username" class="form-control" required />
+            <div class="text-danger" *ngIf="scanForm.submitted && !scanUsername">
+              Username is required
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-3">
+            <label>Password</label>
+            <input type="password" [(ngModel)]="scanPassword" name="password" class="form-control" required />
+            <div class="text-danger" *ngIf="scanForm.submitted && !scanPassword">
+              Password is required
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Start Scan</button>
+          <button type="button" class="btn btn-secondary" (click)="closeScanModal()">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/authservice/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -25,10 +26,20 @@ export class LoginComponent {
   ) {}
 
   onSubmit(form: NgForm) {
-    if (!form.valid) return;
-    this.loading = true;
     this.submitted = true;
+    this.loading = true;
+    
+     if (form.invalid ) {
+      this.snack.open('Login Failed. Please fill in all fields.', '', {
+        duration: 2500,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['app-snack', 'app-snack-red'], 
+      });
+      return;
+    }
 
+     this.loading = true;
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
@@ -38,13 +49,19 @@ export class LoginComponent {
           verticalPosition: 'top',
           panelClass: ['app-snack', 'app-snack-blue'],
         });
+      console.log('Token:',this.auth.token)
+     console.log('Username:', this.auth.username);
+console.log('User ID:', this.auth.userId);
+console.log('Role:', this.auth.role);
+console.log('Email:', this.auth.email);
+
         this.router.navigate(['/dashboard']);
       },
       error: () => {
         this.loading = false;
         this.snack.open('Login Failed. Please try again.', '', {
           duration: 2500,
-          horizontalPosition: 'center',
+          horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['app-snack', 'app-snack-red'],
         });

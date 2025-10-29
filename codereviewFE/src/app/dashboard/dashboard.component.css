@@ -197,8 +197,168 @@
      cursor: pointer; font-size: 12px; font-weight: 600;
    }
    .load-more:hover { background: var(--btn-primary-bg-hover); }
-   
-   
+
+  
+/* ===============================
+   Profile Menu
+   =============================== */
+  .profile-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 100%;      /* อยู่ด้านล่างของปุ่ม */
+  right: 0;       /* ชิดขวา */
+  margin-top: 8px; /* ระยะห่างเล็กน้อย */
+  
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  width: 260px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+/* Profile Details */
+.profile-details p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.profile-details strong {
+  color: var(--text-heading);
+}
+
+/* Edit Button */
+.btn-edit {
+  margin-top: 12px;
+  padding: 8px 16px;
+  width: 100%;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: var(--btn-primary-bg-hover);
+  transform: translateY(-1px);
+}
+
+/* Optional: Animation for dropdown */
+.profile-menu {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInDropdown 0.25s forwards;
+}
+
+@keyframes fadeInDropdown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* เพิ่มความเข้ม */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1040;
+}
+
+.modal-dialog-custom {
+  width: 500px;
+  max-width: 90%;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* เงาสวย */
+  overflow: hidden;
+  animation: slideDown 0.3s ease-out;
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 10px;
+}
+
+.modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  margin-top: 15px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #e5e5e5;
+  padding-top: 10px;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border: none;
+  transition: 0.2s;
+}
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  transition: 0.2s;
+}
+.btn-secondary:hover {
+  background-color: #5c636a;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+:host-context(.dark-mode) .modal-header,
+:host-context(.dark-mode) .modal-footer {
+  border: none !important;
+  background: transparent !important;
+}
+
+
    /* ===============================
       STATUS CARDS (การ์ดสถานะ)
       =============================== */
@@ -226,6 +386,83 @@
    .card.failed::before  { background: linear-gradient(180deg,var(--status-failed-bg),var(--status-failed-text)); }
    
    
+   .status-summary {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 140px;
+}
+
+.status-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.status-item i {
+  font-size: 1.8rem;
+  margin-right: 0.75rem;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.status-info .label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #555;
+}
+
+.status-info .count {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.status-item.passed {
+  border-left: 6px solid #28a745;
+}
+
+.status-item.passed i {
+  color: #28a745;
+}
+
+.status-item.failed {
+  border-left: 6px solid #dc3545;
+}
+
+.status-item.failed i {
+  color: #dc3545;
+}
+
+
+/* สำหรับ Dark Mode */
+body.dark-mode .status-item {
+  background: var(--bg-panel); /*  ให้เข้ากับ theme มืด */
+  box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+}
+
+.status-info .label {
+  color: var(--text-main); /*  ดึงจาก theme */
+}
+
+.status-info .count {
+  color: var(--text-main); /*  ดึงจาก theme */
+}
+
+
    /* ===============================
       RECENT SCANS TABLE (ตาราง)
       =============================== */
@@ -416,7 +653,7 @@
 
 /* Dark mode */
 .dark-mode .notification-tabs button {
-  color: var(--text-main);   /* ✅ จะดึงสีขาวจาก --text-main */
+  color: var(--text-main);   /* จะดึงสีขาวจาก --text-main */
 }
 /* ===============================
    Mobile Responsive (≤576px)
@@ -641,7 +878,7 @@
     background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2));
   }
   
-  /* ✅ Overlay บังแนวขวาทั้งหมด */
+  /* Overlay บังแนวขวาทั้งหมด */
   .sticky-cover {
     position: sticky;
     right: 0;
@@ -695,3 +932,59 @@
     border-left: 1px solid #333;
   }
   
+
+
+/*  FIX: Match ACTION header background only (no side effects) */
+.dashboard-container .recent-scans thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+  color: var(--table-header-text) !important;
+  border-right: none !important;
+  box-shadow: none !important;
+}
+
+/*  Dark mode consistency */
+body.dark-mode .dashboard-container .recent-scans thead th:last-child {
+  background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg2)) !important;
+  color: var(--table-header-text) !important;
+}
+
+
+@media (max-width: 980px) {
+  /* ไม่ให้เลื่อน X */
+  .dashboard-container .recent-scans .table-wrapper {
+  overflow-x: auto !important;
+
+}
+
+
+  /* บีบให้พอดีกรอบ */
+  .dashboard-container .recent-scans table {
+    width: 100% !important;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  /* ลด padding / ฟอนต์ */
+  .dashboard-container .recent-scans thead th,
+  .dashboard-container .recent-scans tbody td {
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+  }
+
+  /* ปรับสัดส่วนคอลัมน์ */
+  .dashboard-container .recent-scans thead th:nth-child(1),
+  .dashboard-container .recent-scans tbody td:nth-child(1) { width: 38%; } /* Project */
+  .dashboard-container .recent-scans thead th:nth-child(2),
+  .dashboard-container .recent-scans tbody td:nth-child(2) { width: 16%; } /* Status */
+  .dashboard-container .recent-scans thead th:nth-child(3),
+  .dashboard-container .recent-scans tbody td:nth-child(3) { width: 12%; } /* Grade */
+  .dashboard-container .recent-scans thead th:nth-child(4),
+  .dashboard-container .recent-scans tbody td:nth-child(4) { width: 22%; } /* Time */
+}
+
+

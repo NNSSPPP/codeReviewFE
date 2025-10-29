@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { AuthService } from '../authservice/auth.service';
+import { environment } from '../../environments/environment';
 
 export type ScanStatus = 'Active' | 'Scanning' | 'Error' | 'Cancelled';
 export type YN = 'Y' | 'N';
@@ -10,6 +11,7 @@ export interface Scan {
 
   scanId: string;            // UUID
   projectId: string;          // UUID
+  projectName: string;
   qualityGate?: string;
   startedAt?: Date;
   completedAt?: Date;
@@ -22,9 +24,14 @@ export interface Scan {
   duplicationGate?: YN;
   // metrics?: Record<string, number>;
   metrics?: {
-    coverage?: number;
     bugs?: number;
     vulnerabilities?: number;
+    codeSmells?: number;
+    coverage?: number;   
+    duplications?: number; 
+
+    code_smells?: number;               // สำหรับ backend legacy
+  duplicated_lines_density?: number;  // สำหรับ backend legacy
   };
 
 
@@ -36,12 +43,10 @@ export interface Scan {
 }
 
 export interface ScanRequest {
-  // ใส่ฟิลด์ตามที่ Spring รับ (คุณระบุไว้แบบนี้)
-  repoUrl: string;
-  projectKey: string;
-  branchName?: string;
-  token: string;
+  username?: string;
+  password?: string;
 }
+
 
 // หมายเหตุ: ชนิดนี้ต้อง "ตรงกับของ Spring" จริง ๆ
 // จากตัวอย่าง controller ก่อนหน้า ผมเคยเห็นหน้าตาประมาณ scanId/fileName/path/content
@@ -54,9 +59,8 @@ export interface ScanLogModel {
 @Injectable({ providedIn: 'root' })
 export class ScanService {
   private readonly http = inject(HttpClient);
-  // แนะนำย้ายไป environment: `${environment.apiBaseUrl}/scans`
-  private readonly base = 'http://localhost:8080/api/scans';
   private readonly auth = inject(AuthService);
+  private readonly base = environment.apiUrl + '/scans';
 
   private authOpts() {
       const token = this.auth.token;
@@ -66,20 +70,27 @@ export class ScanService {
     }
 
   /** POST /api/scans — เริ่มสแกน */
-  startScan(req: ScanRequest): Observable<Scan> {
-    console.log('[ScanService] Starting scan for repository:', req);
-    return this.http.post<Scan>(this.base, req, this.authOpts());
-  }
+startScan(projectId: string, req: ScanRequest): Observable<Scan> {
+  console.log('[ScanService] Starting scan for repository:', req, 'projectId:', projectId);
+  return this.http.post<Scan>(`${this.base}/${projectId}`, req);
+}
+
 
   /** GET /api/scans — ดึงสแกนทั้งหมด */
   getAllScan(): Observable<Scan[]> {
     console.log('[ScanService] Fetching all scans...');
-    return this.http.get<Scan[]>(this.base, this.authOpts()).pipe(
+    const userId = this.auth.userId || '';
+      const opts = {
+        ...this.authOpts(),                             // ใส่ Authorization ถ้ามี
+        params: new HttpParams().set('userId', userId), // << ส่ง userId ไปด้วย
+      };
+    return this.http.get<Scan[]>(`${this.base}/getProject/${userId}`, opts).pipe(
       map(scans => {
         console.log('[ScanService] Raw scans from backend:', scans);
         const mapped = scans.map(s => ({
           ...s,
-          status: this.mapStatus(s.status)
+          status: this.mapStatus(s.status),
+          qualityGate: this.mapQualityStatus(s.qualityGate ?? '')
         }));
         console.log('[ScanService] Mapped scans:', mapped);
         return mapped;
@@ -87,23 +98,35 @@ export class ScanService {
     );
   }
 
-  /** GET /api/scans/{id} — รายละเอียดสแกน */
-  getByScanId(id: string): Observable<Scan> {
-    return this.http.get<Scan>(`${this.base}/${id}`, this.authOpts()).pipe(
-      map(s => ({ ...s, status: this.mapStatus(s.status) }))
-    );
-  }
+  /** GET /api/scans/{scanid} — รายละเอียดสแกน */
+ getByScanId(scanId: string): Observable<Scan> {
+  return this.http.get<Scan>(`${this.base}/${scanId}`).pipe(
+    map(s => ({
+      ...s,
+      status: this.mapStatus(s.status),
+      qualityGate: this.mapQualityStatus(s.qualityGate ?? ''),
+      metrics: s.metrics ? {
+        bugs: s.metrics.bugs ?? 0,
+        vulnerabilities: s.metrics.vulnerabilities ?? 0,
+        codeSmells: s.metrics.codeSmells ?? s.metrics['code_smells'] ?? 0,
+        coverage: s.metrics.coverage ?? 0,
+        duplications: s.metrics.duplications ?? s.metrics['duplicated_lines_density'] ?? 0
+      } : undefined
+    }))
+  );
+}
+
 
   /** GET /api/scans/{id}/log — log ของสแกน */
   getLog(id: string): Observable<ScanLogModel> {
-    return this.http.get<ScanLogModel>(`${this.base}/${id}/log`, this.authOpts());
+    return this.http.get<ScanLogModel>(`${this.base}/${id}/log`);
   }
 
   /** POST /api/scans/{id}/cancel — ยกเลิกสแกน */
   cancelScan(id: string): Observable<Scan> {
     // *** ระวัง: ใน Controller ใช้ @PostMapping("/{id}/cancel") แต่พารามิเตอร์ชื่อ scanId
     // ให้แก้ที่ฝั่ง Spring เป็น @PathVariable("id") UUID scanId
-    return this.http.post<Scan>(`${this.base}/${id}/cancel`, null, this.authOpts());
+    return this.http.post<Scan>(`${this.base}/${id}/cancel`, null);
   }
 
   /** ดึงสแกนตาม project_id (ถ้า backend ยังไม่มี endpoint แยก ใช้วิธี filter ฝั่ง client ชั่วคราว) */
@@ -131,6 +154,13 @@ export class ScanService {
         return 'Error'; // fallback
     }
   }
+
+   public mapQualityStatus(status: 'OK' | 'ERROR' | string): 'Passed' | 'Failed' {
+    const s = String(status ?? '').trim().toUpperCase();
+    return s === 'OK' ? 'Passed' : 'Failed';
+  }
+
+  
   
 
 

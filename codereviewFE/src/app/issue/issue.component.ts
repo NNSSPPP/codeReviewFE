@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { IssueService } from '../services/issueservice/issue.service';
 import { AuthService } from '../services/authservice/auth.service';
+import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 
 interface Issue {
   issuesId: string;
@@ -26,11 +27,15 @@ interface Issue {
 })
 export class IssueComponent {
   issueId: string | null = null;
+  repositories: Repository[] = [];
+  filteredRepositories: Repository[] = [];
+  projects: { name: string }[] = [];
 
   constructor(
     private readonly router: Router,
     private readonly issueApi: IssueService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly repositoryService: RepositoryService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +54,12 @@ export class IssueComponent {
 
     this.loadIssues(String(userId));
     console.log(`Issue ID: ${this.issueId}`);
+
+    this.repositoryService.getAllRepo().subscribe(repos => {
+  const uniqueNames = Array.from(new Set(repos.map(repo => repo.name)));
+  this.projects = uniqueNames.map(name => ({ name }));
+});
+
   }
 
   // ---------- Filters ----------
@@ -113,13 +124,17 @@ export class IssueComponent {
 
     // status mapping: 'Open' | 'In Progress' | 'Resolved' | 'Closed' -> 'open' | 'in-progress' | 'resolved' | 'closed'
     const st = (r.status || '').toLowerCase();
-    const uiStatus =
-      st.includes('in progress') ? 'in-progress' :
-      st.includes('resolved')    ? 'resolved' :
-      st.includes('closed')      ? 'closed'   : 'open';
+const uiStatus =
+  st.includes('open')          ? 'open' :
+  st.includes('in progress')   ? 'in-progress' :
+  st.includes('done')          ? 'done' :
+  st.includes('reject')        ? 'reject' :
+  st.includes('pending')       ? 'pending' :  // <-- เพิ่มบรรทัดนี้
+  'open';
+
 
     // assignee: ใช้ user_id/assignedTo ถ้ามี
-    const rawAssignee = r.assignedTo || r.userId || '';
+    const rawAssignee = r.assignedName || '';
     const assignee = rawAssignee ? `@${rawAssignee}` : 'Unassigned';
 
     // project: ถ้าไม่มีชื่อให้ fallback เป็น project_id
@@ -138,15 +153,19 @@ export class IssueComponent {
   }
 
   // ---------- Filter / Page ----------
-  filterIssues() {
-    return this.issues.filter(i =>
-      (this.filterType === 'All Types'     || i.type === this.filterType) &&
-      (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
-      (this.filterStatus === 'All Status'  || i.status === this.filterStatus) &&
-      (this.filterProject === 'All Projects' || i.projectName === this.filterProject) &&
-      (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
-    );
-  }
+ filterIssues() {
+  return this.issues.filter(i =>
+    (this.filterType === 'All Types'     || i.type === this.filterType) &&
+    (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
+    (this.filterStatus === 'All Status'  || i.status === this.filterStatus) &&
+    (
+      this.filterProject === 'All Projects' ||
+      i.projectName?.toLowerCase().trim() === this.filterProject.toLowerCase().trim()
+    ) &&
+    (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
+  );
+}
+
 
   get filteredIssues() {
     return this.filterIssues();
@@ -185,50 +204,50 @@ export class IssueComponent {
   }
 
   // ---------- Actions (ยังคงเค้าโครงเดิม) ----------
-  assignDeveloper() {
-    const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
+   assignDeveloper() {
+  //   const selectedIssues = this.issues.filter(i => i.selected);
+  //   if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
 
-    const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
-    const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
-    if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
+  //   const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
+  //   const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
+  //   if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
 
-    // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
-    let ok = 0;
-    selectedIssues.forEach(row => {
-      this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
-        next: () => {
-          row.assignee = `@${dev}`;
-          ok++;
-        },
-        error: (e) => console.error('assign failed', e)
-      });
-    });
+  //   // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
+  //   let ok = 0;
+  //   selectedIssues.forEach(row => {
+  //     this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
+  //       next: () => {
+  //         row.assignee = `@${dev}`;
+  //         ok++;
+  //       },
+  //       error: (e) => console.error('assign failed', e)
+  //     });
+  //   });
 
-    alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
-  }
+  //   alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
+   }
 
   changeStatus() {
-    const selectedIssues = this.issues.filter(i => i.selected);
-    if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
+    // const selectedIssues = this.issues.filter(i => i.selected);
+    // if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
 
-    const statusSteps = ['open', 'in-progress', 'resolved', 'closed'];
-    selectedIssues.forEach(row => {
-      const idx = statusSteps.indexOf(row.status);
-      const next = statusSteps[Math.min(idx + 1, statusSteps.length - 1)];
-      // แปลงกลับเป็นรูปแบบ API
-      const apiStatus =
-        next === 'in-progress' ? 'In Progress' :
-        next === 'resolved'    ? 'Resolved' :
-        next === 'closed'      ? 'Closed' : 'Open';
+    // const statusSteps = ['open', 'in-progress', 'resolved', 'closed'];
+    // selectedIssues.forEach(row => {
+    //   const idx = statusSteps.indexOf(row.status);
+    //   const next = statusSteps[Math.min(idx + 1, statusSteps.length - 1)];
+    //   // แปลงกลับเป็นรูปแบบ API
+    //   const apiStatus =
+    //     next === 'in-progress' ? 'In Progress' :
+    //     next === 'resolved'    ? 'Resolved' :
+    //     next === 'closed'      ? 'Closed' : 'Open';
 
-      this.issueApi.updateStatus(row.issuesId, apiStatus as any).subscribe({
-        next: () => row.status = next,
-        error: (e) => console.error('update status failed', e)
-      });
-    });
+    //   this.issueApi.updateStatus(row.issuesId, apiStatus as any).subscribe({
+    //     next: () => row.status = next,
+    //     error: (e) => console.error('update status failed', e)
+    //   });
+    // });
 
-    alert(`Requested status change for ${selectedIssues.length} issue(s).`);
+    // alert(`Requested status change for ${selectedIssues.length} issue(s).`);
   }
 
   exportData() {
@@ -289,13 +308,15 @@ export class IssueComponent {
     }
   }
 
-  statusClass(status: string) {
-    switch (status.toLowerCase()) {
-      case 'open': return 'text-danger';
-      case 'in-progress': return 'text-warning';
-      case 'resolved': return 'text-success';
-      case 'closed': return 'text-secondary';
-      default: return '';
-    }
+ statusClass(status: string) {
+  switch (status.toLowerCase()) {
+    case 'open': return 'text-danger';
+    case 'in-progress': return 'text-warning';
+    case 'done': return 'text-success';
+    case 'reject': return 'text-secondary';
+    case 'pending': return 'text-info';  // <-- เพิ่ม pending
+    default: return '';
   }
+}
+
 }

@@ -351,6 +351,9 @@ body.dark-mode .modal-footer .btn-primary:hover {
 
 
 
+
+
+
 /* Base container */
 .mat-mdc-snack-bar-container.app-snack {
   --bg: #2563eb;
@@ -378,7 +381,10 @@ body.dark-mode .modal-footer .btn-primary:hover {
   --bg: #ef4444; /* red-500 */
   --fg: #fff;
 }
-
+.mat-mdc-snack-bar-container.app-snack-green {
+  --bg: #27ae60; /* green-500 */
+  --fg: #fff;
+}
 /* Surface (ล้างค่า width:100% ของ Material ออก) */
 .mat-mdc-snack-bar-container.app-snack .mdc-snackbar__surface {
   background: transparent !important;
@@ -435,7 +441,7 @@ body.dark-mode .modal-footer .btn-primary:hover {
   justify-content: center;
 }
 
-/* 👇 Mobile: Center + ขยายไม่ให้แคบเกินไป */
+/*  Mobile: Center + ขยายไม่ให้แคบเกินไป */
 @media (max-width: 600px) {
   .mat-mdc-snack-bar-container.app-snack {
     max-width: 90vw !important;   /* ใช้ % ของหน้าจอ */

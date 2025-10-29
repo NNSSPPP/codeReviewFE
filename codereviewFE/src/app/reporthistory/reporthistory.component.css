@@ -587,3 +587,34 @@
   }
 }
 
+/* ================================================
+   🧭 FINAL FIX — Prevent Table from covering toggle
+   ================================================ */
+   @media (min-width: 769px) and (max-width: 1024px) {
+    /* ✅ ให้ container อยู่ใน flow ปกติ (ไม่กินพื้นที่ซ้อน) */
+    .report-history-container {
+      position: static !important;
+      z-index: auto !important;
+      overflow: visible !important;
+    }
+  
+    .main-content {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch;
+    }
+    .theme-toggle,
+    .mode-toggle,
+    .dark-mode-toggle {
+      position: fixed !important;
+      bottom: 24px !important;
+      right: 24px !important;
+      z-index: 9999 !important;
+    }
+  
+    .report-table {
+      position: relative !important;
+      z-index: 0 !important;
+    }
+  }
+  

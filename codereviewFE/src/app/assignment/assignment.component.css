@@ -1,6 +1,4 @@
-/* ===============================
-   🔙 ปุ่ม Back
-   =============================== */
+   /* 🔙 ปุ่ม Back */
    .back-btn {
     display: inline-flex;
     align-items: center;
@@ -22,6 +20,13 @@
   .back-btn i {
     font-size: 1.5rem;
   }
+
+  :host-context(.dark-mode) .assignment-wrapper h3,
+:host-context(.dark-mode) .assignment-wrapper h3 i {
+  color: #fff !important;
+}
+
+
   
   /* ===============================
      🌑 Modal Backdrop
@@ -96,6 +101,8 @@
     cursor: pointer;
     transform: rotate(90deg) scale(1.1);
   }
+
+
   
   /* ===============================
      📄 Modal Body & Footer
@@ -201,8 +208,11 @@
   :host-context(.dark-mode) .assignment-wrapper .assignment-table tbody tr:hover {
     background-color: var(--table-header-bg2) !important;
   }
+
+
+
   /* Badges */
-  :host-context(.dark-mode) .assignment-wrapper .badge.bg-low {
+  /* :host-context(.dark-mode) .assignment-wrapper .badge.bg-low {
     background-color: #10b981 !important;
     color: #fff !important;
   }
@@ -217,161 +227,184 @@
   :host-context(.dark-mode) .assignment-wrapper .badge.bg-critical {
     background-color: #111827 !important;
     color: #fff !important;
-  }
-  /* Dark mode button */
-  :host-context(.dark-mode) .btn-outline-primary {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
-    border: 1px solid #2563eb !important;
-    font-weight: 500;
-    transition: background-color 0.25s ease, box-shadow 0.25s ease;
-  }
-  :host-context(.dark-mode) .btn-outline-primary:hover {
-    background-color: #1e40af !important;
-    border-color: #1e40af !important;
-    box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
-  }
-  :host-context(.dark-mode) .btn-outline-primary i.bi {
-    color: inherit !important;
-    font-size: 1.05rem;
-    transition: color 0.25s ease;
-  }
-  
-  /* ===============================
-     📱 Mobile Responsive (≤768px)
-     =============================== */
-  @media (max-width: 768px) {
-    /* Back button */
-    .back-btn {
-      font-size: 0.8rem;
-      padding: 3px 6px;
-      margin-bottom: 6px;
-    }
-    .back-btn i { font-size: 0.9rem; }
-  
-    /* Modal */
-    .modal-dialog-custom {
-      max-width: 95% !important;
-      margin: 0.5rem auto;
-    }
-    .modal-header,
-    .modal-body,
-    .modal-footer { padding: 8px 10px; }
-    .modal-title { font-size: 0.85rem; }
-  
-    /* Table */
-    .table {
-      font-size: 0.7rem;
-      border-radius: 4px;
-      min-width: 100%;
-    }
-    .table thead th {
-      font-size: 0.7rem;
-      padding: 3px 4px;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    .table tbody td {
-      font-size: 0.75rem;
-      padding: 3px 4px;
-    }
-    .table-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-  
-    /* Buttons */
-    .btn {
-      font-size: 0.75rem;
-      padding: 3px 6px;
-    }
-  
-    /* Form */
-    .form-select,
-    .form-control {
-      font-size: 0.75rem;
-      padding: 3px 4px;
-    }
-  
-    /* Header */
-    .assignment-header {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      gap: 8px;
-    }
-    .assignment-header h1,
-    .assignment-header .modal-title {
-      font-size: 0.85rem !important;
-      line-height: 1.1;
-      font-weight: 600;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .assignment-header .btn-outline-primary {
-      font-size: 0.7rem !important;
-      padding: 2px 6px !important;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .assignment-header .btn-outline-primary i {
-      font-size: 0.75rem;
-      margin-right: 2px;
-    }
-  
-    /* Title "My Assignments" */
-    .assignment-wrapper h3 {
-      font-size: 0.85rem !important;
-      font-weight: 600;
-      margin: 0;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-  }
-  /* ===============================
-   🔙 ปุ่ม Back
-   =============================== */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: #2563eb;            /* ฟ้า */
-  text-decoration: none;
-  background: transparent;   /* พื้นหลังใส */
-  border: none;              /* ไม่มีกรอบ */
-  border-radius: 12px;       /* มุมโค้ง */
-  transition: background 0.25s ease, transform 0.25s ease;
-}
-.back-btn:hover {
-  background: #e5f0ff;       /* ฟ้าอ่อนเมื่อ hover */
-  transform: translateX(-4px);
-}
-.back-btn i {
-  font-size: 1.5rem;
-}
+  } */
+
+
+
 
 /* ===============================
-   🌙 Dark Mode Back Button (แก้ใหม่)
+   🟢 Status Box Styles
    =============================== */
-:host-context(.dark-mode) .back-btn {
-  background: transparent !important;   /* โปร่งใส */
-  color: #3b82f6 !important;            /* ลูกศรฟ้า */
-  box-shadow: none !important;
+.status-box {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1.5px solid transparent;
+  min-width: 90px;
+  text-align: center;
+  transition: all 0.25s ease;
 }
-:host-context(.dark-mode) .back-btn:hover {
-  background: rgba(255,255,255,0.08) !important; /* เทาโปร่งบาง */
-  transform: translateX(-4px);
+
+/* 🎯 สีตามสถานะ */
+.status-open {
+  color: #dc2626;             /* แดง */
+  background: #fee2e2;
+  border-color: #fca5a5;
 }
-:host-context(.dark-mode) .back-btn:active {
-  background: rgba(255,255,255,0.15) !important; /* เทาเข้มกว่า */
-  transform: scale(0.95);
+.status-in-progress {
+  color: #b45309;             /* ส้มทอง */
+  background: #fef3c7;
+  border-color: #fcd34d;
 }
+.status-done {
+  color: #15803d;             /* เขียว */
+  background: #dcfce7;
+  border-color: #86efac;
+}
+.status-reject {
+  color: #374151;             /* เทา */
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+.status-unknown {
+  color: #1e3a8a;             /* น้ำเงิน */
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+/* 🌙 Dark Mode Support */
+:host-context(.dark-mode) .status-open {
+  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+:host-context(.dark-mode) .status-in-progress {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+:host-context(.dark-mode) .status-done {
+  color: #86efac;
+  background: rgba(22, 163, 74, 0.15);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+:host-context(.dark-mode) .status-reject {
+  color: #d1d5db;
+  background: rgba(107, 114, 128, 0.15);
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+.custom-btn {
+  border-radius: 0.5rem; /* ปุ่มมน ๆ */
+  padding: 0.35rem 0.75rem; /* ปรับขนาดปุ่มให้พอดี */
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.custom-btn:hover {
+  transform: translateY(-2px); /* effect ยกปุ่มเล็กน้อย */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+
+
+
+/* ===============================
+📱 Mobile Responsive (≤768px)
+=============================== */
+@media (max-width: 768px) {
+/* หัวข้อ My Assignments */
+  .assignment-header h3,
+  .assignment-wrapper h3 {
+    font-size: 1.2rem !important; /* ← ปรับขนาดหัวข้อ */
+    line-height: 1.2;
+  }
+
+
+  /* ปรับขนาดฟอนต์และช่องว่างให้พอดีจอ */
+  .assignment-table {
+    font-size: 0.7rem !important;
+    table-layout: fixed; /* บังคับคอลัมน์กระชับ */
+    width: 100%;
+  }
+
+  .assignment-table th,
+  .assignment-table td {
+    padding: 4px 6px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* ตัดข้อความยาวเกิน */
+  }
+
+  /* ให้คอลัมน์ข้อความยาว เช่น Issue มีความกว้างอัตโนมัติ */
+  .assignment-table th:nth-child(2),
+  .assignment-table td:nth-child(2) {
+    white-space: normal; /* ให้ขึ้นบรรทัดใหม่ได้ */
+  }
+
+  /* ลดขนาด badge/status */
+  .severity-badge,
+  .status-box {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
+  /* ปุ่มหัวตาราง */
+  .btn,
+  .back-btn {
+    font-size: 0.75rem;
+    padding: 3px 5px;
+  }
+
+  /* ตัด margin/padding รอบ container */
+  .assignment-wrapper {
+    padding: 0 4px;
+  }
+
+  /* modal */
+  .modal-dialog-custom {
+    max-width: 95% !important;
+  }
+}
+/* ทำให้คอลัมน์ Status sticky ด้านขวา */
+.assignment-table th:last-child,
+.assignment-table td:last-child {
+  position: sticky;
+  right: 0;
+  background: var(--bg-card, #fff);
+  z-index: 2;
+}
+
+/* เฉพาะมือถือ */
+@media (max-width: 768px) {
+  .assignment-table th,
+  .assignment-table td {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+  }
+
+  .assignment-table {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
+
+  /* คงสวยแม้ scroll */
+  .assignment-table th:last-child,
+  .assignment-table td:last-child {
+    background: #fff;
+    min-width: 70px;
+  }
+
+  .severity-badge,
+  .status-box {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+  }
+}
+

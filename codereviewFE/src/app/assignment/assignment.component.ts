@@ -1,126 +1,175 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { IssuemodalComponent } from '../issuemodal/issuemodal.component';
+import { AssignHistory, AssignhistoryService, UpdateStatusRequest } from '../services/assignservice/assignhistory.service';
+import { AuthService } from '../services/authservice/auth.service';
+import { Issue, IssueService } from '../services/issueservice/issue.service';
 
-interface IssueAssignment {
+interface StatusUpdate {
   issueId: string;
-  assignedTo: string; // userId
-  assignedBy: string; // userId
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  dueDate?: Date;
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
-  resolution?: string;
+  status: string;
+  annotation?: string;
 }
+
 
 @Component({
   selector: 'app-assignment',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IssuemodalComponent],
   templateUrl: './assignment.component.html',
   styleUrl: './assignment.component.css'
 })
-export class AssignmentComponent {
-  @ViewChild('assignmentForm') assignmentForm!: NgForm;
+export class AssignmentComponent implements OnInit {
+  @ViewChild(IssuemodalComponent) assignModal!: IssuemodalComponent;
 
-  users = [
-    { id: 'u1', name: 'Alice' },
-    { id: 'u2', name: 'Bob' },
-    { id: 'u3', name: 'Charlie' },
-    { id: 'u4', name: 'David' },
-    { id: 'u5', name: 'Eva' }
-  ];
 
-  assignment: IssueAssignment = {
-    issueId: 'ISS-001',
-    assignedTo: '',
-    assignedBy: 'admin',
-    priority: 'medium',
-    status: 'open'
-  };
+  // ปุ่มย้อนกลับ
+  goBack(): void {
+    window.history.back();
+  }
 
-  // Mock assignments
-  assignments: IssueAssignment[] = [
-    {
-      issueId: 'ISS-001',
-      assignedTo: 'BK',
-      assignedBy: 'admin',
-      priority: 'low',
-      dueDate: new Date("2025-09-11"),
-      status: 'open',
-      resolution: ''
-    },
-    {
-      issueId: 'ISS-002',
-      assignedTo: 'PP',
-      assignedBy: 'admin',
-      priority: 'medium',
-      dueDate: new Date("2025-09-10"),
-      status: 'in-progress',
-      resolution: ''
-    },
-    {
-      issueId: 'ISS-003',
-      assignedTo: 'BTS',
-      assignedBy: 'admin',
-      priority: 'high',
-      dueDate: new Date("2025-09-09"),
-      status: 'resolved',
-      resolution: 'Fixed in v1.0.2'
-    },
-    {
-      issueId: 'ISS-004',
-      assignedTo: 'V',
-      assignedBy: 'admin',
-      priority: 'critical',
-      dueDate: new Date("2025-09-15"),
-      status: 'open',
-      resolution: ''
-    },
-    {
-      issueId: 'ISS-005',
-      assignedTo: 'JK',
-      assignedBy: 'admin',
-      priority: 'medium',
-      dueDate: new Date("2025-09-16"),
-      status: 'closed',
-      resolution: 'Duplicate issue'
-    }
-  ];
+  Assign: AssignHistory[] = [];
+  showStatus = false; // สำหรับ modal status
+  currentIssue: AssignHistory | null = null; // แทน issue สำหรับ modal
+  remark = '';
 
-// ปุ่มย้อนกลับ
-goBack(): void {
-  window.history.back();
-}
+  constructor(
+    private readonly router: Router,
+    private readonly assignService: AssignhistoryService,
+    private readonly auth: AuthService,
+    private readonly issue: IssueService
+  ) { }
 
-  showAssignModal = false;
+  ngOnInit() {
+    const userId = this.auth.userId;
+    if (!userId) { this.router.navigate(['/login']); return; }
+    this.loadAssignments();
+  }
 
-openAssignModal() {
-  this.showAssignModal = true;
-}
+  // ฟังก์ชันโหลดข้อมูล assignment ทั้งหมด
+  loadAssignments() {
+    const userId = this.auth.userId;
+    if (!userId) return;
 
-  closeAssignModal() {
-    this.showAssignModal = false;
+    this.assignService.getAllAssign(userId).subscribe({
+      next: (data: any[]) => {
+        // แปลง field และ date ให้ตรงกับ interface
+        this.Assign = data.map(item => ({
+          userId: item.user_id || item.userId,
+          assignedTo: item.assigned_to || item.assignedTo,
+          assignedToName: item.assigned_to_name || item.assignedToName,
+          issueId: item.issue_id || item.issueId,
+          severity: item.severity,
+          message: item.message,
+          status: item.status,
+          dueDate: item.dueDate,
+          annotation: item.annotation
+        }));
+      },
+      error: (err) => console.error('Error fetching assignments:', err)
+    });
   }
 
 
-  onSubmit(form: NgForm) {
-    if (form.invalid) {
-      return;
-    }
-    this.assignments.push({ ...this.assignment });
-    this.assignment = { issueId: 'ISS-001', assignedTo: '', assignedBy: 'admin', priority: 'medium', status: 'open' };
+  openAssignModal() {
+    this.assignModal.openAddAssign();
+  }
+
+  updateStatus(assign: AssignHistory, status: string) {
+    this.assignModal.openStatus(assign, status);
+  }
+
+  // ส่ง assignment ไป backend
+handleAssignSubmit(data: { issue: Partial<Issue>, isEdit: boolean }) {
+  if (!data.issue.issueId || !data.issue.assignedTo || !data.issue.dueDate) return;
+
+  const issueId = data.issue.issueId;  
+  const assignedTo = data.issue.assignedTo;
+  const dueDate = data.issue.dueDate; // string 'YYYY-MM-DD'
+
+  this.assignService.addassign(issueId, assignedTo, dueDate).subscribe({
+    next: (res) => {
+      console.log('Assigned successfully:', res);
+      this.loadAssignments();
+    },
+    error: (err) => console.error('Error:', err),
+  });
+}
+
+
+  // ส่ง status update ไป backend
+  handleStatusSubmit(update: StatusUpdate) {
+  const userId = this.auth.userId;
+  const { issueId, status, annotation } = update;
+
+  if (!userId || !issueId) {
+    console.error('Missing userId or issueId');
+    return;
+  }
+
+  const body: any = { status };
+  if (status !== 'IN PROGRESS' && annotation) {
+    body.annotation = annotation;
+  }
+
+  this.assignService.updateStatus(userId, issueId, body).subscribe({
+    next: () => {
+      console.log('Status updated successfully');
+
+      this.assignModal.close();
+      
+      const idx = this.Assign.findIndex(a => a.issueId === issueId);
+      if (idx >= 0) {
+         this.Assign[idx].status = status === 'ACCEPT' ? 'IN PROGRESS' : status;
+
+      }
+
   
-    this.closeAssignModal();
-  }
+    },
+    error: (err) => console.error('Error updating status:', err),
+  });
+}
 
-  getPriorityColor(priority: string): string {
-    switch(priority) {
-      case 'low': return 'success';
-      case 'medium': return 'warning';
-      case 'high': return 'danger';
-      case 'critical': return 'dark';
-      default: return 'secondary';
+
+get hasActionColumn(): boolean {
+  return this.Assign.some(a => a.status === 'PENDING' || a.status === 'IN PROGRESS');
+}
+
+
+
+  getPriorityColor(severity: string): string {
+    switch (severity.trim().toUpperCase()) {
+      case 'MINOR':
+        return '#FBC02D';
+      case 'MAJOR':
+        return '#FF9800';
+      case 'CRITICAL':
+        return '#E64A19';
+      case 'BLOCKER':
+        return '#C62828';
+      default:
+        return '#757575';
     }
   }
+  statusClass(status: string) {
+    if (!status) return '';
 
+    switch (status.toLowerCase()) {
+      case 'open':
+        return 'status-open';
+      case 'in progress':
+      case 'in-progress':
+        return 'status-in-progress';
+      case 'done':
+        return 'status-done';
+      case 'reject':
+        return 'status-reject';
+      default:
+        return 'status-unknown';
+    }
+  }
 }
+
+
