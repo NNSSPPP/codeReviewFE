@@ -1,3 +1,31 @@
+   .custom-assignment-title {
+  font-size: 2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+  color: #0d6efd;
+}
+
+@media (prefers-color-scheme: dark) {
+  .custom-assignment-title {
+    color: white;
+  }
+}
+
+.custom-assignment-icon {
+  font-size: 2rem;
+  margin-right: 0.25rem;
+  color: #0d6efd;
+}
+
+@media (prefers-color-scheme: dark) {
+  .custom-assignment-icon {
+    color: #0dcaf0;
+  }
+}
+   
    /* 🔙 ปุ่ม Back */
    .back-btn {
     display: inline-flex;
@@ -407,4 +435,3 @@
     padding: 2px 5px;
   }
 }
-
