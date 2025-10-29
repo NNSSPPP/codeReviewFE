@@ -16,7 +16,7 @@ export interface AssignHistory {
   status: string;
   dueDate: string | null;
   annotation: string;
-
+  own : boolean;
 }
 export interface UpdateStatusRequest {
   status: string;

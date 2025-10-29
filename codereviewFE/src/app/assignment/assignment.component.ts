@@ -24,6 +24,17 @@ interface StatusUpdate {
 export class AssignmentComponent implements OnInit {
   @ViewChild(IssuemodalComponent) assignModal!: IssuemodalComponent;
 
+goToDetail(issueId: string) {
+  const userId = this.auth.userId;
+  if (!userId || !issueId) return;
+
+  this.router.navigate(
+    ['/issuedetail', issueId],
+    { queryParams: { userId } }        // ✅ ส่ง userId ไปกับ URL
+  );
+}
+
+
 
   // ปุ่มย้อนกลับ
   goBack(): void {
@@ -42,6 +53,7 @@ export class AssignmentComponent implements OnInit {
     private readonly issue: IssueService
   ) { }
 
+  
   ngOnInit() {
     const userId = this.auth.userId;
     if (!userId) { this.router.navigate(['/login']); return; }
@@ -65,7 +77,8 @@ export class AssignmentComponent implements OnInit {
           message: item.message,
           status: item.status,
           dueDate: item.dueDate,
-          annotation: item.annotation
+          annotation: item.annotation,
+          own: item.own
         }));
       },
       error: (err) => console.error('Error fetching assignments:', err)
