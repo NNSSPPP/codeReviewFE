@@ -394,3 +394,15 @@
 :host-context(.dark-mode) .action-icons button { 
   box-shadow: 0 4px 10px rgba(0,0,0,0.6) !important; 
 }
+
+
+.comment-list {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.white-space-pre-wrap {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
