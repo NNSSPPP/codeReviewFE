@@ -345,6 +345,27 @@ body.dark-mode .modal-footer .btn-primary:hover {
   background-color: var(--btn-primary-bg-hover) !important;
 }
 
+/* assign ทำปฏิทันขาวใน Dark mode */
+.dark-mode input[type="date"] {
+    color-scheme: dark !important; 
+    color: var(--text-main) !important;
+}
+
+.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: var(--calendar-icon-filter) !important; 
+    opacity: 1 !important; 
+    color: var(--text-main) !important;
+}
+
+.dark-mode input[type="date"]::-moz-calendar-picker-indicator {
+    filter: var(--calendar-icon-filter) !important;
+    color: var(--text-main) !important;
+}
+
+
+
+
+
 
 
 
