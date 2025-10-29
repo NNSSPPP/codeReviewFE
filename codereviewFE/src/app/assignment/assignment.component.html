@@ -55,8 +55,7 @@
 
         <!-- <td>{{ a.resolution || '-' }}</td> -->
 
-       <td class="text-center">
-  <!-- สำหรับ PENDING -->
+       <td class="text-center" *ngIf="hasActionColumn">
   <!-- สำหรับ PENDING -->
 <ng-container *ngIf="a.status === 'PENDING'">
   <button class="btn btn-success btn-sm me-1" (click)="updateStatus(a,'ACCEPT')">
