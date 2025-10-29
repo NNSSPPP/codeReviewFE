@@ -704,5 +704,3 @@ closeEditProfileModal() {
   }
  
 }
-
-+
