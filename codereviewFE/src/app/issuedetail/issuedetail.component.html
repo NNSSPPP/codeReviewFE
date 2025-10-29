@@ -57,6 +57,32 @@
     </div>
   </div>
 
+  <!-- Action Buttons -->
+  <div class="action-icons mt-3">
+    <button type="button" class="btn btn-primary" (click)="openAssignModal()" title="Add Assignee">
+      <i class="bi bi-person"></i>
+    </button>
+
+    <!-- <button type="button" class="btn btn-warning" (click)="setPriority()" title="Set Priority">
+      <i class="bi bi-lightning"></i>
+    </button> -->
+
+    <!-- <button type="button" class="btn btn-secondary" (click)="openStatusModal()"title="Update Status">
+      <i class="bi bi-arrow-repeat"></i>
+    </button> -->
+
+    <!-- <button type="button" class="btn btn-danger" (click)="rejectIssue()" title="Reject Assign">
+      <i class="bi bi-x"></i>
+    </button> -->
+
+    <app-issuemodal #assignModal (assignSubmit)="handleAssignSubmit($event)" (statusSubmit)="handleStatusSubmit($event)"
+      (closed)="{}">
+    </app-issuemodal>
+
+
+
+  </div>
+
   <!-- Description -->
   <!-- <div class="issue-description">
     <h3>Description</h3>
@@ -95,31 +121,49 @@
     </div>
   </div> -->
 
-  <!-- Action Buttons -->
-  <div class="action-icons mt-3">
-    <button type="button" class="btn btn-primary" (click)="openAssignModal()" title="Add Assignee">
-      <i class="bi bi-person"></i>
-    </button>
+  <!-- Comments -->
+  <div class="issue-comments mt-4" *ngIf="issue?.id">
+    <h3 class="d-flex align-items-center gap-2">
+      Comments &amp; Discussion
+      <button class="btn btn-sm btn-outline-secondary ms-2" (click)="loadComments()" [disabled]="loadingComments"
+        title="Refresh comments">
+        {{ loadingComments ? 'Loading...' : 'Refresh' }}
+      </button>
+    </h3>
 
-    <!-- <button type="button" class="btn btn-warning" (click)="setPriority()" title="Set Priority">
-      <i class="bi bi-lightning"></i>
-    </button> -->
+    <!-- รายการคอมเมนต์ -->
+    <div class="comment" *ngFor="let c of comments; trackBy: trackByComment">
+      <p class="mb-1">
+        <strong>{{ c.userId }}</strong>
+        <span class="text-muted"> - {{ c.timestamp | date:'dd/MM/yyyy, hh:mm a' }}</span>
+      </p>
+      <p class="mb-2">{{ c.comment }}</p>
 
-    <!-- <button type="button" class="btn btn-secondary" (click)="openStatusModal()"title="Update Status">
-      <i class="bi bi-arrow-repeat"></i>
-    </button> -->
+      <!-- แนบไฟล์ (รองรับ future use) -->
+      <div *ngIf="c.attachments?.length">
+        <ul class="mb-2">
+          <li *ngFor="let a of c.attachments">
+            <a [href]="a.url" target="_blank" rel="noopener">📎 {{ a.filename }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-    <!-- <button type="button" class="btn btn-danger" (click)="rejectIssue()" title="Reject Assign">
-      <i class="bi bi-x"></i>
-    </button> -->
+    <!-- ว่าง -->
+    <div *ngIf="!comments?.length && !loadingComments" class="text-muted">
+      ยังไม่มีคอมเมนต์
+    </div>
 
-    <app-issuemodal
-  #assignModal
-  (assignSubmit)="handleAssignSubmit($event)"
-  (statusSubmit)="handleStatusSubmit($event)"
-  (closed)="{}">
-</app-issuemodal>
-  
-
-
-</div>
+    <!-- Add comment -->
+    <div class="add-comment d-flex align-items-center gap-2 mt-3">
+      <input type="text" placeholder="Write a comment..." [(ngModel)]="newComment.comment"
+        class="form-control flex-grow-1" title="Write your comment"
+        (keyup.enter)="newComment.comment.trim() && postComment()" />
+      <button class="btn btn-primary" type="button" title="Post comment" (click)="postComment()"
+        [disabled]="!newComment.comment?.trim() || sendingComment">
+        <i class="bi bi-chat-dots" *ngIf="!sendingComment"></i>
+        <span *ngIf="sendingComment">Sending...</span>
+        <span class="visually-hidden" *ngIf="!sendingComment">Send</span>
+      </button>
+    </div>
+  </div>

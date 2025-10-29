@@ -820,5 +820,3 @@ export class DashboardComponent {
   }
  
 }
-
-+

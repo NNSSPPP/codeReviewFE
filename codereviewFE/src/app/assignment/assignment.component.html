@@ -28,12 +28,12 @@
         <th>Due Date</th>
         <th>Status</th>
 
-         <th *ngIf="hasActionColumn">Action</th>
+        <th *ngIf="hasActionColumn">Action</th>
         <!-- <th>Resolution</th> -->
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let a of Assign">
+      <tr *ngFor="let a of Assign" (click)="goToDetail(a.issueId)">
         <td>{{ a.assignedToName }}</td>
         <td>{{ a.message }}</td>
         <td>
@@ -55,32 +55,29 @@
 
         <!-- <td>{{ a.resolution || '-' }}</td> -->
 
-       <td class="text-center" *ngIf="hasActionColumn">
-  <!-- สำหรับ PENDING -->
-<ng-container *ngIf="a.status === 'PENDING'">
-  <button class="btn btn-success btn-sm me-1" (click)="updateStatus(a,'ACCEPT')">
-    <i class="bi bi-check-lg"></i>
-  </button>
-  <button class="btn btn-danger btn-sm" (click)="updateStatus(a,'REJECT')">
-    <i class="bi bi-x-lg"></i>
-  </button>
-</ng-container>
+        <td class="text-center" *ngIf="hasActionColumn">
+          <!-- สำหรับ PENDING -->
+          <ng-container *ngIf="a.status === 'PENDING' ">
+            <button *ngIf="a.own==true" class="btn btn-success btn-sm me-1" (click)="updateStatus(a,'ACCEPT')">
+              <i class="bi bi-check-lg"></i>
+            </button>
+            <button *ngIf="a.own==true" class="btn btn-danger btn-sm" (click)="updateStatus(a,'REJECT')">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </ng-container>
 
-<!-- สำหรับ IN PROGRESS -->
-<ng-container *ngIf="a.status === 'IN PROGRESS'">
-  <button class="btn btn-primary btn-sm" (click)="updateStatus(a,'DONE')">
-    <i class="bi bi-check2-square"></i> Done
-  </button>
-</ng-container>
+          <!-- สำหรับ IN PROGRESS -->
+          <ng-container *ngIf="a.status === 'IN PROGRESS'">
+            <button *ngIf="a.own==true" class="btn btn-primary btn-sm" (click)="updateStatus(a,'DONE')">
+              <i class="bi bi-check2-square"></i> Done
+            </button>
+          </ng-container>
 
-</td>
+        </td>
       </tr>
     </tbody>
   </table>
-  <app-issuemodal
-   #assignModal 
-   (assignSubmit)="handleAssignSubmit($event)" 
-   (statusSubmit)="handleStatusSubmit($event)"
+  <app-issuemodal #assignModal (assignSubmit)="handleAssignSubmit($event)" (statusSubmit)="handleStatusSubmit($event)"
     (closed)="{}">
   </app-issuemodal>
 

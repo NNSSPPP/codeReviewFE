@@ -5,7 +5,8 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 import { AuthService } from '../services/authservice/auth.service';
-import{ScanService} from '../services/scanservice/scan.service';
+import { ScanService } from '../services/scanservice/scan.service';
+
 @Component({
   selector: 'app-addrepository',
   standalone: true,
@@ -23,6 +24,19 @@ export class AddrepositoryComponent implements OnInit {
     private readonly snack: MatSnackBar,
     private readonly scanService: ScanService
   ) {}
+
+  // ---------------- helper ดึงข้อความ error แบบง่ายสุด ----------------
+  private extractApiError(err: any): string {
+    return (
+      err?.error?.message ||     // Spring ส่ง {"message": "..."} (เปิด include-message แล้ว)
+      err?.error?.detail  ||     // เผื่อส่งเป็น ProblemDetail
+      (typeof err?.error === 'string' && err.error) || // กรณีส่งเป็น string
+      err?.statusText ||         // สำรองสุดท้าย
+      'Unknown error'
+    );
+  }
+  // ----------------------------------------------------------------------
+
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
   isEditMode: boolean = false;
 
@@ -34,7 +48,7 @@ export class AddrepositoryComponent implements OnInit {
     repositoryUrl: ''
   };
 
-  credentials= {
+  credentials = {
     username: '',
     password: ''
   };
@@ -49,8 +63,6 @@ export class AddrepositoryComponent implements OnInit {
     enableAutoScan: true,
     enableQualityGate: true
   };
-
-
 
   ngOnInit(): void {
     const projectId = this.route.snapshot.paramMap.get('projectId');
@@ -82,16 +94,16 @@ export class AddrepositoryComponent implements OnInit {
           return;
         }
 
-         const rawType = (repo.projectType || '').toLowerCase().trim();
-      let normalizedType: 'Angular' | 'Spring Boot' | undefined;
+        const rawType = (repo.projectType || '').toLowerCase().trim();
+        let normalizedType: 'Angular' | 'Spring Boot' | undefined;
 
-      if (rawType.includes('angular')) {
-        normalizedType = 'Angular';
-      } else if (rawType.includes('spring')) {
-        normalizedType = 'Spring Boot';
-      } else {
-        normalizedType = undefined;
-      }
+        if (rawType.includes('angular')) {
+          normalizedType = 'Angular';
+        } else if (rawType.includes('spring')) {
+          normalizedType = 'Spring Boot';
+        } else {
+          normalizedType = undefined;
+        }
 
         this.gitRepository = {
           projectId: repo.projectId || '',
@@ -99,22 +111,16 @@ export class AddrepositoryComponent implements OnInit {
           name: repo.name || '',
           repositoryUrl: repo.repositoryUrl || '',
           projectType: normalizedType,
-          //branch: repo.branch || 'main',
-          // createdAt: repo.createdAt ? new Date(repo.createdAt) : new Date(),
-          // updatedAt: repo.updatedAt ? new Date(repo.updatedAt) : new Date(),
           sonarProjectKey: repo.sonarProjectKey || ''
-          
         };
         this.updateProjectKey();
 
-        console.log('Loaded projectType:',  normalizedType);
-
+        console.log('Loaded projectType:', normalizedType);
       },
       error: (err) => console.error('Failed to load repository', err)
     });
   }
 
-  
   /** ฟังก์ชันอัปเดต projectKey ให้ตรงกับชื่อ repo */
   updateProjectKey() {
     this.sonarConfig.projectKey = this.gitRepository.name || '';
@@ -126,154 +132,85 @@ export class AddrepositoryComponent implements OnInit {
     this.updateProjectKey();             // <- อัปเดต projectKey ทันที
   }
 
-
-
   onSubmit(form: NgForm) {
-  if (!form.valid) {
-    this.snack.open('Please fill in all required fields', '', {
-      duration: 2500,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: ['app-snack', 'app-snack-red']
-    });
-    return;
-  }
-
-  // อัปเดต projectKey ก่อน submit
-  this.updateProjectKey();
-
-  const payload = {
-  ...this.gitRepository,
-  ...this.credentials
-};
-  console.log(payload)
-
-  const saveOrUpdate$ = this.isEditMode
-    ? this.repositoryService.updateRepo(this.gitRepository.projectId!, payload)
-    : this.repositoryService.addRepo(payload);
-
-  saveOrUpdate$.subscribe({
-    next: (savedRepo) => {
-      // toast success save/update
-      const msg = this.isEditMode ? 'Repository updated successfully!' : 'Repository added successfully!'
-      this.snack.open(msg, '', {
-        duration: 2500,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-        panelClass: ['app-snack', 'app-snack-blue']
-      });
-
-      // กลับหน้า repository management ทันที
-      this.router.navigate(['/repositories']);
-
-
-
-      // เรียก scan หลัง 5 วินาที
-     if (savedRepo.projectId) {
-  setTimeout(() => {
-    this.scanService.startScan(savedRepo.projectId!, {
-      username: this.credentials.username || '',
-      password: this.credentials.password || ''
-    })
-.subscribe({
-          next: () => {
-            this.snack.open('Scan started successfully!', '', {
-              duration: 2500,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-              panelClass: ['app-snack', 'app-snack-green']
-            });
-          },
-          error: (err) => {
-            console.error('Scan failed:', err);
-            this.snack.open('Scan failed to start', '', {
-              duration: 2500,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
-              panelClass: ['app-snack', 'app-snack-red']
-            });
-          }
-        });
-      }, 5000);
-    }
-    },
-    error: (err) => {
-      console.error('Failed to save repository', err);
-      this.snack.open('Failed to save repository', '', {
+    if (!form.valid) {
+      this.snack.open('Please fill in all required fields', '', {
         duration: 2500,
         horizontalPosition: 'right',
         verticalPosition: 'top',
         panelClass: ['app-snack', 'app-snack-red']
       });
+      return;
     }
-  });
-}
 
+    // อัปเดต projectKey ก่อน submit
+    this.updateProjectKey();
 
-  // onSubmit(form: NgForm) {
-  //   if (!form.valid) {
-  //     alert('Please fill in all required fields');
-  //     return;
-  //   }
+    const payload = {
+      ...this.gitRepository,
+      ...this.credentials
+    };
+    console.log(payload);
 
-  //   // <- อัปเดต projectKey อีกครั้งก่อน submit
-  //   this.updateProjectKey();
-  //   if (form.valid) {
-  //     const payload = this.gitRepository;
-  //     if (this.isEditMode) {
-  //       this.repositoryService.updateRepo(this.gitRepository.projectId!, this.gitRepository)
-  //         .subscribe({
-  //           next: () => {
-  //             this.snack.open("Repository updated successfully!", '', {
-  //               duration: 2500,
-  //               horizontalPosition: 'right',
-  //               verticalPosition: 'top',
-  //               panelClass: ['app-snack', 'app-snack-blue'], 
-  //             });
-  //             this.router.navigate(['/repositories']);
-  //           },
-  //           error: (err) => {
-  //             console.error('Failed to update repository', err);
-  //             this.snack.open('Failed to update repository', '', {
-  //               duration: 2500,
-  //               horizontalPosition: 'right',
-  //               verticalPosition: 'top',
-  //               panelClass: ['app-snack', 'app-snack-red'], 
-  //             });
-  //           }
-  //         });
-  //     } else {
-  //       this.repositoryService.addRepo(this.gitRepository)
-  //         .subscribe({
-  //           next: () => {
-  //             this.snack.open("Repository added successfully!", '', {
-  //               duration: 2500,
-  //               horizontalPosition: 'right',
-  //               verticalPosition: 'top',
-  //               panelClass: ['app-snack', 'app-snack-blue'], 
-  //             });
-  //             this.router.navigate(['/repositories']);
-  //           },
-  //           error: (err) => {
-  //             console.error('Failed to add repository', err);
-  //             this.snack.open('Failed to add repository', '', {
-  //               duration: 2500,
-  //               horizontalPosition: 'right',
-  //               verticalPosition: 'top',
-  //               panelClass: ['app-snack', 'app-snack-red'], 
-  //             });
-  //           }
-  //         });
-  //     }
-  //   } else {
-  //     alert('Please fill in all required fields');
-  //   }
-  // }
+    const saveOrUpdate$ = this.isEditMode
+      ? this.repositoryService.updateRepo(this.gitRepository.projectId!, payload)
+      : this.repositoryService.addRepo(payload);
 
-  // onTest() {
-  //   console.log('Testing connection:', this.gitRepository, this.sonarConfig);
-  //   alert('Connection OK!');
-  // }
+    saveOrUpdate$.subscribe({
+      next: (savedRepo) => {
+        const msg = this.isEditMode ? 'Repository updated successfully!' : 'Repository added successfully!';
+        this.snack.open(msg, '', {
+          duration: 2500,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-blue']
+        });
+
+        // กลับหน้า repository management ทันที
+        this.router.navigate(['/repositories']);
+
+        // เรียก scan หลัง 5 วินาที
+        if (savedRepo.projectId) {
+          setTimeout(() => {
+            this.scanService.startScan(savedRepo.projectId!, {
+              username: this.credentials.username || '',
+              password: this.credentials.password || ''
+            })
+            .subscribe({
+              next: () => {
+                this.snack.open('Scan started successfully!', '', {
+                  duration: 2500,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['app-snack', 'app-snack-green']
+                });
+              },
+              error: (err) => {
+                const msgErr = this.extractApiError(err);
+                console.error('Scan failed:', err);
+                this.snack.open(`Scan failed to start: ${msgErr}`, '', {
+                  duration: 3000,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['app-snack', 'app-snack-red']
+                });
+              }
+            });
+          }, 5000);
+        }
+      },
+      error: (err) => {
+        const msg = this.extractApiError(err);
+        console.error('Failed to save repository', err);
+        this.snack.open(`Failed to save repository: ${msg}`, '', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['app-snack', 'app-snack-red']
+        });
+      }
+    });
+  }
 
   onCancel() {
     this.router.navigate(['/repositories']);
@@ -281,11 +218,12 @@ export class AddrepositoryComponent implements OnInit {
 
   onDelete() {
     if (confirm('Are you sure to delete this repository?')) {
-      this.repositoryService.deleteRepo(this.gitRepository.projectId!).subscribe(() => {        this.snack.open('Deleted successfully!', '', {
+      this.repositoryService.deleteRepo(this.gitRepository.projectId!).subscribe(() => {
+        this.snack.open('Deleted successfully!', '', {
           duration: 2500,
           horizontalPosition: 'right',
           verticalPosition: 'top',
-          panelClass: ['app-snack', 'app-snack-red'], 
+          panelClass: ['app-snack', 'app-snack-red'],
         });
         this.router.navigate(['/repositories']);
       });
@@ -299,8 +237,6 @@ export class AddrepositoryComponent implements OnInit {
       name: '',
       projectType: undefined,
       repositoryUrl: '',
-      // createdAt: new Date(),
-      // updatedAt: new Date()
     };
 
     this.sonarConfig = {
@@ -329,5 +265,4 @@ export class AddrepositoryComponent implements OnInit {
       });
     }
   }
-
 }
