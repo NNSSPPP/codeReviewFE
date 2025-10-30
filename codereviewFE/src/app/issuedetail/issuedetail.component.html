@@ -48,11 +48,11 @@
 
     <div class="info-row">
       <strong>Assigned:</strong>
-      {{ issue.assignedTo || 'No assignee' }}
+      {{ issue.assignedName || 'No assignee' }}
 
       <div>
         <strong>Due Date:</strong>
-        {{ issue.dueDate | date:'dd/MM/yyyy, hh:mm a' }}
+        {{ issue.dueDate | date:'dd/MM/yyyy' }}
       </div>
     </div>
   </div>
@@ -125,10 +125,15 @@
   <div class="issue-comments mt-4" *ngIf="issue?.id">
     <h3 class="d-flex align-items-center gap-2">
       Comments &amp; Discussion
-      <button class="btn btn-sm btn-outline-secondary ms-2" (click)="loadComments()" [disabled]="loadingComments"
-        title="Refresh comments">
-        {{ loadingComments ? 'Loading...' : 'Refresh' }}
-      </button>
+      <button class="btn-refresh" (click)="loadComments()" [disabled]="loadingComments" title="Refresh comments">
+  <span *ngIf="!loadingComments">
+    <i class="bi bi-arrow-clockwise me-1"></i> 
+  </span>
+  <span *ngIf="loadingComments">
+    <i class="spinner-border spinner-border-sm me-1"></i> Loading...
+  </span>
+</button>
+
     </h3>
 
     <!-- รายการคอมเมนต์ -->
@@ -151,7 +156,7 @@
 
     <!-- ว่าง -->
     <div *ngIf="!comments?.length && !loadingComments" class="text-muted">
-      ยังไม่มีคอมเมนต์
+      No comments so far. Share your thoughts!
     </div>
 
     <!-- Add comment -->

@@ -41,17 +41,17 @@
           <div class="notification-tabs">
             <button [class.active]="activeTab==='All'" (click)="selectTab('All')" type="button">All</button>
             <button [class.active]="activeTab==='Unread'" (click)="selectTab('Unread')" type="button">Unread</button>
-            <button [class.active]="activeTab==='Scans'" (click)="selectTab('Scans')" type="button">Scans</button>
-            <button [class.active]="activeTab==='Issues'" (click)="selectTab('Issues')" type="button">Issues</button>
-            <button [class.active]="activeTab==='System'" (click)="selectTab('System')" type="button">System</button>
-            <button class="mark-all" (click)="markAllRead()" type="button">Mark All Read</button>
+            <button [class.active]="activeTab==='Repo'" (click)="selectTab('Repo')" type="button"> Repo</button>
+            <button [class.active]="activeTab==='Scan'" (click)="selectTab('Scan')" type="button">Scan</button>
+            <button [class.active]="activeTab==='Export'" (click)="selectTab('Export')" type="button">Export</button>
+            <!-- <button class="mark-all" (click)="markAllRead()" type="button">Mark All Read</button> -->
           </div>
 
           <!-- รายการ Notifications -->
           <div class="notification-item" *ngFor="let n of filteredNotifications" [class.read]="n.read"
             (click)="viewNotification(n)">
             <div class="item-header">
-              <span>{{ n.icon }} {{ n.title }}</span>
+              <!-- <span>{{ n.icon }} {{ n.title }}</span> -->
               <span class="item-time">{{ getTimeAgo(n.timestamp) }}</span>
             </div>
             <div class="item-message">{{ n.message }}</div>
