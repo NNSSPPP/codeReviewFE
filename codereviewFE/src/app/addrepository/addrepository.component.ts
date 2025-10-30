@@ -6,13 +6,15 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 import { AuthService } from '../services/authservice/auth.service';
 import { ScanService } from '../services/scanservice/scan.service';
+import { SseService } from '../services/scanservice/sse.service';        // <-- added
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-addrepository',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, MatSnackBarModule],
   templateUrl: './addrepository.component.html',
-  styleUrls: ['./addrepository.component.css'] // <- แก้จาก styleUrl เป็น styleUrls
+  styleUrls: ['./addrepository.component.css']
 })
 export class AddrepositoryComponent implements OnInit {
 
@@ -22,20 +24,19 @@ export class AddrepositoryComponent implements OnInit {
     private readonly repositoryService: RepositoryService,
     private readonly authService: AuthService,
     private readonly snack: MatSnackBar,
-    private readonly scanService: ScanService
-  ) {}
+    private readonly scanService: ScanService,
+    private readonly sse: SseService               // <-- added
+  ) { }
 
-  // ---------------- helper ดึงข้อความ error แบบง่ายสุด ----------------
   private extractApiError(err: any): string {
     return (
-      err?.error?.message ||     // Spring ส่ง {"message": "..."} (เปิด include-message แล้ว)
-      err?.error?.detail  ||     // เผื่อส่งเป็น ProblemDetail
-      (typeof err?.error === 'string' && err.error) || // กรณีส่งเป็น string
-      err?.statusText ||         // สำรองสุดท้าย
+      err?.error?.message ||
+      err?.error?.detail ||
+      (typeof err?.error === 'string' && err.error) ||
+      err?.statusText ||
       'Unknown error'
     );
   }
-  // ----------------------------------------------------------------------
 
   authMethod: 'usernamePassword' | 'accessToken' | null = null;
   isEditMode: boolean = false;
@@ -72,20 +73,16 @@ export class AddrepositoryComponent implements OnInit {
       this.loadRepository(projectId);
     }
 
-    // ตรวจสอบ userId จาก AuthService
     const userId = this.authService.userId;
     if (!userId) {
       this.router.navigate(['/login']);
       return;
     }
 
-    // ตั้งค่า userId ให้ repository ที่จะเพิ่ม
     this.gitRepository.user = userId.toString();
-
     this.updateProjectKey();
   }
 
-  /** โหลด repo สำหรับแก้ไข */
   loadRepository(projectId: string) {
     this.repositoryService.getByIdRepo(projectId).subscribe({
       next: (repo) => {
@@ -114,22 +111,18 @@ export class AddrepositoryComponent implements OnInit {
           sonarProjectKey: repo.sonarProjectKey || ''
         };
         this.updateProjectKey();
-
-        console.log('Loaded projectType:', normalizedType);
       },
       error: (err) => console.error('Failed to load repository', err)
     });
   }
 
-  /** ฟังก์ชันอัปเดต projectKey ให้ตรงกับชื่อ repo */
   updateProjectKey() {
     this.sonarConfig.projectKey = this.gitRepository.name || '';
   }
 
-  /** ฟังก์ชันเรียกตอนกรอกชื่อ repository แบบ real-time */
   onNameChange(newName: string) {
-    this.gitRepository.name = newName;   // <- อัปเดตชื่อ repo
-    this.updateProjectKey();             // <- อัปเดต projectKey ทันที
+    this.gitRepository.name = newName;
+    this.updateProjectKey();
   }
 
   onSubmit(form: NgForm) {
@@ -142,41 +135,71 @@ export class AddrepositoryComponent implements OnInit {
       });
       return;
     }
-
-    // อัปเดต projectKey ก่อน submit
+    this.router.navigate(['/repositories']);
     this.updateProjectKey();
 
     const payload = {
       ...this.gitRepository,
       ...this.credentials
     };
-    console.log(payload);
 
     const saveOrUpdate$ = this.isEditMode
       ? this.repositoryService.updateRepo(this.gitRepository.projectId!, payload)
       : this.repositoryService.addRepo(payload);
 
     saveOrUpdate$.subscribe({
+      // ...
       next: (savedRepo) => {
+        // 1) แจ้งบันทึกก่อน
         const msg = this.isEditMode ? 'Repository updated successfully!' : 'Repository added successfully!';
         this.snack.open(msg, '', {
           duration: 2500,
           horizontalPosition: 'right',
           verticalPosition: 'top',
           panelClass: ['app-snack', 'app-snack-blue']
-        });
+        })
+        this.router.navigate(['/repositories']);;
 
-        // กลับหน้า repository management ทันที
-        this.router.navigate(['/repositories']);
+        // 2) เลือก key สำหรับ SSE ให้ชัวร์
+        const sseKey =
+          savedRepo.sonarProjectKey ||         // จาก backend
+          this.sonarConfig.projectKey ||       // ที่เราคำนวณเอง
+          savedRepo.name;                      // สำรองสุดท้าย
 
-        // เรียก scan หลัง 5 วินาที
+        if (sseKey) {
+          const sub = this.sse.connect(sseKey).subscribe({
+            next: (data) => {
+              console.log('SSE scan-complete:', data);
+              this.snack.open('Sonar scan finished!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['app-snack', 'app-snack-green']
+              });
+
+              // ปิด SSE ก่อน
+              sub.unsubscribe();
+
+              // รอ 5 วิแล้วค่อยไป
+              setTimeout(() => {
+                window.location.reload()
+              }, 15000);
+            },
+            error: (err) => {
+              console.error('SSE error:', err);
+            }
+          });
+        } else {
+          this.router.navigate(['/repositories']);
+        }
+
+        // 3) สั่ง start scan (คงไว้ตามเดิม)
         if (savedRepo.projectId) {
           setTimeout(() => {
             this.scanService.startScan(savedRepo.projectId!, {
               username: this.credentials.username || '',
               password: this.credentials.password || ''
-            })
-            .subscribe({
+            }).subscribe({
               next: () => {
                 this.snack.open('Scan started successfully!', '', {
                   duration: 2500,
@@ -184,6 +207,7 @@ export class AddrepositoryComponent implements OnInit {
                   verticalPosition: 'top',
                   panelClass: ['app-snack', 'app-snack-green']
                 });
+                window.location.reload();
               },
               error: (err) => {
                 const msgErr = this.extractApiError(err);
@@ -196,19 +220,12 @@ export class AddrepositoryComponent implements OnInit {
                 });
               }
             });
+
           }, 5000);
         }
       },
-      error: (err) => {
-        const msg = this.extractApiError(err);
-        console.error('Failed to save repository', err);
-        this.snack.open(`Failed to save repository: ${msg}`, '', {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-          panelClass: ['app-snack', 'app-snack-red']
-        });
-      }
+      // ...
+
     });
   }
 
