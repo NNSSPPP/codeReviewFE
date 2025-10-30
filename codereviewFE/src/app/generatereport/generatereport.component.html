@@ -101,40 +101,46 @@
   </label>
 
   <div class="d-flex flex-wrap gap-2">
-    <div 
-      class="form-check form-check-inline format-option" 
-      *ngFor="let format of ['PDF', 'Excel', 'Word', 'PowerPoint']"
+  <div 
+    class="form-check form-check-inline format-option" 
+    *ngFor="let format of ['PDF', 'Excel', 'Word', 'PowerPoint']"
+  >
+    <input 
+      class="btn-check"
+      [ngClass]="{
+        'pdf': format === 'PDF',
+        'excel': format === 'Excel',
+        'word': format === 'Word',
+        'ppt': format === 'PowerPoint'
+      }"
+      type="radio" 
+      name="format" 
+      [value]="format" 
+      [(ngModel)]="outputFormat" 
+      required 
+      id="{{format}}"
     >
-      <input 
-        class="btn-check" 
-        type="radio" 
-        name="format" 
-        [value]="format" 
-        [(ngModel)]="outputFormat" 
-        required 
-        id="{{format}}"
-      >
-      <label 
-        class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm" 
-        for="{{format}}"
-      >
-        <i 
-          class="bi" 
-          [ngClass]="{
-            'bi-filetype-pdf': format === 'PDF',
-            'bi-filetype-xlsx': format === 'Excel',
-            'bi-filetype-docx': format === 'Word',
-            'bi-filetype-pptx': format === 'PowerPoint'
-          }"
-        ></i> {{format}}
-      </label>
-    </div>
+    <label 
+      class="btn btn-outline-primary px-4 py-2 rounded-pill shadow-sm"
+      for="{{format}}"
+    >
+      <i 
+        class="bi" 
+        [ngClass]="{
+          'bi-filetype-pdf': format === 'PDF',
+          'bi-filetype-xlsx': format === 'Excel',
+          'bi-filetype-docx': format === 'Word',
+          'bi-filetype-pptx': format === 'PowerPoint'
+        }"
+      ></i> {{format}}
+    </label>
   </div>
-
-  <div class="text-danger small mt-1" *ngIf="reportForm.submitted && !outputFormat">
+</div>
+ <div class="text-danger small mt-1" *ngIf="reportForm.submitted && !outputFormat">
     Please select an output format.
   </div>
 </div>
+
 
 
       <!-- Delivery Method -->
@@ -165,8 +171,10 @@
         <button class="btn btn-success" type="submit" [disabled]="loading">
   {{ loading ? 'Generating...' : 'Generate' }}
 </button>
-
-      </div>
-    </form>
-  </div>
 </div>
+    
+  
+</form>
+</div>
+</div>
+
