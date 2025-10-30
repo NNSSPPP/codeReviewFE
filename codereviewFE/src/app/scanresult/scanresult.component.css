@@ -25,6 +25,10 @@
     font-size: 1.4rem; /* ขนาดตัวอักษร */
     margin-bottom: 20px; /* เว้นระยะด้านล่าง */
     color: #2563eb; /* สีฟ้า */
+     background: transparent; /* ✅ ล้างพื้นหลัง */
+  border: none; /* ✅ เอากรอบออก */
+  outline: none; /* ✅ ปิดเส้นขอบ focus */
+  cursor: pointer; /* ให้เมาส์เป็น pointer */
     text-decoration: none; /* เอาขีดเส้นใต้ลิงก์ออก */
     border-radius: 8px; /* มุมโค้ง */
     transition: background 0.25s ease, transform 0.25s ease; /* transition */

@@ -1,7 +1,7 @@
 <div class="scan-results-container p-4">
-  <a routerLink="/scanhistory" class="back-btn" title="Back to Scan History Page">
+  <button title="Back to Previous Page" class="back-btn" (click)="goBack()">
     <i class="bi bi-arrow-left"></i>
-  </a>
+  </button>
   <!-- Title -->
   <h2 class="mb-4"><i class="bi bi-bar-chart"></i> Scan Results: {{ scanInfo?.projectName }}</h2>
 

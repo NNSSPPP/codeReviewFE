@@ -16,6 +16,7 @@ import autoTable from 'jspdf-autotable';
 export class ScanresultComponent {
 
   constructor(private readonly router: Router,private readonly scanService: ScanService) {}
+  goBack() { window.history.back(); }
 
  scanInfo: Scan | null = null;
 
