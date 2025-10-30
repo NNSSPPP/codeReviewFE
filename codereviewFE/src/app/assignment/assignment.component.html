@@ -22,13 +22,13 @@
   <table class="table table-bordered assignment-table">
     <thead>
       <tr>
-        <th>Assigned To</th>
-        <th>Issue</th>
-        <th>Severity</th>
-        <th>Due Date</th>
-        <th>Status</th>
+        <th class="text-center" >Assigned To</th>
+        <th class="text-center">Issue</th>
+        <th class="text-center">Severity</th>
+        <th class="text-center">Due Date</th>
+        <th class="text-center">Status</th>
 
-        <th *ngIf="hasActionColumn">Action</th>
+        <th class="text-center" *ngIf="hasActionColumn">Action</th>
         <!-- <th>Resolution</th> -->
       </tr>
     </thead>
@@ -36,7 +36,7 @@
       <tr *ngFor="let a of Assign" (click)="goToDetail(a.issueId)">
         <td>{{ a.assignedToName }}</td>
         <td>{{ a.message }}</td>
-        <td>
+        <td class="text-center">
           <span class="badge severity-badge" [ngStyle]="{
           'background-color': getPriorityColor(a.severity),
           'font-weight': '500'
@@ -46,8 +46,8 @@
         </td>
 
 
-        <td>{{ a.dueDate | date:'yyyy-MM-dd' }}</td>
-        <td>
+        <td class="text-center">{{ a.dueDate | date:'yyyy-MM-dd' }}</td>
+        <td class="text-center"> 
           <span class="status-box" [ngClass]="statusClass(a.status)">
             {{ a.status }}
           </span>
