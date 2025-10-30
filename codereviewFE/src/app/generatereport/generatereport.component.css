@@ -247,21 +247,83 @@
     }
   }
 
-  
-  .format-option .btn-check:checked + .btn {
-  background-color: #0d6efd;
+  /* ===============================
+     🎛️ Output Format Options (Light Mode)
+     =============================== */
+  /* PDF */
+.format-option .pdf.btn-check:checked + .btn,
+.format-option .pdf.btn-check + .btn:hover {
+  background-color: #dc2626; /* Red */
+  border-color: #dc2626;
   color: white;
-  border-color: #0d6efd;
-  box-shadow: 0 0 6px rgba(13, 110, 253, 0.6);
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);
 }
 
-.format-option .btn:hover {
-  background-color: #e9f1ff;
-  border-color: #0d6efd;
+/* Excel */
+.format-option .excel.btn-check:checked + .btn,
+.format-option .excel.btn-check + .btn:hover {
+  background-color: #16a34a; /* Green */
+  border-color: #16a34a;
+  color: white;
+  box-shadow: 0 0 8px rgba(22, 163, 74, 0.5);
 }
 
-.format-option .btn i {
-  margin-right: 6px;
+/* Word */
+.format-option .word.btn-check:checked + .btn,
+.format-option .word.btn-check + .btn:hover {
+  background-color: #2563eb; /* Blue */
+  border-color: #2563eb;
+  color: white;
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+}
+
+/* PowerPoint */
+.format-option .ppt.btn-check:checked + .btn,
+.format-option .ppt.btn-check + .btn:hover {
+  background-color: #ea580c; /* Orange */
+  border-color: #ea580c;
+  color: white;
+  box-shadow: 0 0 8px rgba(234, 88, 12, 0.5);
+}
+
+  
+  /* ===============================
+     🎛️ Output Format Options (Dark Mode)
+     =============================== */
+  /* PDF Dark Mode */
+:host-context(.dark-mode) .format-option .pdf.btn-check:checked + .btn,
+:host-context(.dark-mode) .format-option .pdf.btn-check + .btn:hover {
+  background-color: #b91c1c; /* Darker Red */
+  border-color: #b91c1c;
+  color: white;
+  box-shadow: 0 0 8px rgba(185, 28, 28, 0.6);
+}
+
+/* Excel Dark Mode */
+:host-context(.dark-mode) .format-option .excel.btn-check:checked + .btn,
+:host-context(.dark-mode) .format-option .excel.btn-check + .btn:hover {
+  background-color: #15803d; /* Darker Green */
+  border-color: #15803d;
+  color: white;
+  box-shadow: 0 0 8px rgba(21, 128, 61, 0.6);
+}
+
+/* Word Dark Mode */
+:host-context(.dark-mode) .format-option .word.btn-check:checked + .btn,
+:host-context(.dark-mode) .format-option .word.btn-check + .btn:hover {
+  background-color: #1d4ed8; /* Darker Blue */
+  border-color: #1d4ed8;
+  color: white;
+  box-shadow: 0 0 8px rgba(29, 78, 216, 0.6);
+}
+
+/* PowerPoint Dark Mode */
+:host-context(.dark-mode) .format-option .ppt.btn-check:checked + .btn,
+:host-context(.dark-mode) .format-option .ppt.btn-check + .btn:hover {
+  background-color: #c2410c; /* Darker Orange */
+  border-color: #c2410c;
+  color: white;
+  box-shadow: 0 0 8px rgba(194, 65, 12, 0.6);
 }
 
   
@@ -389,29 +451,6 @@
     display: none;
   }
   
-  /* ===============================
-     🩵 Fix Outline Primary (Dark)
-     =============================== */
-  :host-context(.dark-mode)
-    .btn-outline-primary,
-  :host-context(.dark-mode)
-    .btn-outline-primary:hover,
-  :host-context(.dark-mode)
-    .btn-outline-primary:focus {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
-    border-color: #2563eb !important;
-  }
-  
-  :host-context(.dark-mode)
-    .btn-outline-primary input[type="checkbox"] {
-    accent-color: #ffffff !important;
-    background-color: #2563eb !important;
-    border: 1px solid #1e40af !important;
-  }
-  
-
-
   /* ===============================
      📱 Responsive Design
      =============================== */
