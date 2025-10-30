@@ -3,13 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
-import { DashboardService, TrendsWithAvg } from '../services/dashboardservice/dashboard.service';
+import { DashboardService } from '../services/dashboardservice/dashboard.service';
 import { AuthService } from '../services/authservice/auth.service';
 import { ScanService, Scan } from '../services/scanservice/scan.service';
 import { UserService, ChangePasswordData } from '../services/userservice/user.service';
 import { forkJoin } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { IssueService } from '../services/issueservice/issue.service';
+
+interface TopIssue {
+  message: string;
+  count: number;
+}
 
 interface Condition {
   metric: string;
@@ -17,6 +23,7 @@ interface Condition {
   actual: number;
   threshold: number;
 }
+
 interface Issue {
   id: number;
   type: string;
@@ -24,12 +31,14 @@ interface Issue {
   message: string;
   project: string;
 }
+
 interface SecurityHotspot {
   id: number;
   status: 'REVIEWED' | 'TO_REVIEW';
   description: string;
   project: string;
 }
+
 interface ScanHistory {
   scanId: string;
   projectId: string;
@@ -40,6 +49,7 @@ interface ScanHistory {
   time: string;
   maintainabilityGate: string | null;
 }
+
 interface DashboardData {
   id: string;
   name: string;
@@ -61,6 +71,7 @@ interface DashboardData {
 }
 
 type NotificationTab = 'All' | 'Unread' | 'Scans' | 'Issues' | 'System';
+
 interface Notification {
   title: string;
   message: string;
@@ -69,6 +80,7 @@ interface Notification {
   timestamp: Date;
   read: boolean;
 }
+
 interface UserProfile {
   username: string;
   email: string;
@@ -89,11 +101,14 @@ export class DashboardComponent {
     private readonly dash: DashboardService,
     private readonly auth: AuthService,
     private readonly userService: UserService,
-    private readonly scanService: ScanService
-  ) {}
+    private readonly scanService: ScanService,
+    private readonly issueService: IssueService,   // 👈 เพิ่มอันนี้
+
+  ) { }
 
   loading = true;
 
+  // ================== STATE หลัก ==================
   dashboardData: DashboardData = {
     id: '',
     name: '',
@@ -123,6 +138,9 @@ export class DashboardComponent {
   coverageChartSeries: any[] = [];
   coverageChartOptions: ApexOptions = {};
   recentScans: Scan[] = [];
+  topIssues: { message: string; count: number }[] = [];
+  maxTop = 5;
+
 
   userProfile: UserProfile = { username: '', email: '', phoneNumber: '', status: '' };
   user: any = {};
@@ -130,19 +148,24 @@ export class DashboardComponent {
   showEditModal = false;
   showProfileDropdown = false;
 
-  /** ตัวอักษรเกรดเฉลี่ย A–E เพื่อโชว์ตรงกลางโดนัท */
+  /** ตัวอักษรเกรดเฉลี่ยจาก backend (A–E) */
   avgGateLetter: 'A' | 'B' | 'C' | 'D' | 'E' = 'A';
 
+  // ================== LIFE CYCLE ==================
   ngOnInit() {
+    // ถ้าไม่มี token ให้เด้งไป login ก่อน
     if (!this.auth.token) {
       this.router.navigate(['/login']);
       return;
     }
+
     const userId = this.auth.userId;
     if (!userId) return;
 
+    // ดาวน์โหลดข้อมูล dashboard
     this.fetchFromServer(userId);
 
+    // โหลดโปรไฟล์ผู้ใช้
     this.userService.getUserProfile(userId).subscribe({
       next: (user) => {
         this.userProfile = {
@@ -155,87 +178,149 @@ export class DashboardComponent {
       error: (err) => console.error('Error fetching user profile:', err)
     });
 
+    // โหลดกราฟครั้งแรก (จะถูกเรียกซ้ำตอน fetch เสร็จ)
     this.loadDashboardData();
   }
 
-  // ========== FETCH ==========
-fetchFromServer(userId: string | number) {
-  this.loading = true;
-  forkJoin({
-    overview: this.dash.getOverview(userId),
-    history: this.dash.getHistory(userId),
-    trends: this.dash.getTrendsWithAvg(userId),
-    scans: this.scanService.getAllScan()
-  }).subscribe({
-    next: ({ overview, history, trends, scans }) => {
-      // ✅ 1) ดึง metric จาก overview (เฉพาะสแกนล่าสุดต่อโปรเจกต์)
-      const metrics = this.dash.getMetricsSummary(overview);
-      this.dashboardData.metrics = {
-        ...metrics,
-        technicalDebt: this.dashboardData.metrics.technicalDebt ?? '0'
+  // ================== FETCH FROM SERVER ==================
+  fetchFromServer(userId: string | number) {
+    this.loading = true;
+
+forkJoin({
+  overview: this.dash.getOverview(userId),
+  history: this.dash.getHistory(userId),
+  trends: this.dash.getTrendsWithAvg(userId),
+  scans: this.scanService.getAllScan(),
+  issues: this.issueService.getAllIssue(String(userId))   // ✅ เพิ่ม
+}).subscribe({
+  next: ({ overview, history, trends, scans, issues }) => {
+    // 1) metrics จาก overview
+    const metrics = this.dash.getMetricsSummary(overview);
+    this.dashboardData.metrics = {
+      ...metrics,
+      technicalDebt: this.dashboardData.metrics.technicalDebt ?? '0'
+    };
+    console.log('[overview] metrics summary:', metrics);
+
+    // 2) history -> map
+    this.dashboardData.history = this.dash.mapHistory(history);
+
+    // 3) avg grade จาก trends
+    if (trends?.length && this.isValidGateLetter(trends[0].avgGrade)) {
+      this.avgGateLetter = trends[0].avgGrade.toUpperCase() as any;
+      console.log('[trends] avgGrade from API =', trends[0].avgGrade);
+    } else {
+      // ... fallback เดิมของคุณ ...
+      const latestMap = this.dashboardData.history.reduce((m, h) => {
+        const cur = m.get(h.projectId);
+        const tNew = new Date(h.time).getTime();
+        const tCur = cur ? new Date(cur.time).getTime() : 0;
+        if (!cur || tNew > tCur) m.set(h.projectId, h);
+        return m;
+      }, new Map<string, any>());
+      const rows = Array.from(latestMap.values());
+
+      const scoreMap: Record<'A'|'B'|'C'|'D'|'E', number> = { A: 5, B: 4, C: 3, D: 2, E: 1 };
+      const score = (g: string) => scoreMap[(g || 'E').toUpperCase() as keyof typeof scoreMap] || 1;
+
+      const grades = rows
+        .map(r => (r.grade || 'E').toUpperCase())
+        .filter(g => this.isValidGateLetter(g));
+
+      const avgScore = grades.length
+        ? grades.map(score).reduce((a, b) => a + b, 0) / grades.length
+        : 1;
+
+      const revMap: Record<1|2|3|4|5,'A'|'B'|'C'|'D'|'E'> = {
+        1: 'E', 2: 'D', 3: 'C', 4: 'B', 5: 'A'
       };
 
-      console.log('[overview] metrics summary:', metrics);
-
-      // 2) history -> map
-      this.dashboardData.history = this.dash.mapHistory(history);
-
-      // 3) ค่าเฉลี่ยเกรด A–E (เหมือนเดิม)
-      if (trends?.length && this.isValidGateLetter(trends[0].avgGrade)) {
-        this.avgGateLetter = trends[0].avgGrade.toUpperCase() as any;
-        console.log('[trends] avgGrade from API =', trends[0].avgGrade);
-      } else {
-        // fallback ถ้า trends ไม่มี avgGrade
-        const latestMap = this.dashboardData.history.reduce((m, h) => {
-          const cur = m.get(h.projectId);
-          const tNew = new Date(h.time).getTime();
-          const tCur = cur ? new Date(cur.time).getTime() : 0;
-          if (!cur || tNew > tCur) m.set(h.projectId, h);
-          return m;
-        }, new Map<string, any>());
-        const rows = Array.from(latestMap.values());
-
-        const scoreMap: Record<'A'|'B'|'C'|'D'|'E', number> = { A: 5, B: 4, C: 3, D: 2, E: 1 };
-        const score = (g: string) => scoreMap[(g || 'E').toUpperCase() as keyof typeof scoreMap] || 1;
-
-        const grades = rows.map(r => (r.grade || 'E').toUpperCase()).filter(g => this.isValidGateLetter(g));
-        const avgScore = grades.length ? grades.map(score).reduce((a,b)=>a+b,0)/grades.length : 1;
-        const revMap: Record<1|2|3|4|5,'A'|'B'|'C'|'D'|'E'> = {1:'E',2:'D',3:'C',4:'B',5:'A'};
-        const rounded = Math.max(1, Math.min(5, Math.round(avgScore))) as 1|2|3|4|5;
-        this.avgGateLetter = revMap[rounded];
-        console.log('[fallback] avgGateLetter =', this.avgGateLetter);
-      }
-
-      // 4) recent scans
-      this.recentScans = scans
-        .sort((a, b) => {
-          const dateA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
-          const dateB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
-          return dateB - dateA;
-        })
-        .slice(0, 5);
-
-      // 5) อัปเดตข้อมูลอื่น
-      this.recomputeStatusCountsFromHistory();
-      this.calculateProjectDistribution();
-      this.loadDashboardData();
-
-      console.log('[donut] pass/fail ->', this.Data, 'totalProjects =', this.totalProjects);
-      console.log('[donut] grade ->', this.grade, this.gradePercent + '%');
-      console.log('[donut] center =', this.avgGateLetter);
-
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error('Error fetching dashboard data:', err);
-      this.loading = false;
+      const rounded = Math.max(1, Math.min(5, Math.round(avgScore))) as 1|2|3|4|5;
+      this.avgGateLetter = revMap[rounded];
+      console.log('[fallback] avgGateLetter =', this.avgGateLetter);
     }
-  });
+
+    // 4) recent scans (เอา 5 อันล่าสุด)
+    this.recentScans = scans
+      .sort((a, b) => {
+        const dateA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+        const dateB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+        return dateB - dateA;
+      })
+      .slice(0, 5);
+
+    // 5) นับ passed / failed จาก history
+    this.recomputeStatusCountsFromHistory();
+
+    // 6) สรุป project distribution
+    this.calculateProjectDistribution();
+
+    // 7) คำนวณ donut / เกรด
+    this.loadDashboardData();
+
+    // 8) ✅ ตรงนี้คือของใหม่: คำนวณ Top Issues จากรายการ issues ที่ดึงมา
+    this.buildTopIssues(issues);
+
+    console.log('[donut] pass/fail ->', this.Data, 'totalProjects =', this.totalProjects);
+    console.log('[donut] center =', this.avgGateLetter);
+
+    this.loading = false;
+  },
+  error: (err) => {
+    console.error('Error fetching dashboard data:', err);
+    this.loading = false;
+  }
+});
+
+  }
+
+  private buildTopIssuesFromDashboard() {
+    const list = this.dashboardData?.issues || [];
+    const counter: Record<string, number> = {};
+
+    for (const it of list) {
+      // backend บางทีส่ง message, บางทีส่ง title ก็กันไว้
+      const msgRaw = it?.message || '(no message)';
+      const msg = String(msgRaw).trim();
+
+      // ถ้าจะนับเฉพาะที่ยัง open ก็เช็กตรงนี้ได้
+      // if (it.status && it.status.toLowerCase() !== 'open') continue;
+
+      counter[msg] = (counter[msg] || 0) + 1;
+    }
+
+    const arr: TopIssue[] = Object.entries(counter)
+      .map(([message, count]) => ({ message, count }))
+      .sort((a, b) => b.count - a.count);
+
+    this.topIssues = arr.slice(0, this.maxTop);
+  }
+  private buildTopIssues(rawIssues: any[]) {
+  if (!rawIssues || !rawIssues.length) {
+    this.topIssues = [];
+    return;
+  }
+
+  const counter: Record<string, number> = {};
+
+  for (const it of rawIssues) {
+    // ดึงเฉพาะหัวข้อ
+    const msg = (it.message || '(no message)').trim();
+
+    // ถ้าอยากตัดตัวที่ DONE / REJECT ออก ให้ uncomment 3 บรรทัดนี้
+    // const st = (it.status || '').toUpperCase();
+    // if (st === 'DONE' || st === 'REJECT') continue;
+
+    counter[msg] = (counter[msg] || 0) + 1;
+  }
+
+  this.topIssues = Object.entries(counter)
+    .map(([message, count]) => ({ message, count }))
+    .sort((a, b) => b.count - a.count)  // มาก -> น้อย
+    .slice(0, this.maxTop);
 }
 
-
-
-  // ========== PROFILE ==========
+  // ================== PROFILE & USER ==================
   toggleProfileDropdown() {
     this.showProfileDropdown = !this.showProfileDropdown;
   }
@@ -252,12 +337,15 @@ fetchFromServer(userId: string | number) {
     this.showChangePasswordModal = true;
     this.resetForm();
   }
+
   closeChangePasswordModal() {
     this.showChangePasswordModal = false;
   }
+
   resetForm() {
     this.passwordData = { oldPassword: '', newPassword: '', confirmPassword: '' };
   }
+
   submitChangePassword(form: any) {
     this.submitted = true;
     if (form.invalid || this.passwordData.newPassword !== this.passwordData.confirmPassword) return;
@@ -283,11 +371,7 @@ fetchFromServer(userId: string | number) {
     });
   }
 
-  viewDetail(scanId: string) {
-    this.router.navigate(['/scanresult', scanId]);
-  }
-
-  // ========== Notifications ==========
+  // ================== NOTIFICATIONS ==================
   showNotifications = false;
   isMobile = false;
   activeTab: NotificationTab = 'All';
@@ -317,46 +401,57 @@ fetchFromServer(userId: string | number) {
     if (h < 24) return `${h}h ago`;
     return `${d}d ago`;
   }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
   }
+
   closeNotifications() {
     this.showNotifications = false;
   }
+
   markAllRead() {
     this.notifications.forEach((n) => (n.read = true));
   }
+
   selectTab(tab: NotificationTab) {
     this.activeTab = tab;
     this.displayCount = 5;
   }
+
   viewNotification(n: Notification) {
     n.read = true;
   }
+
   get filteredNotifications() {
     let filtered = this.notifications;
-    if (this.activeTab === 'Unread') filtered = filtered.filter((n) => !n.read);
-    else if (this.activeTab !== 'All') filtered = filtered.filter((n) => n.type === this.activeTab);
+    if (this.activeTab === 'Unread') {
+      filtered = filtered.filter((n) => !n.read);
+    } else if (this.activeTab !== 'All') {
+      filtered = filtered.filter((n) => n.type === this.activeTab);
+    }
     filtered = filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
     return filtered.slice(0, this.displayCount);
   }
+
   get unreadCount() {
     return this.notifications.filter((n) => !n.read).length;
   }
+
   loadMore() {
     this.displayCount += 5;
   }
+
   get totalFilteredCount() {
     if (this.activeTab === 'All') return this.notifications.length;
     if (this.activeTab === 'Unread') return this.notifications.filter((n) => !n.read).length;
     return this.notifications.filter((n) => n.type === this.activeTab).length;
   }
 
-  // ========== CALC / CHARTS ==========
+  // ================== PROJECT DISTRIBUTION ==================
   projectDistribution: { type: string; count: number; percent: number }[] = [];
 
   calculateProjectDistribution() {
-    // อันนี้ใช้ทั้งหมดใน history ก็ได้ ไม่มีปัญหา
     const typeCounts: Record<string, number> = {};
     const total = this.dashboardData.history.length || 1;
     this.dashboardData.history.forEach((h) => {
@@ -369,14 +464,28 @@ fetchFromServer(userId: string | number) {
     }));
   }
 
+  // ================== ช่วยนับ passed / failed ==================
+  /** ✅ แก้ตรงนี้ให้ normalize แล้ว */
   private recomputeStatusCountsFromHistory() {
-    const passed = this.dashboardData.history.filter((h) => h.status === 'Passed').length;
-    const failed = this.dashboardData.history.filter((h) => h.status === 'Failed').length;
+    const norm = (s?: string) => (s || '').trim().toUpperCase();
+
+    // บาง backend ใช้ PASSED / FAILED
+    // บาง backend ใช้ OK / ERROR
+    const passed = this.dashboardData.history.filter((h) => {
+      const st = norm(h.status);
+      return st === 'PASSED' || st === 'OK' || st === 'SUCCESS';
+    }).length;
+
+    const failed = this.dashboardData.history.filter((h) => {
+      const st = norm(h.status);
+      return st === 'FAILED' || st === 'ERROR';
+    }).length;
+
     this.Data = { passedCount: passed, failedCount: failed };
     this.totalProjects = passed + failed;
   }
 
-  // --- helper เลือก scan ล่าสุดต่อโปรเจ็กต์ ---
+  // ================== HELPERS ==================
   private getLatestPerProject(rows: ScanHistory[]): ScanHistory[] {
     const map = new Map<string, ScanHistory>();
     for (const h of rows) {
@@ -397,90 +506,94 @@ fetchFromServer(userId: string | number) {
     return /^[A-E]$/i.test((v || '').trim());
   }
 
-  // ฟังก์ชันคำนวณสีตามเกรด (สำหรับโดนัท)
-private getGradeColor(grade: string): string {
-  switch (grade?.toUpperCase()) {
-    case 'A': return '#10B981';      // เขียว
-    case 'B': return '#84CC16';
-    case 'C': return '#F59E0B';
-    case 'D': return '#FB923C';
-    case 'E': return '#EF4444';
-    default:  return '#6B7280';      // เทา
+  private getGradeColor(grade: string): string {
+    switch (grade?.toUpperCase()) {
+      case 'A': return '#10B981';      // เขียว
+      case 'B': return '#84CC16';
+      case 'C': return '#F59E0B';
+      case 'D': return '#FB923C';
+      case 'E': return '#EF4444';
+      default: return '#6B7280';      // เทา
+    }
   }
-}
 
+  // ================== โหลดข้อมูลสำหรับโดนัทและการ์ด ==================
   loadDashboardData() {
-    // 1) เอาเฉพาะสแกนล่าสุดต่อโปรเจ็กต์
     const latest = this.getLatestPerProject(this.dashboardData.history);
-
-    // 2) ใช้เฉพาะแถวที่ status ไม่ว่าง
     const norm = (s?: string) => (s || '').trim().toUpperCase();
     const validLatest = latest.filter((s) => this.notEmpty(s.status));
 
-    const passedCount = validLatest.filter((s) => norm(s.status) === 'PASSED').length;
-    const failedCount = validLatest.filter((s) => norm(s.status) === 'FAILED').length;
+    // ✅ pass ได้เฉพาะ 3 ตัวนี้เท่านั้น
+    const passedCount = validLatest.filter((s) => {
+      const st = norm(s.status);
+      return st === 'PASSED' || st === 'OK' || st === 'SUCCESS';
+    }).length;
+
+    // ✅ ที่เหลือคือ failed ทั้งหมด
+    const failedCount = validLatest.filter((s) => {
+      const st = norm(s.status);
+      return !(st === 'PASSED' || st === 'OK' || st === 'SUCCESS');
+    }).length;
+
+    // ใช้เฉพาะที่จบแล้ว (pass+fail) มาหาร
+    const finishedTotal = passedCount + failedCount;
 
     this.Data = { passedCount, failedCount };
-    this.totalProjects = validLatest.length;
+    this.totalProjects = finishedTotal;
 
-    // 3) คิดเปอร์เซ็นต์จากแถว valid
-    const ratio = this.totalProjects > 0 ? passedCount / this.totalProjects : 0;
+    const ratio = finishedTotal > 0 ? passedCount / finishedTotal : 0;
+
     this.grade =
-      ratio >= 0.8
-        ? 'A'
-        : ratio >= 0.7
-        ? 'B'
-        : ratio >= 0.6
-        ? 'C'
-        : ratio >= 0.5
-        ? 'D'
-        : ratio >= 0.4
-        ? 'E'
-        : 'F';
+      ratio >= 0.8 ? 'A' :
+        ratio >= 0.7 ? 'B' :
+          ratio >= 0.6 ? 'C' :
+            ratio >= 0.5 ? 'D' :
+              ratio >= 0.4 ? 'E' :
+                'F';
+
     this.gradePercent = Math.round(ratio * 100);
 
-   // 4) เลือกตัวอักษรวงใน (วิธีง่ายสุด)
-// ถ้าผ่าน 100% ให้โชว์ A ไปเลย ไม่ต้องเชื่อ backend
-let centerLetter: 'A' | 'B' | 'C' | 'D' | 'E';
+    let centerLetter: 'A' | 'B' | 'C' | 'D' | 'E';
+    if (this.isValidGateLetter(this.avgGateLetter)) {
+      centerLetter = this.avgGateLetter;
+    } else {
+      centerLetter = (this.grade === 'F' ? 'E' : this.grade) as 'A' | 'B' | 'C' | 'D' | 'E';
+    }
 
-if (this.gradePercent === 100) {
-  centerLetter = 'A';
-} else if (this.isValidGateLetter(this.avgGateLetter)) {
-  centerLetter = this.avgGateLetter;
-} else {
-  // ถ้า backend ส่งไม่ดี ก็ใช้เกรดจาก ratio
-  centerLetter = (this.grade === 'F' ? 'E' : this.grade) as 'A' | 'B' | 'C' | 'D' | 'E';
-}
-
-this.pieChartOptions = {
-  chart: { type: 'donut', height: 300 },
-  series: [this.gradePercent, 100 - this.gradePercent],
-  labels: ['', ''],
-  colors: [this.getGradeColor(this.grade), '#E5E7EB'],
-  plotOptions: {
-    pie: {
-      donut: {
-        labels: {
-          show: true,
-          total: {
-            show: true,
-            showAlways: true,
-            label: centerLetter,
-            fontSize: '24px',
-            formatter: () => this.gradePercent + '%'
+    this.pieChartOptions = {
+      chart: { type: 'donut', height: 300 },
+      series: [this.gradePercent, 100 - this.gradePercent],
+      labels: ['', ''],
+      colors: [this.getGradeColor(centerLetter), '#E5E7EB'],
+      plotOptions: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              name: {
+                show: true,
+                offsetY: 0,
+                fontSize: '48px',
+                formatter: () => centerLetter
+              },
+              value: {
+                show: false,
+                offsetY: 5,
+                formatter: () => this.gradePercent + '%'
+              },
+              total: { show: true }
+            }
           }
         }
-      }
-    }
-  },
-  dataLabels: { enabled: false },
-  legend: { show: false },
-  tooltip: { enabled: false }
-};
-
+      },
+      dataLabels: { enabled: false },
+      legend: { show: false },
+      tooltip: { enabled: false }
+    };
   }
 
-  // ========== EXPORT ==========
+
+  // ================== EXPORT PDF ==================
   onExport() {
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const margin = 12;
@@ -504,6 +617,7 @@ this.pieChartOptions = {
     pdf.line(margin, y, pdf.internal.pageSize.getWidth() - margin, y);
     y += 8;
 
+    // Quality Gate
     pdf.setFontSize(14);
     pdf.setTextColor(0, 123, 255);
     pdf.text('Quality Gate Status', margin, y);
@@ -515,6 +629,7 @@ this.pieChartOptions = {
     pdf.text(`Failed: ${this.Data.failedCount}`, margin, y);
     y += 10;
 
+    // Recent scans
     pdf.setFontSize(14);
     pdf.setTextColor(0, 123, 255);
     pdf.text('Recent Scans', margin, y);
@@ -540,6 +655,7 @@ this.pieChartOptions = {
 
     y = (pdf as any).lastAutoTable?.finalY + 8;
 
+    // Metrics
     pdf.setFontSize(14);
     pdf.setTextColor(0, 123, 255);
     pdf.text('Metrics Summary', margin, y);
@@ -555,6 +671,7 @@ this.pieChartOptions = {
     pdf.text(`Coverage: ${this.dashboardData.metrics.coverage}%`, margin, y);
     y += 10;
 
+    // Top issues
     pdf.setFontSize(14);
     pdf.setTextColor(220, 53, 69);
     pdf.text('Top Issues', margin, y);
@@ -573,6 +690,7 @@ this.pieChartOptions = {
     }
     y += 5;
 
+    // Project distribution
     pdf.setFontSize(14);
     pdf.setTextColor(0, 123, 255);
     pdf.text('Project Distribution', margin, y);
@@ -603,11 +721,16 @@ this.pieChartOptions = {
     pdf.save(fileName);
   }
 
+  // ================== ACTIONS อื่น ๆ ==================
   onRefresh() {
     this.fetchFromServer(this.auth.userId!);
   }
 
   viewScan(scanId: string) {
+    this.router.navigate(['/scanresult', scanId]);
+  }
+
+  viewDetail(scanId: string) {
     this.router.navigate(['/scanresult', scanId]);
   }
 }
