@@ -345,7 +345,7 @@ body.dark-mode .modal-footer .btn-primary:hover {
   background-color: var(--btn-primary-bg-hover) !important;
 }
 
-/* assign ทำปฏิทันขาวใน Dark mode */
+assign ทำปฏิทันขาวใน Dark mode
 .dark-mode input[type="date"] {
     color-scheme: dark !important; 
     color: var(--text-main) !important;
