@@ -79,10 +79,10 @@
             <p><strong>Status:</strong> {{ userProfile?.status }}</p>
           </div> -->
 
-          <!-- <button class="btn-edit" (click)="openEditProfileModal()">
+      <!-- <button class="btn-edit" (click)="openEditProfileModal()">
             Edit Profile
           </button> -->
-          <!-- <button class="btn-edit" (click)="openChangePasswordModal()">
+      <!-- <button class="btn-edit" (click)="openChangePasswordModal()">
             Change Password
           </button>
 
@@ -90,44 +90,38 @@
       </div> -->
 
       <div class="profile-dropdown" (click)="toggleProfileDropdown()">
-  <div class="profile-info">
-    <i class="bi bi-person-circle"></i>
-    <span>{{ userProfile?.username }}</span>
-  </div>
+        <div class="profile-info">
+          <i class="bi bi-person-circle"></i>
+          <span>{{ userProfile?.username }}</span>
+        </div>
 
-  <div class="profile-menu" *ngIf="showProfileDropdown">
-    <div class="profile-details">
-      <p><strong>Username:</strong> {{ userProfile?.username }}</p>
-      <p><strong>Email:</strong> {{ userProfile?.email }}</p>
-      <p><strong>Phone Number:</strong> {{ userProfile?.phoneNumber }}</p>
-      <p>
-        <strong>Status:</strong>
-        <span
-          [ngClass]="{
+        <div class="profile-menu" *ngIf="showProfileDropdown">
+          <div class="profile-details">
+            <p><strong>Username:</strong> {{ userProfile?.username }}</p>
+            <p><strong>Email:</strong> {{ userProfile?.email }}</p>
+            <p><strong>Phone Number:</strong> {{ userProfile?.phoneNumber }}</p>
+            <p>
+              <strong>Status:</strong>
+              <span [ngClass]="{
             'status-pending': userProfile?.status === 'PENDING_VERIFICATION',
             'status-active': userProfile?.status === 'ACTIVE'
-          }"
-        >
-          {{ userProfile?.status }}
-        </span>
-      </p>
-    </div>
+          }">
+                {{ userProfile?.status }}
+              </span>
+            </p>
+          </div>
 
-    <!-- ปุ่มเปลี่ยนรหัสผ่าน -->
-    <button class="btn-edit" (click)="openChangePasswordModal()">
-      Change Password
-    </button>
+          <!-- ปุ่มเปลี่ยนรหัสผ่าน -->
+          <button class="btn-edit" (click)="openChangePasswordModal()">
+            Change Password
+          </button>
 
-    <!-- ปุ่ม Verify Email เฉพาะตอน Pending -->
-    <button
-      *ngIf="userProfile?.status === 'PENDING_VERIFICATION'"
-      class="btn-verify"
-      (click)="verifyEmail()"
-    >
-      Verify Email
-    </button>
-  </div>
-</div>
+          <!-- ปุ่ม Verify Email เฉพาะตอน Pending -->
+          <button *ngIf="userProfile?.status === 'PENDING_VERIFICATION'" class="btn-verify" (click)="verifyEmail()">
+            Verify Email
+          </button>
+        </div>
+      </div>
 
 
 
@@ -278,14 +272,20 @@
     <div class="col">
       <h4><i class="bi bi-exclamation-circle"></i> Top Issues</h4>
       <ul>
-        <li *ngFor="let i of dashboardData.issues">
-          {{ i?.type || 'N/A' }} - {{ i?.message || '' }}
+        <li *ngFor="let i of topIssues">
+          <div class="d-flex justify-content-between align-items-center">
+            <span>{{ i.message }}</span>
+            <span class="badge bg-primary rounded-pill">{{ i.count }}</span>
+          </div>
         </li>
-
+        <li *ngIf="!topIssues || topIssues.length === 0" class="text-muted small">
+          No issues.
+        </li>
       </ul>
       <a [routerLink]="['/issue']" class="view-all-link">
-        Manage Issues<i class="bi bi-arrow-right"></i>
+        Manage Issues <i class="bi bi-arrow-right"></i>
       </a>
+
     </div>
 
     <!-- Project Distribution -->

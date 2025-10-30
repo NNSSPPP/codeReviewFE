@@ -29,6 +29,8 @@ export interface Issue {
  
 }
 
+
+
 export interface AddCommentPayload {
   text: string;   // เนื้อคอมเมนต์
   author: string; // userId ผู้เขียน

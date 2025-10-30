@@ -17,15 +17,22 @@ interface Issue {
   status: string;      // 'open' | 'in-progress' | 'resolved' | 'closed'
   selected?: boolean;
 }
+interface TopIssue {
+  message: string;
+  count: number;
+}
 
 @Component({
   selector: 'app-issue',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './issue.component.html',
-  styleUrls: ['./issue.component.css'] 
+  styleUrls: ['./issue.component.css']
 })
 export class IssueComponent {
+  topIssues: TopIssue[] = [];
+  maxTop = 5;   // อยากให้โชว์กี่อันดับ
+
   issueId: string | null = null;
   repositories: Repository[] = [];
   filteredRepositories: Repository[] = [];
@@ -36,7 +43,7 @@ export class IssueComponent {
     private readonly issueApi: IssueService,
     private readonly auth: AuthService,
     private readonly repositoryService: RepositoryService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const userId = this.auth.userId;
@@ -56,9 +63,10 @@ export class IssueComponent {
     console.log(`Issue ID: ${this.issueId}`);
 
     this.repositoryService.getAllRepo().subscribe(repos => {
-  const uniqueNames = Array.from(new Set(repos.map(repo => repo.name)));
-  this.projects = uniqueNames.map(name => ({ name }));
-});
+      const uniqueNames = Array.from(new Set(repos.map(repo => repo.name)));
+      this.projects = uniqueNames.map(name => ({ name }));
+    });
+
 
   }
 
@@ -90,9 +98,9 @@ export class IssueComponent {
     this.loading = true; this.errorMsg = '';
     this.issueApi.getAllIssue(userId).subscribe({
       next: (rows) => {
-        // map backend Issue -> UI Issue
         this.issues = (rows || []).map(r => this.mapApiIssueToUi(r));
-        // เติมรายการ project ให้ filter ถ้าต้องการใช้ใน template ภายหลัง
+        // 🔽 คำนวณ Top Issues ตรงนี้เลย
+        this.buildTopIssues();
         this.loading = false;
       },
       error: (err) => {
@@ -102,6 +110,24 @@ export class IssueComponent {
       }
     });
   }
+
+  private buildTopIssues() {
+  const counter: Record<string, number> = {};
+
+  // นับตาม message อย่างเดียว
+  for (const it of this.issues) {
+    const msg = (it.message || '(no message)').trim().toLowerCase();
+    counter[msg] = (counter[msg] || 0) + 1;
+  }
+
+  // แปลงเป็น array แล้ว sort
+  const arr: TopIssue[] = Object.entries(counter)
+    .map(([message, count]) => ({ message, count }))
+    .sort((a, b) => b.count - a.count);   // มาก → น้อย
+
+  // เก็บเฉพาะจำนวนที่อยากโชว์ป
+  this.topIssues = arr.slice(0, this.maxTop);
+}
 
   private mapApiIssueToUi(r: import('../services/issueservice/issue.service').Issue): Issue {
     // type mapping: 'Bug' | 'Vulnerability' | 'Code Smell'  ->  'bug' | 'security' | 'code-smell'
@@ -124,13 +150,13 @@ export class IssueComponent {
 
     // status mapping: 'Open' | 'In Progress' | 'Resolved' | 'Closed' -> 'open' | 'in-progress' | 'resolved' | 'closed'
     const st = (r.status || '').toLowerCase();
-const uiStatus =
-  st.includes('open')          ? 'open' :
-  st.includes('in progress')   ? 'in-progress' :
-  st.includes('done')          ? 'done' :
-  st.includes('reject')        ? 'reject' :
-  st.includes('pending')       ? 'pending' :  // <-- เพิ่มบรรทัดนี้
-  'open';
+    const uiStatus =
+      st.includes('open') ? 'open' :
+        st.includes('in progress') ? 'in-progress' :
+          st.includes('done') ? 'done' :
+            st.includes('reject') ? 'reject' :
+              st.includes('pending') ? 'pending' :  // <-- เพิ่มบรรทัดนี้
+                'open';
 
 
     // assignee: ใช้ user_id/assignedTo ถ้ามี
@@ -153,18 +179,18 @@ const uiStatus =
   }
 
   // ---------- Filter / Page ----------
- filterIssues() {
-  return this.issues.filter(i =>
-    (this.filterType === 'All Types'     || i.type === this.filterType) &&
-    (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
-    (this.filterStatus === 'All Status'  || i.status === this.filterStatus) &&
-    (
-      this.filterProject === 'All Projects' ||
-      i.projectName?.toLowerCase().trim() === this.filterProject.toLowerCase().trim()
-    ) &&
-    (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
-  );
-}
+  filterIssues() {
+    return this.issues.filter(i =>
+      (this.filterType === 'All Types' || i.type === this.filterType) &&
+      (this.filterSeverity === 'All Severity' || i.severity === this.filterSeverity) &&
+      (this.filterStatus === 'All Status' || i.status === this.filterStatus) &&
+      (
+        this.filterProject === 'All Projects' ||
+        i.projectName?.toLowerCase().trim() === this.filterProject.toLowerCase().trim()
+      ) &&
+      (this.searchText === '' || i.message.toLowerCase().includes(this.searchText.toLowerCase()))
+    );
+  }
 
 
   get filteredIssues() {
@@ -204,28 +230,28 @@ const uiStatus =
   }
 
   // ---------- Actions (ยังคงเค้าโครงเดิม) ----------
-   assignDeveloper() {
-  //   const selectedIssues = this.issues.filter(i => i.selected);
-  //   if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
+  assignDeveloper() {
+    //   const selectedIssues = this.issues.filter(i => i.selected);
+    //   if (!selectedIssues.length) { alert('กรุณาเลือก Issue ก่อน'); return; }
 
-  //   const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
-  //   const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
-  //   if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
+    //   const developers = ['userA', 'userB', 'userC']; // สมมุติ user_id; ถ้ามี list จริงให้แทนที่
+    //   const dev = prompt('เลือก Developer (พิมพ์ user id): ' + developers.join(', '));
+    //   if (!dev || !developers.includes(dev)) { alert('Developer ไม่ถูกต้อง'); return; }
 
-  //   // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
-  //   let ok = 0;
-  //   selectedIssues.forEach(row => {
-  //     this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
-  //       next: () => {
-  //         row.assignee = `@${dev}`;
-  //         ok++;
-  //       },
-  //       error: (e) => console.error('assign failed', e)
-  //     });
-  //   });
+    //   // call API แบบทีละรายการ (คงโครงเดิมให้เบา ๆ)
+    //   let ok = 0;
+    //   selectedIssues.forEach(row => {
+    //     this.issueApi.assignDeveloper(row.issuesId, dev).subscribe({
+    //       next: () => {
+    //         row.assignee = `@${dev}`;
+    //         ok++;
+    //       },
+    //       error: (e) => console.error('assign failed', e)
+    //     });
+    //   });
 
-  //   alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
-   }
+    //   alert(`Sent assign requests for ${selectedIssues.length} issue(s).`); // แจ้งแบบง่าย ๆ
+  }
 
   changeStatus() {
     // const selectedIssues = this.issues.filter(i => i.selected);
@@ -263,7 +289,7 @@ const uiStatus =
       ['No.', 'Title', 'Severity', 'Status', 'Assignee'].join(','),
       ...exportIssues.map((i, idx) => [
         idx + 1,
-        `"${i.message.replaceAll('"','""')}"`,
+        `"${i.message.replaceAll('"', '""')}"`,
         i.severity,
         i.status,
         i.assignee || '-'
@@ -308,15 +334,15 @@ const uiStatus =
     }
   }
 
- statusClass(status: string) {
-  switch (status.toLowerCase()) {
-    case 'open': return 'text-danger';
-    case 'in-progress': return 'text-warning';
-    case 'done': return 'text-success';
-    case 'reject': return 'text-secondary';
-    case 'pending': return 'text-info';  // <-- เพิ่ม pending
-    default: return '';
+  statusClass(status: string) {
+    switch (status.toLowerCase()) {
+      case 'open': return 'text-danger';
+      case 'in-progress': return 'text-warning';
+      case 'done': return 'text-success';
+      case 'reject': return 'text-secondary';
+      case 'pending': return 'text-info';  // <-- เพิ่ม pending
+      default: return '';
+    }
   }
-}
 
 }
