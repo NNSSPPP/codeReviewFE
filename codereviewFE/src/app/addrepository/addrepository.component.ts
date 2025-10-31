@@ -135,7 +135,6 @@ export class AddrepositoryComponent implements OnInit {
       });
       return;
     }
-    this.router.navigate(['/repositories']);
     this.updateProjectKey();
 
     const payload = {
@@ -169,26 +168,24 @@ export class AddrepositoryComponent implements OnInit {
         if (sseKey) {
           const sub = this.sse.connect(sseKey).subscribe({
             next: (data) => {
-              console.log('SSE scan-complete:', data);
               this.snack.open('Sonar scan finished!', '', {
                 duration: 3000,
                 horizontalPosition: 'right',
                 verticalPosition: 'top',
                 panelClass: ['app-snack', 'app-snack-green']
               });
-
-              // ปิด SSE ก่อน
-              sub.unsubscribe();
-
-              // รอ 5 วิแล้วค่อยไป
               setTimeout(() => {
-                window.location.reload()
-              }, 15000);
+                window.location.reload();
+                this.router.navigate(['/repositories']);
+                sub.unsubscribe();
+              }, 3500);
+
             },
             error: (err) => {
               console.error('SSE error:', err);
             }
           });
+
         } else {
           this.router.navigate(['/repositories']);
         }
@@ -207,7 +204,6 @@ export class AddrepositoryComponent implements OnInit {
                   verticalPosition: 'top',
                   panelClass: ['app-snack', 'app-snack-green']
                 });
-                window.location.reload();
               },
               error: (err) => {
                 const msgErr = this.extractApiError(err);
@@ -221,7 +217,7 @@ export class AddrepositoryComponent implements OnInit {
               }
             });
 
-          }, 5000);
+          }, 1000);
         }
       },
       // ...
