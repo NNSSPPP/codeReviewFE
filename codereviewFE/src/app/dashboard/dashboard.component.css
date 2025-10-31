@@ -594,6 +594,12 @@ body.dark-mode .status-item {
      flex: 1; overflow-x: auto; 
    }
    
+   /* เลื่อนตัวอักษรตรงกลาง donut ขึ้น */
+.apexcharts-donut .apexcharts-donut-label text {
+  transform: translateY(-20px);
+}
+
+   
    
    /* ===============================
       VIEW ALL LINK

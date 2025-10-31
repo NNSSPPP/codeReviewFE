@@ -11,6 +11,7 @@ import { forkJoin } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { IssueService } from '../services/issueservice/issue.service';
+import { NotificationService, Notification } from '../services/notiservice/notification.service';
 
 interface TopIssue {
   message: string;
@@ -70,16 +71,9 @@ interface DashboardData {
   days: number[];
 }
 
-type NotificationTab = 'All' | 'Unread' | 'Scans' | 'Issues' | 'System';
+type NotificationTab = 'All' | 'Unread' | 'Repo' | 'Scan' | 'Export';
 
-interface Notification {
-  title: string;
-  message: string;
-  icon: string;
-  type: NotificationTab;
-  timestamp: Date;
-  read: boolean;
-}
+
 
 interface UserProfile {
   username: string;
@@ -102,7 +96,8 @@ export class DashboardComponent {
     private readonly auth: AuthService,
     private readonly userService: UserService,
     private readonly scanService: ScanService,
-    private readonly issueService: IssueService,   // 👈 เพิ่มอันนี้
+    private readonly issueService: IssueService,
+    private readonly notificationService: NotificationService,
 
   ) { }
 
@@ -148,6 +143,8 @@ export class DashboardComponent {
   showEditModal = false;
   showProfileDropdown = false;
 
+  notifications: Notification[] = [];
+
   /** ตัวอักษรเกรดเฉลี่ยจาก backend (A–E) */
   avgGateLetter: 'A' | 'B' | 'C' | 'D' | 'E' = 'A';
 
@@ -180,97 +177,98 @@ export class DashboardComponent {
 
     // โหลดกราฟครั้งแรก (จะถูกเรียกซ้ำตอน fetch เสร็จ)
     this.loadDashboardData();
+    this.loadNotifications();
   }
 
   // ================== FETCH FROM SERVER ==================
   fetchFromServer(userId: string | number) {
     this.loading = true;
 
-forkJoin({
-  overview: this.dash.getOverview(userId),
-  history: this.dash.getHistory(userId),
-  trends: this.dash.getTrendsWithAvg(userId),
-  scans: this.scanService.getAllScan(),
-  issues: this.issueService.getAllIssue(String(userId))   // ✅ เพิ่ม
-}).subscribe({
-  next: ({ overview, history, trends, scans, issues }) => {
-    // 1) metrics จาก overview
-    const metrics = this.dash.getMetricsSummary(overview);
-    this.dashboardData.metrics = {
-      ...metrics,
-      technicalDebt: this.dashboardData.metrics.technicalDebt ?? '0'
-    };
-    console.log('[overview] metrics summary:', metrics);
+    forkJoin({
+      overview: this.dash.getOverview(userId),
+      history: this.dash.getHistory(userId),
+      trends: this.dash.getTrendsWithAvg(userId),
+      scans: this.scanService.getAllScan(),
+      issues: this.issueService.getAllIssue(String(userId))   // ✅ เพิ่ม
+    }).subscribe({
+      next: ({ overview, history, trends, scans, issues }) => {
+        // 1) metrics จาก overview
+        const metrics = this.dash.getMetricsSummary(overview);
+        this.dashboardData.metrics = {
+          ...metrics,
+          technicalDebt: this.dashboardData.metrics.technicalDebt ?? '0'
+        };
+        console.log('[overview] metrics summary:', metrics);
 
-    // 2) history -> map
-    this.dashboardData.history = this.dash.mapHistory(history);
+        // 2) history -> map
+        this.dashboardData.history = this.dash.mapHistory(history);
 
-    // 3) avg grade จาก trends
-    if (trends?.length && this.isValidGateLetter(trends[0].avgGrade)) {
-      this.avgGateLetter = trends[0].avgGrade.toUpperCase() as any;
-      console.log('[trends] avgGrade from API =', trends[0].avgGrade);
-    } else {
-      // ... fallback เดิมของคุณ ...
-      const latestMap = this.dashboardData.history.reduce((m, h) => {
-        const cur = m.get(h.projectId);
-        const tNew = new Date(h.time).getTime();
-        const tCur = cur ? new Date(cur.time).getTime() : 0;
-        if (!cur || tNew > tCur) m.set(h.projectId, h);
-        return m;
-      }, new Map<string, any>());
-      const rows = Array.from(latestMap.values());
+        // 3) avg grade จาก trends
+        if (trends?.length && this.isValidGateLetter(trends[0].avgGrade)) {
+          this.avgGateLetter = trends[0].avgGrade.toUpperCase() as any;
+          console.log('[trends] avgGrade from API =', trends[0].avgGrade);
+        } else {
+          // ... fallback เดิมของคุณ ...
+          const latestMap = this.dashboardData.history.reduce((m, h) => {
+            const cur = m.get(h.projectId);
+            const tNew = new Date(h.time).getTime();
+            const tCur = cur ? new Date(cur.time).getTime() : 0;
+            if (!cur || tNew > tCur) m.set(h.projectId, h);
+            return m;
+          }, new Map<string, any>());
+          const rows = Array.from(latestMap.values());
 
-      const scoreMap: Record<'A'|'B'|'C'|'D'|'E', number> = { A: 5, B: 4, C: 3, D: 2, E: 1 };
-      const score = (g: string) => scoreMap[(g || 'E').toUpperCase() as keyof typeof scoreMap] || 1;
+          const scoreMap: Record<'A' | 'B' | 'C' | 'D' | 'E', number> = { A: 5, B: 4, C: 3, D: 2, E: 1 };
+          const score = (g: string) => scoreMap[(g || 'E').toUpperCase() as keyof typeof scoreMap] || 1;
 
-      const grades = rows
-        .map(r => (r.grade || 'E').toUpperCase())
-        .filter(g => this.isValidGateLetter(g));
+          const grades = rows
+            .map(r => (r.grade || 'E').toUpperCase())
+            .filter(g => this.isValidGateLetter(g));
 
-      const avgScore = grades.length
-        ? grades.map(score).reduce((a, b) => a + b, 0) / grades.length
-        : 1;
+          const avgScore = grades.length
+            ? grades.map(score).reduce((a, b) => a + b, 0) / grades.length
+            : 1;
 
-      const revMap: Record<1|2|3|4|5,'A'|'B'|'C'|'D'|'E'> = {
-        1: 'E', 2: 'D', 3: 'C', 4: 'B', 5: 'A'
-      };
+          const revMap: Record<1 | 2 | 3 | 4 | 5, 'A' | 'B' | 'C' | 'D' | 'E'> = {
+            1: 'E', 2: 'D', 3: 'C', 4: 'B', 5: 'A'
+          };
 
-      const rounded = Math.max(1, Math.min(5, Math.round(avgScore))) as 1|2|3|4|5;
-      this.avgGateLetter = revMap[rounded];
-      console.log('[fallback] avgGateLetter =', this.avgGateLetter);
-    }
+          const rounded = Math.max(1, Math.min(5, Math.round(avgScore))) as 1 | 2 | 3 | 4 | 5;
+          this.avgGateLetter = revMap[rounded];
+          console.log('[fallback] avgGateLetter =', this.avgGateLetter);
+        }
 
-    // 4) recent scans (เอา 5 อันล่าสุด)
-    this.recentScans = scans
-      .sort((a, b) => {
-        const dateA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
-        const dateB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
-        return dateB - dateA;
-      })
-      .slice(0, 5);
+        // 4) recent scans (เอา 5 อันล่าสุด)
+        this.recentScans = scans
+          .sort((a, b) => {
+            const dateA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+            const dateB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+            return dateB - dateA;
+          })
+          .slice(0, 5);
 
-    // 5) นับ passed / failed จาก history
-    this.recomputeStatusCountsFromHistory();
+        // 5) นับ passed / failed จาก history
+        this.recomputeStatusCountsFromHistory();
 
-    // 6) สรุป project distribution
-    this.calculateProjectDistribution();
+        // 6) สรุป project distribution
+        this.calculateProjectDistribution();
 
-    // 7) คำนวณ donut / เกรด
-    this.loadDashboardData();
+        // 7) คำนวณ donut / เกรด
+        this.loadDashboardData();
 
-    // 8) ✅ ตรงนี้คือของใหม่: คำนวณ Top Issues จากรายการ issues ที่ดึงมา
-    this.buildTopIssues(issues);
+        // 8) ✅ ตรงนี้คือของใหม่: คำนวณ Top Issues จากรายการ issues ที่ดึงมา
+        this.buildTopIssues(issues);
 
-    console.log('[donut] pass/fail ->', this.Data, 'totalProjects =', this.totalProjects);
-    console.log('[donut] center =', this.avgGateLetter);
+        console.log('[donut] pass/fail ->', this.Data, 'totalProjects =', this.totalProjects);
+        console.log('[donut] center =', this.avgGateLetter);
 
-    this.loading = false;
-  },
-  error: (err) => {
-    console.error('Error fetching dashboard data:', err);
-    this.loading = false;
-  }
-});
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching dashboard data:', err);
+        this.loading = false;
+      }
+    });
 
   }
 
@@ -296,29 +294,29 @@ forkJoin({
     this.topIssues = arr.slice(0, this.maxTop);
   }
   private buildTopIssues(rawIssues: any[]) {
-  if (!rawIssues || !rawIssues.length) {
-    this.topIssues = [];
-    return;
+    if (!rawIssues || !rawIssues.length) {
+      this.topIssues = [];
+      return;
+    }
+
+    const counter: Record<string, number> = {};
+
+    for (const it of rawIssues) {
+      // ดึงเฉพาะหัวข้อ
+      const msg = (it.message || '(no message)').trim();
+
+      // ถ้าอยากตัดตัวที่ DONE / REJECT ออก ให้ uncomment 3 บรรทัดนี้
+      // const st = (it.status || '').toUpperCase();
+      // if (st === 'DONE' || st === 'REJECT') continue;
+
+      counter[msg] = (counter[msg] || 0) + 1;
+    }
+
+    this.topIssues = Object.entries(counter)
+      .map(([message, count]) => ({ message, count }))
+      .sort((a, b) => b.count - a.count)  // มาก -> น้อย
+      .slice(0, this.maxTop);
   }
-
-  const counter: Record<string, number> = {};
-
-  for (const it of rawIssues) {
-    // ดึงเฉพาะหัวข้อ
-    const msg = (it.message || '(no message)').trim();
-
-    // ถ้าอยากตัดตัวที่ DONE / REJECT ออก ให้ uncomment 3 บรรทัดนี้
-    // const st = (it.status || '').toUpperCase();
-    // if (st === 'DONE' || st === 'REJECT') continue;
-
-    counter[msg] = (counter[msg] || 0) + 1;
-  }
-
-  this.topIssues = Object.entries(counter)
-    .map(([message, count]) => ({ message, count }))
-    .sort((a, b) => b.count - a.count)  // มาก -> น้อย
-    .slice(0, this.maxTop);
-}
 
   // ================== PROFILE & USER ==================
   toggleProfileDropdown() {
@@ -376,17 +374,21 @@ forkJoin({
   isMobile = false;
   activeTab: NotificationTab = 'All';
   displayCount = 5;
+  loadNotifications() {
+    this.notificationService.getAllNotification().subscribe({
+      next: (data) => {
+        // แปลง createdAt เป็น Date object
+        this.notifications = data.map(n => ({
+          ...n,
+          timestamp: new Date(n.createdAt) // ใช้ field timestamp ใน template
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading notifications:', err);
+      }
+    });
+  }
 
-  notifications: Notification[] = [
-    { title: '1.New Scan Completed', message: 'Scan #123 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T10:00:00'), read: false },
-    { title: '2.System Update', message: 'Update v1.2 deployed.', icon: '⚙️', type: 'System', timestamp: new Date('2025-08-26T09:00:00'), read: false },
-    { title: '3.Error Detected', message: 'Server error reported.', icon: '❌', type: 'Issues', timestamp: new Date('2025-08-26T11:00:00'), read: true },
-    { title: '4.New Issue', message: 'Issue #456 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-25T10:00:00'), read: false },
-    { title: '5.Backup Done', message: 'Daily backup completed.', icon: '💾', type: 'System', timestamp: new Date('2025-08-25T11:00:00'), read: true },
-    { title: '6.Security Alert', message: 'Login from new device.', icon: '🔒', type: 'System', timestamp: new Date('2025-07-26T10:00:00'), read: false },
-    { title: '7.Scan #124 Completed', message: 'Scan #124 finished.', icon: '🔍', type: 'Scans', timestamp: new Date('2025-08-26T12:00:00'), read: false },
-    { title: '8.New Issue', message: 'Issue #457 created.', icon: '🐞', type: 'Issues', timestamp: new Date('2025-08-26T08:00:00'), read: false }
-  ];
 
   getTimeAgo(value: Date | string | number): string {
     const t = value instanceof Date ? value.getTime() : new Date(value).getTime();
@@ -410,9 +412,9 @@ forkJoin({
     this.showNotifications = false;
   }
 
-  markAllRead() {
-    this.notifications.forEach((n) => (n.read = true));
-  }
+  // markAllRead() {
+  //   this.notifications.forEach((n) => (n.read = true));
+  // }
 
   selectTab(tab: NotificationTab) {
     this.activeTab = tab;
@@ -420,15 +422,24 @@ forkJoin({
   }
 
   viewNotification(n: Notification) {
-    n.read = true;
+    this.notificationService.checkNotification(n.notiId).subscribe({
+      next: (res) => {
+        n.read = true; // อัปเดตสถานะใน frontend หลังจาก backend ตอบกลับสำเร็จ
+        console.log('Notification marked as read:', res);
+      },
+      error: (err) => {
+        console.error('Failed to mark as read:', err);
+      }
+    });
   }
+
 
   get filteredNotifications() {
     let filtered = this.notifications;
     if (this.activeTab === 'Unread') {
       filtered = filtered.filter((n) => !n.read);
     } else if (this.activeTab !== 'All') {
-      filtered = filtered.filter((n) => n.type === this.activeTab);
+      filtered = filtered.filter((n) => n.typeNoti === this.activeTab);
     }
     filtered = filtered.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
     return filtered.slice(0, this.displayCount);
@@ -445,7 +456,7 @@ forkJoin({
   get totalFilteredCount() {
     if (this.activeTab === 'All') return this.notifications.length;
     if (this.activeTab === 'Unread') return this.notifications.filter((n) => !n.read).length;
-    return this.notifications.filter((n) => n.type === this.activeTab).length;
+    return this.notifications.filter((n) => n.typeNoti === this.activeTab).length;
   }
 
   // ================== PROJECT DISTRIBUTION ==================
@@ -478,7 +489,7 @@ forkJoin({
 
     const failed = this.dashboardData.history.filter((h) => {
       const st = norm(h.status);
-      return st === 'FAILED' || st === 'ERROR';
+      return st === 'FAILED' || st === 'ERROR' || st === "FAIL";
     }).length;
 
     this.Data = { passedCount: passed, failedCount: failed };
@@ -568,27 +579,34 @@ forkJoin({
       plotOptions: {
         pie: {
           donut: {
+            size: '65%',
             labels: {
               show: true,
-              name: {
-                show: true,
-                offsetY: 0,
-                fontSize: '48px',
-                formatter: () => centerLetter
-              },
+              name: { show: false },
               value: {
-                show: false,
-                offsetY: 5,
-                formatter: () => this.gradePercent + '%'
+                show: true,
+                // ใช้ formatter แทน label ตรง ๆ
+                formatter: () => centerLetter,
+                fontSize: '64px',
+                fontWeight: 700,
+                color: 'var(--text-main)',
               },
-              total: { show: true }
+              total: {
+                show: true,
+                // ใช้ formatter แทน label ตรง ๆ
+                formatter: () => centerLetter,
+                fontSize: '64px',
+                fontWeight: 700,
+                color: 'var(--text-main)',
+              }
             }
           }
         }
       },
       dataLabels: { enabled: false },
+
       legend: { show: false },
-      tooltip: { enabled: false }
+      tooltip: { enabled: false },
     };
   }
 
@@ -724,10 +742,6 @@ forkJoin({
   // ================== ACTIONS อื่น ๆ ==================
   onRefresh() {
     this.fetchFromServer(this.auth.userId!);
-  }
-
-  viewScan(scanId: string) {
-    this.router.navigate(['/scanresult', scanId]);
   }
 
   viewDetail(scanId: string) {

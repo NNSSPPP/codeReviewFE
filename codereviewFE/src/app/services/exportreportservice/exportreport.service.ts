@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface ReportRequest {
   projectId: string;
-  dateFrom: string;  // 'YYYY-MM-DD'
-  dateTo: string;    // 'YYYY-MM-DD'
-  outputFormat: string; // 'pdf' | 'xlsx' | 'docx' | 'pptx'
-  includeSections: string[]; // ["QualityGateSummary","IssueBreakdown"]
+  dateFrom: string;  
+  dateTo: string;    
+  outputFormat: string; 
+  includeSections: string[]; 
 }
 
 @Injectable({
@@ -15,15 +16,15 @@ export interface ReportRequest {
 })
 export class ExportreportService {
 
-   private apiUrl = 'http://localhost:8080/api/export'; // ปรับเป็น URL ของคุณ
-
-  constructor(private http: HttpClient) {}
+   private readonly http = inject(HttpClient);
+  private readonly base = environment.apiUrl + '/export';
+   
 
   generateReport(req: ReportRequest): Observable<Blob> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.post(`${this.apiUrl}/generate`, req, {
+    return this.http.post(`${this.base}/generate`, req, {
       headers,
       responseType: 'blob'
     });

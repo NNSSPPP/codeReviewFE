@@ -26,6 +26,7 @@ interface Issue {
   status: 'open' | 'in-progress' | 'done' | 'reject' | 'pending';
   project: string; file: string; line: number; created: string;
   assignedTo?: string; dueDate: string; description: string;
+  assignedName?: string;
   vulnerableCode: string; recommendedFix: string; comments: IssueComment[];
 }
 
@@ -121,7 +122,8 @@ export class IssuedetailComponent implements OnInit {
       line: 0, // ถ้า BE มี lineNumber ให้แทนด้วย Number(r.lineNumber)
       created: (r.createdAt as any) ?? '',
       assignedTo: r.assignedTo ?? '',
-      dueDate: '', // ถ้า BE มี dueDate ให้ map มา
+      dueDate: r.dueDate ? new Date(r.dueDate).toISOString() : '',
+      assignedName: r.assignedName ?? '',
       description: (r as any).description ?? '',
       vulnerableCode: (r as any).vulnerableCode ?? '',
       recommendedFix: (r as any).recommendedFix ?? '',
