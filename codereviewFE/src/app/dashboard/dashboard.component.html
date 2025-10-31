@@ -42,7 +42,7 @@
             <button [class.active]="activeTab==='All'" (click)="selectTab('All')" type="button">All</button>
             <button [class.active]="activeTab==='Unread'" (click)="selectTab('Unread')" type="button">Unread</button>
             <button [class.active]="activeTab==='Repo'" (click)="selectTab('Repo')" type="button"> Repo</button>
-            <button [class.active]="activeTab==='Scan'" (click)="selectTab('Scan')" type="button">Scan</button>
+            <button [class.active]="activeTab==='scan'" (click)="selectTab('scan')" type="button">Scan</button>
             <button [class.active]="activeTab==='Export'" (click)="selectTab('Export')" type="button">Export</button>
             <!-- <button class="mark-all" (click)="markAllRead()" type="button">Mark All Read</button> -->
           </div>
@@ -63,32 +63,7 @@
           </button>
         </div>
       </div>
-
-      <!-- Profile Dropdown -->
-      <!-- <div class="profile-dropdown" (click)="toggleProfileDropdown()">
-        <div class="profile-info">
-          <i class="bi bi-person-circle"></i>
-          <span>{{ userProfile?.username }}</span>
-        </div>
-
-        <div class="profile-menu" *ngIf="showProfileDropdown">
-          <div class="profile-details">
-            <p><strong>Username:</strong> {{ userProfile?.username }}</p>
-            <p><strong>Email:</strong> {{ userProfile?.email }}</p>
-            <p><strong>PhoneNumber:</strong> {{ userProfile?.phoneNumber }}</p>
-            <p><strong>Status:</strong> {{ userProfile?.status }}</p>
-          </div> -->
-
-      <!-- <button class="btn-edit" (click)="openEditProfileModal()">
-            Edit Profile
-          </button> -->
-      <!-- <button class="btn-edit" (click)="openChangePasswordModal()">
-            Change Password
-          </button>
-
-        </div>
-      </div> -->
-
+       <!-- ปุ่ม profile-dropdown -->
       <div class="profile-dropdown" (click)="toggleProfileDropdown()">
         <div class="profile-info">
           <i class="bi bi-person-circle"></i>

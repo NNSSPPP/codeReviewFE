@@ -71,7 +71,7 @@ interface DashboardData {
   days: number[];
 }
 
-type NotificationTab = 'All' | 'Unread' | 'Repo' | 'Scan' | 'Export';
+type NotificationTab = 'All' | 'Unread' | 'Repo' | 'scan' | 'Export';
 
 
 
@@ -480,17 +480,17 @@ export class DashboardComponent {
   private recomputeStatusCountsFromHistory() {
     const norm = (s?: string) => (s || '').trim().toUpperCase();
 
-    // บาง backend ใช้ PASSED / FAILED
-    // บาง backend ใช้ OK / ERROR
+
     const passed = this.dashboardData.history.filter((h) => {
       const st = norm(h.status);
-      return st === 'PASSED' || st === 'OK' || st === 'SUCCESS';
+      return ['PASSED', 'OK', 'SUCCESS', 'PASS'].includes(st);
     }).length;
 
     const failed = this.dashboardData.history.filter((h) => {
       const st = norm(h.status);
-      return st === 'FAILED' || st === 'ERROR' || st === "FAIL";
+      return ['FAILED', 'ERROR', 'FAIL', 'FAILURE'].includes(st);
     }).length;
+    
 
     this.Data = { passedCount: passed, failedCount: failed };
     this.totalProjects = passed + failed;
@@ -587,7 +587,7 @@ export class DashboardComponent {
                 show: true,
                 // ใช้ formatter แทน label ตรง ๆ
                 formatter: () => centerLetter,
-                fontSize: '64px',
+                fontSize: '50px',
                 fontWeight: 700,
                 color: 'var(--text-main)',
               },
@@ -595,7 +595,7 @@ export class DashboardComponent {
                 show: true,
                 // ใช้ formatter แทน label ตรง ๆ
                 formatter: () => centerLetter,
-                fontSize: '64px',
+                fontSize: '50px',
                 fontWeight: 700,
                 color: 'var(--text-main)',
               }
