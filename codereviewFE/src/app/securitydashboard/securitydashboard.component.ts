@@ -1,7 +1,8 @@
 import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink} from '@angular/router';
+import { Router, RouterLink} from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
+import { AuthService } from '../services/authservice/auth.service';
 
 @Component({
   selector: 'app-securitydashboard',
@@ -45,6 +46,19 @@ export class SecuritydashboardComponent{
     'Path Traversal (1)'
   ];
 
+  constructor(
+      private readonly router: Router,
+      private readonly authService: AuthService,
+    ) { }
+    
+ngOnInit(): void {
+    const userId = this.authService.userId;
+    console.log(userId);
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
   // ปุ่มย้อนกลับ
   goBack(): void {
     window.history.back();

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IssuemodalComponent } from '../issuemodal/issuemodal.component';
 import { IssueService, Issue as ApiIssue } from '../services/issueservice/issue.service';
 import { filter, map } from 'rxjs/operators';
@@ -72,14 +72,24 @@ export class IssuedetailComponent implements OnInit {
   sendingComment = false;
 
   constructor(
+    private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly issueApi: IssueService,
     private readonly repositoryService: RepositoryService,
     private readonly assignService: AssignhistoryService,
-    private readonly commentService: CommentService,    // << เพิ่ม
+    private readonly commentService: CommentService,
+    private readonly authService : AuthService,
   ) { }
 
   ngOnInit(): void {
+
+    const userId = this.authService.userId;
+      console.log(userId);
+      if (!userId) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
     this.route.paramMap.pipe(
       map(pm => pm.get('issuesId') ?? ''),
       filter(id => {

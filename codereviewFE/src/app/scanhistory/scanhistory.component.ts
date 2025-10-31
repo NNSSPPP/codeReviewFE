@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import{Scan , ScanService} from '../services/scanservice/scan.service';
+import { AuthService } from '../services/authservice/auth.service';
 
 @Component({
   selector: 'app-scanhistory',
@@ -27,7 +28,10 @@ export class ScanhistoryComponent {
   pagedScans: Scan[] = [];
   pages: number[] = [];
 
-  constructor(private readonly router: Router , private readonly scanService: ScanService) {
+
+
+  constructor(private readonly router: Router , private readonly scanService: ScanService,private authService:AuthService) {
+    
     this.scanService.getAllScan().subscribe(scans => {
        // เรียงจากล่าสุดไปเก่า
     this.scans = scans.sort((a, b) => {
@@ -40,6 +44,14 @@ export class ScanhistoryComponent {
     });
   }
 
+  ngOnInit(): void {
+    const userId = this.authService.userId;
+    console.log(userId);
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
   applyFilter() {
     const start = this.startDate ? new Date(this.startDate) : null;
     const end = this.endDate ? new Date(this.endDate) : null;
