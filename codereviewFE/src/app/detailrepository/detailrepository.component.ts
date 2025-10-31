@@ -4,6 +4,7 @@ import { Router,RouterModule ,ActivatedRoute } from '@angular/router';
 import { Repository, RepositoryService } from '../services/reposervice/repository.service';
 import { Scan,ScanService } from '../services/scanservice/scan.service';
 import { Issue} from '../services/issueservice/issue.service';
+import { AuthService } from '../services/authservice/auth.service';
 
 
 @Component({
@@ -27,10 +28,17 @@ export class DetailrepositoryComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly repoService: RepositoryService,
-    private readonly scanService: ScanService
+    private readonly scanService: ScanService,
+    private readonly authService : AuthService
   ) {}
 
   ngOnInit(): void {
+    const userId = this.authService.userId;
+      console.log(userId);
+      if (!userId) {
+        this.router.navigate(['/login']);
+        return;
+      }
     this.repoId = this.route.snapshot.paramMap.get('projectId') ?? '';
 
     if (this.repoId) {
@@ -44,7 +52,9 @@ export class DetailrepositoryComponent implements OnInit, OnDestroy {
       next: (repo) => {
         if (repo) {
           this.repo = repo;
-          this.scans = repo.scans ?? [];
+          this.scans = (repo.scans ?? [])
+          .filter(scan => scan.completedAt)                 
+          .sort((a, b) => new Date(b.completedAt!).getTime() - new Date(a.completedAt!).getTime());
           this.issues = repo.issues ?? [];
         }
         this.loading = false;
