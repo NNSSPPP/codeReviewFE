@@ -25,14 +25,14 @@
   <!-- Actions -->
   <div class="mb-4 d-flex gap-2 flex-wrap">
     <!-- Run Scan: แสดงเฉพาะ Active -->
-<button class="btn btn-primary" *ngIf="repo?.status === 'Active'" (click)="runScan(repo)">
+<!-- <button class="btn btn-primary" *ngIf="repo?.status === 'Active'" (click)="runScan(repo)">
   <i class="bi bi-play-circle me-1"></i> Run Scan
-</button>
+</button> -->
 
 <!-- Resume Scan: แสดงเฉพาะ Error -->
-<button class="btn btn-success" *ngIf="repo?.status === 'Error'" (click)="resumeScan(repo)">
+<!-- <button class="btn btn-success" *ngIf="repo?.status === 'Error'" (click)="resumeScan(repo)">
   <i class="bi bi-play-fill me-1"></i> Resume Scan
-</button>
+</button> -->
 
     <button class="btn btn-secondary" (click)="editRepo(repo)">
       <i class="bi bi-gear me-1"></i> Settings
@@ -66,7 +66,9 @@
         </div>
 
         <p *ngIf="repo?.status === 'Active'"><i class="bi bi-clock me-1"></i> Last Scan: {{ repo?.lastScan |date:'dd/MM/yyyy HH:mm'}}</p>
-        <p *ngIf="repo?.qualityGate">Quality Gate: <span class="badge bg-success">{{ repo?.qualityGate }}</span></p>
+        <p *ngIf="repo?.qualityGate">Quality Gate:  <span class="status-badge" [ngClass]="getQualityGateClass(repo?.qualityGate|| '')">
+    {{ repo?.qualityGate }}
+  </span></p>
 
 
         <p *ngIf="repo?.metrics?.coverage !== undefined">

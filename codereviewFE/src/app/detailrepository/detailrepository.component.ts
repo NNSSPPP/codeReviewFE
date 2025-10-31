@@ -126,6 +126,16 @@ export class DetailrepositoryComponent implements OnInit, OnDestroy {
     }
   }
 
+  getQualityGateClass(qualityGate: string): string {
+  switch (qualityGate.toLowerCase()) {
+    case 'passed': return 'active';
+    case 'failed': return 'failed';
+    case 'warning': return 'paused';
+    case 'scanning': return 'scanning';
+    default: return '';
+  }
+}
+
   ngOnDestroy(): void {
     // Clean up interval to prevent memory leaks
     if (this.scanInterval) {
