@@ -434,7 +434,7 @@
   }
 /* Repo link */
 .repo-link {
-  font-size: 0.65rem !important;   /* ย่อฟอนต์ลง */
+  font-size: 0.9rem !important;   /* ย่อฟอนต์ลง */
   word-break: break-all;           /* ให้ตัดคำอัตโนมัติ */
   display: inline-block;
   max-width: 100%;

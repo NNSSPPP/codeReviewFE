@@ -162,7 +162,7 @@ export class DashboardService {
         projectId: h.projectId,
         project: h.projectName,
         typeproject,
-        status: ((h as any).status ?? 'Passed') as 'Passed' | 'Failed',
+        status: ((h as any).qualityGate ?? 'Passed') as 'Passed' | 'Failed',
         grade: ((h as any).grade ?? 'F') as string,
         time: t.toISOString().slice(0, 16).replace('T', ' '),
         maintainabilityGate: ((h as any).maintainabilityGate ?? null)
