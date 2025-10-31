@@ -4,6 +4,7 @@ import { Router, RouterLink,RouterOutlet } from '@angular/router';
 import { Scan,ScanService } from '../services/scanservice/scan.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { AuthService } from '../services/authservice/auth.service';
 
 
 @Component({
@@ -15,12 +16,20 @@ import autoTable from 'jspdf-autotable';
 })
 export class ScanresultComponent {
 
-  constructor(private readonly router: Router,private readonly scanService: ScanService) {}
+  constructor(private readonly router: Router,private readonly scanService: ScanService,
+          private readonly authService: AuthService,) {}
+          
   goBack() { window.history.back(); }
 
  scanInfo: Scan | null = null;
 
  ngOnInit(): void {
+  const userId = this.authService.userId;
+      console.log(userId);
+      if (!userId) {
+        this.router.navigate(['/login']);
+        return;
+      }
     const scanId = this.router.url.split('/').pop(); // หรือใช้ ActivatedRoute
     if (scanId) {
       this.scanService.getByScanId(scanId).subscribe(scan => {

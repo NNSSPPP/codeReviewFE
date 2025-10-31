@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import{RepositoryService,Repository} from '../services/reposervice/repository.service';
 import{ExportreportService,ReportRequest} from '../services/exportreportservice/exportreport.service';
+import { AuthService } from '../services/authservice/auth.service';
 
 interface Project {
   id: string;      // id จริงจาก backend
@@ -50,9 +51,16 @@ export class GeneratereportComponent {
     // { name: 'Recommendations', selected: true }
   ];
 
-  constructor(private readonly route: ActivatedRoute,private readonly repositoryService: RepositoryService,private readonly exportreportService: ExportreportService) {} 
+  constructor(private readonly route: ActivatedRoute,private readonly repositoryService: RepositoryService,private readonly exportreportService: ExportreportService,private readonly router: Router,
+        private readonly authService: AuthService) {} 
 
   ngOnInit(): void {
+    const userId = this.authService.userId;
+    console.log(userId);
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.route.queryParams.subscribe(params => {
       if (params['reportType']) {
         this.reportType = params['reportType']; 

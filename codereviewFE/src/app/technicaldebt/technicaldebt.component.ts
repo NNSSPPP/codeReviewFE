@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
+import { AuthService } from '../services/authservice/auth.service';
 
 type Priority = 'High' | 'Med' | 'Low';
 
@@ -35,7 +36,6 @@ interface DebtItem {
 })
 export class TechnicaldebtComponent {
 
-    constructor(private readonly router: Router) {}
 
     // Meta (matches your text)
     totalDays = 45;
@@ -71,8 +71,19 @@ export class TechnicaldebtComponent {
       { priority: 'Med', colorClass: 'med',  item: 'Improve documentation',  time: '1d', cost: 30_000 },
       { priority: 'Low', colorClass: 'low',  item: 'Code formatting',        time: '4h', cost: 6_000  },
     ];
+ constructor(
+      private readonly router: Router,
+      private readonly authService: AuthService,
+    ) { }
 
-    
+    ngOnInit(): void {
+    const userId = this.authService.userId;
+    console.log(userId);
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
 
     // ปุ่มย้อนกลับ
   goBack(): void {

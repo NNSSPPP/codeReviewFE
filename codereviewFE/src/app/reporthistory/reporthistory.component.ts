@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/authservice/auth.service';
+import { Router } from '@angular/router';
 
 interface ReportHistory {
   reportType: string;
@@ -84,6 +86,19 @@ export class ReporthistoryComponent {
 
   currentPage = 1;
   pageSize = 5;
+
+   constructor(
+        private readonly router: Router,
+        private readonly authService: AuthService,
+      ) { }
+  ngOnInit(): void {
+      const userId = this.authService.userId;
+      console.log(userId);
+      if (!userId) {
+        this.router.navigate(['/login']);
+        return;
+      }
+    }
   
   filteredReports() {
     return this.reports.filter(r =>

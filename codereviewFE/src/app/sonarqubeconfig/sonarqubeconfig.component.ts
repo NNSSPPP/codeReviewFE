@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/authservice/auth.service';
 
 interface AngularSettings {
   runNpm: boolean;
@@ -55,7 +57,18 @@ export class SonarqubeconfigComponent implements OnInit {
 
   private storageKey = 'sonarConfig_v1';
 
+  constructor(
+        private readonly router: Router,
+        private readonly authService: AuthService,
+      ) { }
+
   ngOnInit(): void {
+     const userId = this.authService.userId;
+    console.log(userId);
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.loadFromLocal();
   }
 
