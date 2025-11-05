@@ -23,7 +23,7 @@ export class SseService {
 
       es.onerror = (err) => {
         this.ngZone.run(() => {
-          observer.error(err);  // หรือ observer.complete();
+          observer.complete;  // หรือ observer.complete();
         });
         es.close();
       };

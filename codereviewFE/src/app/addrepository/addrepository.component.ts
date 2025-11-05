@@ -7,7 +7,6 @@ import { Repository, RepositoryService } from '../services/reposervice/repositor
 import { AuthService } from '../services/authservice/auth.service';
 import { ScanService } from '../services/scanservice/scan.service';
 import { SseService } from '../services/scanservice/sse.service';        // <-- added
-import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-addrepository',
@@ -147,87 +146,85 @@ export class AddrepositoryComponent implements OnInit {
       : this.repositoryService.addRepo(payload);
 
     saveOrUpdate$.subscribe({
-next: (savedRepo) => {
-  const msg = this.isEditMode
-    ? 'Repository updated successfully!'
-    : 'Repository added successfully!';
-    this.router.navigate(['/repositories']);
-  this.snack.open(msg, '', {
-    duration: 2500,
-    horizontalPosition: 'right',
-    verticalPosition: 'top',
-    panelClass: ['app-snack', 'app-snack-blue']
-  });
-
-  // 1) เตรียม key ให้ตรงกับ backend
-  const sseKey =
-    savedRepo.sonarProjectKey ||
-    savedRepo.projectId ||
-    this.sonarConfig.projectKey ||
-    savedRepo.name;
-
-  // 2) ถ้ามี key -> ค่อยฟัง SSE
-  if (sseKey) {
-    const sub = this.sse.connect(sseKey).subscribe({
-      next: (data) => {
-        this.snack.open('Sonar scan finished!', '', {
-          duration: 3000,
+      next: (savedRepo) => {
+        const msg = this.isEditMode
+          ? 'Repository updated successfully!'
+          : 'Repository added successfully!';
+        this.router.navigate(['/repositories']);
+        this.snack.open(msg, '', {
+          duration: 2500,
           horizontalPosition: 'right',
           verticalPosition: 'top',
-          panelClass: ['app-snack', 'app-snack-green']
-        })
-        setTimeout(() => {
-  window.location.reload();
-  this.router.navigate(['/repositories']);
-  sub.unsubscribe();
-}, 3500);
+          panelClass: ['app-snack', 'app-snack-blue']
+        });
 
-        ;
+        // 1) เตรียม key ให้ตรงกับ backend
+        const sseKey =
+          savedRepo.sonarProjectKey ||
+          savedRepo.projectId ||
+          this.sonarConfig.projectKey ||
+          savedRepo.name;
 
-        // 👉 ตอนนี้ค่อย navigate ได้ เพราะ event มาแล้ว
-        this.router.navigate(['/repositories']);
-        sub.unsubscribe();
-      },
-      error: (err) => {
-        console.error('SSE error:', err);
-        // ถ้า SSE พัง ค่อยกลับหน้า list
-        this.router.navigate(['/repositories']);
-      }
-    });
-  } else {
-    // ถ้าไม่มี key เลย ก็กลับก่อน
-    this.router.navigate(['/repositories']);
-  }
-
-  // 3) ค่อยสั่ง start scan ทีหลัง
-  if (savedRepo.projectId) {
-    setTimeout(() => {
-      this.scanService.startScan(savedRepo.projectId!, {
-        username: this.credentials.username || '',
-        password: this.credentials.password || ''
-      }).subscribe({
-        next: () => {
-          this.snack.open('Scan started successfully!', '', {
-            duration: 2500,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: ['app-snack', 'app-snack-green']
+        // 2) ถ้ามี key -> ค่อยฟัง SSE
+        if (sseKey) {
+          const sub = this.sse.connect(sseKey).subscribe({
+            next: (data) => {
+              this.snack.open('Sonar scan finished!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['app-snack', 'app-snack-green']
+              })
+              setTimeout(() => {
+                window.location.reload();
+                this.router.navigate(['/repositories']);
+                sub.unsubscribe();
+              }, 3500);
+              ;
+              // 👉 ตอนนี้ค่อย navigate ได้ เพราะ event มาแล้ว
+              this.router.navigate(['/repositories']);
+              sub.unsubscribe();
+            },
+            error: (err) => {
+              console.error('SSE error:', err);
+              // ถ้า SSE พัง ค่อยกลับหน้า list
+              this.router.navigate(['/repositories']);
+            }
           });
-        },
-        error: (err) => {
-          const msgErr = this.extractApiError(err);
-          console.error('Scan failed:', err);
-          this.snack.open(`Scan failed to start: ${msgErr}`, '', {
-            duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: ['app-snack', 'app-snack-red']
-          });
+        } else {
+          // ถ้าไม่มี key เลย ก็กลับก่อน
+          this.router.navigate(['/repositories']);
         }
-      });
-    }, 1000);
-  }
-}
+
+        // 3) ค่อยสั่ง start scan ทีหลัง
+        if (savedRepo.projectId) {
+          setTimeout(() => {
+            this.scanService.startScan(savedRepo.projectId!, {
+              username: this.credentials.username || '',
+              password: this.credentials.password || ''
+            }).subscribe({
+              next: () => {
+                this.snack.open('Scan started successfully!', '', {
+                  duration: 2500,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['app-snack', 'app-snack-green']
+                });
+              },
+              error: (err) => {
+                const msgErr = this.extractApiError(err);
+                console.error('Scan failed:', err);
+                this.snack.open(`Scan failed to start: ${msgErr}`, '', {
+                  duration: 3000,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['app-snack', 'app-snack-red']
+                });
+              }
+            });
+          }, 1000);
+        }
+      }
 
     });
   }
